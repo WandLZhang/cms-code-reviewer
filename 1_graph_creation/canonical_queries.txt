@@ -1,0 +1,27 @@
+/*
+------------------------------------------------------------------------------
+ CANONICAL QUERIES (GQL)
+------------------------------------------------------------------------------
+
+1. TRACEABILITY ("The Killer Query")
+   "Show me every line of logic that touches Revenue Code 0421"
+
+   MATCH (input:Entity {name: 'REV-CODE-0421'})<-[:USES]-(rule:Rule)
+   MATCH (rule)<-[:CONTAINS]-(section:Section)<-[:CONTAINS]-(prog:Program)
+   RETURN 
+     prog.program_name AS Program,
+     section.section_name AS Paragraph,
+     rule.technical_condition AS Logic,
+     rule.plain_english AS Meaning
+   ORDER BY prog.program_name
+
+2. EXECUTION FLOW ("The Tree Query")
+   "Show the execution path starting from 1000-PROCESS-CLAIM"
+
+   MATCH path = (start:Section {name: '1000-PROCESS-CLAIM'})-[:CALLS*]->(sub:Section)
+   -- Note: Requires identifying intra-program GOTO/PERFORM edges which are not yet in schema, 
+   -- or inter-program CALLs which are in ProgramRelationships.
+   RETURN path
+
+------------------------------------------------------------------------------
+*/
