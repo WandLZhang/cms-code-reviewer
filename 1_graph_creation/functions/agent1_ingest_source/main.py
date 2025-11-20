@@ -3,6 +3,7 @@ from flask import jsonify
 import os
 import re
 import logging
+import requests
 from google.cloud import storage
 
 # --- Initialize Logging ---
@@ -96,8 +97,18 @@ def ingest_source(request):
             "raw_content_preview": file_content[:100] + "..." 
         }
 
-        return (jsonify(response_data), 200, headers)
+        # Forward to Agent 2 if configured
+        agent2_url = os.environ.get('AGENT2_URL')
+        if agent2_url:
+            try:
+                logging.info(f"Forwarding to Agent 2: {agent2_url}")
+                # Agent 2 expects content and program_id/node
+                payload = {
+                    "program_id": program_id,
+                    "node": program_node,
+                    "content": file_content
+                }
+                requests.post(agent2_url, json=payload)
+            except Exception as e:
+                logging.error(f"Failed to call Agent 2: {e}")
 
-    except Exception as e:
-        logging.exception(f"Ingest error: {e}")
-        return (jsonify({'error': str(e)}), 500, headers)
