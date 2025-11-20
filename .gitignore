@@ -1,0 +1,22 @@
+# Archives
+archive/
+
+# Virtual Environment
+venv/
+env/
+
+# System files
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# IDEs
+.vscode/
+.idea/
