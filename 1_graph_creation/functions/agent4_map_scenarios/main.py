@@ -4,6 +4,7 @@ from google import genai
 import os
 import json
 import logging
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
@@ -96,6 +97,25 @@ def link_entities(request):
             "rule_id": rule.get('rule_id'),
             "entity_links": result_data.get('links', [])
         }
+
+        # Forward to Graph Writer (Persist Rule + Links)
+        writer_url = os.environ.get('WRITER_URL')
+        if writer_url:
+            try:
+                logging.info(f"Forwarding to Graph Writer: {writer_url}")
+                writer_payload = {
+                    "program": {}, # Context lost in chain, ignored by writer for partial updates?
+                    "sections": [],
+                    "rules": [
+                        {
+                            "rule": rule,
+                            "links": result_data.get('links', [])
+                        }
+                    ]
+                }
+                requests.post(writer_url, json=writer_payload)
+            except Exception as e:
+                logging.error(f"Failed to call Writer: {e}")
 
         return (jsonify(output), 200, headers)
 

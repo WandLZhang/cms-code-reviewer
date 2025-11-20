@@ -20,3 +20,4 @@ __pycache__/
 # IDEs
 .vscode/
 .idea/
+test_scripts/

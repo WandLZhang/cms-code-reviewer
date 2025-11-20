@@ -2,6 +2,8 @@ import functions_framework
 from flask import jsonify
 import re
 import logging
+import os
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
@@ -137,6 +139,38 @@ def parse_structure(request):
             },
             "sections": sections # In real app, these would be written to Spanner
         }
+
+        # 1. Forward to Writer (Persist Sections)
+        writer_url = os.environ.get('WRITER_URL')
+        if writer_url:
+            try:
+                logging.info(f"Forwarding Sections to Writer: {writer_url}")
+                # Writer expects: program, sections, rules
+                # We construct partial payload.
+                # We pass 'program' with just ID to satisfy schema if needed, or just sections.
+                # Looking at writer: if program: insert_or_update Programs.
+                # if sections: insert_or_update CodeSections.
+                writer_payload = {
+                    "program": {"properties": {"program_id": program_id}}, # Minimal
+                    "sections": sections,
+                    "rules": [] 
+                }
+                requests.post(writer_url, json=writer_payload)
+            except Exception as e:
+                logging.error(f"Failed to call Writer: {e}")
+
+        # 2. Fan-out to Agent 3 (Extract Rules)
+        agent3_url = os.environ.get('AGENT3_URL')
+        if agent3_url:
+            for section in sections:
+                # Only process PROCEDURE sections or PARAGRAPHS for rules
+                if section['type'] == 'PARAGRAPH' or (section['type'] == 'DIVISION' and 'PROCEDURE' in section['section_name']):
+                    try:
+                        logging.info(f"Forwarding Section {section['section_name']} to Agent 3")
+                        payload = {"section": section}
+                        requests.post(agent3_url, json=payload)
+                    except Exception as e:
+                        logging.error(f"Failed to call Agent 3 for {section['section_name']}: {e}")
 
         return (jsonify(response_data), 200, headers)
 

@@ -4,6 +4,7 @@ from google import genai
 import os
 import json
 import logging
+import requests
 
 # --- Initialize Logging ---
 logging.basicConfig(level=logging.INFO)
@@ -101,6 +102,17 @@ def extract_rules(request):
             rule['section_id'] = section_id
             # Generate a rule ID (in real app, might use UUID or hash)
             rule['rule_id'] = f"rule_{abs(hash(rule['technical_condition']))}" 
+
+        # Forward to Agent 4 (Link Entities)
+        agent4_url = os.environ.get('AGENT4_URL')
+        if agent4_url:
+            for rule in result_data.get('rules', []):
+                try:
+                    logging.info(f"Forwarding Rule {rule['rule_name']} to Agent 4")
+                    payload = {"rule": rule}
+                    requests.post(agent4_url, json=payload)
+                except Exception as e:
+                    logging.error(f"Failed to call Agent 4: {e}")
 
         return (jsonify(result_data), 200, headers)
 

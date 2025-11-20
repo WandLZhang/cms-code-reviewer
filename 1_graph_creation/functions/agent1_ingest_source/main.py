@@ -112,3 +112,8 @@ def ingest_source(request):
             except Exception as e:
                 logging.error(f"Failed to call Agent 2: {e}")
 
+        return (jsonify(response_data), 200, headers)
+
+    except Exception as e:
+        logging.exception(f"Ingest error: {e}")
+        return (jsonify({'error': str(e)}), 500, headers)
