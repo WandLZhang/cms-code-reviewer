@@ -17,7 +17,6 @@ try:
     client = genai.Client(
         vertexai=True,
         project=project_id,
-        location="us-central1",
     )
     print(f"Worker: Gemini initialized for project '{project_id}'", flush=True)
 except Exception as e:
@@ -85,12 +84,13 @@ def extract_rules(request):
              print("Error: Gemini client not initialized", flush=True)
         
         # Configure Thinking Model
-        system_instruction = """You are a COBOL Modernization Expert. Analyze this code section and extract BUSINESS RULES.
+        system_instruction = """You are a COBOL Modernization Expert. Analyze this code section and extract BUSINESS RULES and CONTROL FLOW.
         
         INSTRUCTIONS:
         1. Identify any logic that governs business behavior (calculations, validations, flow control).
         2. Identify any DATA ENTITIES used (variables, files).
-        3. Return a JSON object with a list of rules.
+        3. Identify explicit CONTROL FLOW statements (PERFORM, CALL, GO TO).
+        4. Return a JSON object with a list of rules and a list of flow targets.
         
         FORMAT:
         {
@@ -100,6 +100,16 @@ def extract_rules(request):
                     "technical_condition": "IF A = B...",
                     "plain_english": "Explanation...",
                     "entities_used": ["VAR-A", "VAR-B"]
+                }
+            ],
+            "flow_targets": [
+                {
+                    "target_name": "1000-PROCESS-DATA",
+                    "type": "PERFORM" 
+                },
+                {
+                    "target_name": "SUBPROG",
+                    "type": "CALL"
                 }
             ]
         }"""
@@ -144,6 +154,7 @@ def extract_rules(request):
             
         result_data = json.loads(response_text)
         print(f"Extracted {len(result_data.get('rules', []))} rules from {section.get('section_name')}", flush=True)
+        print(f"FULL EXTRACTED RULES: {json.dumps(result_data, indent=2)}", flush=True)
         
         # Enhance with metadata
         for rule in result_data.get('rules', []):
@@ -161,6 +172,26 @@ def extract_rules(request):
                     requests.post(agent4_url, json=payload, timeout=30)
                 except Exception as e:
                     print(f"Error: Failed to call Agent 4: {e}", flush=True)
+
+        # Forward Flow Targets to Writer (Agent 5)
+        writer_url = os.environ.get('WRITER_URL')
+        flow_targets = result_data.get('flow_targets', [])
+        if writer_url and flow_targets:
+            try:
+                print(f"Forwarding {len(flow_targets)} flow targets to Writer: {writer_url}", flush=True)
+                # Transform to expected Writer format
+                section_calls = []
+                for target in flow_targets:
+                    section_calls.append({
+                        "source_section_id": section_id,
+                        "target_name": target.get('target_name'),
+                        "type": target.get('type')
+                    })
+                
+                writer_payload = {"section_calls": section_calls}
+                requests.post(writer_url, json=writer_payload, timeout=30)
+            except Exception as e:
+                print(f"Error: Failed to call Writer for flow targets: {e}", flush=True)
 
         return (jsonify(result_data), 200, headers)
 

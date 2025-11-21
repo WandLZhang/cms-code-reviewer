@@ -67,6 +67,17 @@ CREATE TABLE RuleEntities (
   FOREIGN KEY (entity_id) REFERENCES BusinessEntities (entity_id),
 ) PRIMARY KEY (rule_id, entity_id);
 
+-- Section Calls table - stores execution flow (Section -> Section)
+CREATE TABLE SectionCalls (
+  call_id STRING(36) NOT NULL,
+  source_section_id STRING(36) NOT NULL,
+  target_section_id STRING(36) NOT NULL,
+  call_type STRING(50) NOT NULL, -- 'PERFORM', 'GO TO'
+  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
+  FOREIGN KEY (source_section_id) REFERENCES CodeSections (section_id),
+  FOREIGN KEY (target_section_id) REFERENCES CodeSections (section_id),
+) PRIMARY KEY (call_id);
+
 -- Create indexes for common queries
 CREATE INDEX ProgramsByName ON Programs(program_name);
 CREATE INDEX RulesByType ON BusinessRules(rule_type);
@@ -95,5 +106,9 @@ CREATE PROPERTY GRAPH CobolKnowledgeGraph
     RuleEntities
       SOURCE KEY (rule_id) REFERENCES BusinessRules (rule_id)
       DESTINATION KEY (entity_id) REFERENCES BusinessEntities (entity_id)
-      LABEL REFERENCES_ENTITY
+      LABEL REFERENCES_ENTITY,
+    SectionCalls
+      SOURCE KEY (source_section_id) REFERENCES CodeSections (section_id)
+      DESTINATION KEY (target_section_id) REFERENCES CodeSections (section_id)
+      LABEL CALLS
   );

@@ -21,7 +21,7 @@ except Exception as e:
     print(f"Worker: Error initializing Gemini: {e}", flush=True)
     client = None
 
-MODEL_NAME = "gemini-2.5-pro"
+MODEL_NAME = "gemini-3.0-pro-preview"
 
 @functions_framework.http
 def link_entities(request):

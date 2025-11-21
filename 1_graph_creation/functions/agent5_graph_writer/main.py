@@ -42,6 +42,7 @@ def write_graph(request):
         program = data.get('program')
         sections = data.get('sections', [])
         rules = data.get('rules', [])
+        section_calls = data.get('section_calls', [])
         
         if program:
              print(f"Writing Program: {program.get('properties', {}).get('program_id')}", flush=True)
@@ -49,6 +50,8 @@ def write_graph(request):
              print(f"Writing {len(sections)} sections", flush=True)
         if rules:
              print(f"Writing {len(rules)} rules", flush=True)
+        if section_calls:
+             print(f"Writing {len(section_calls)} section calls", flush=True)
         
         if not database:
              # If local/no-auth, fallback to simulated output
@@ -136,7 +139,39 @@ def write_graph(request):
                             spanner.COMMIT_TIMESTAMP
                         )]
                     )
-        
+
+            # 4. Section Calls (Execution Flow)
+            for call in section_calls:
+                # Input: { "source_section_id": "...", "target_name": "1000-MAIN", "type": "PERFORM" }
+                # We need to resolve target_name to target_section_id.
+                # Assumption: Target is in the SAME program. ID = ProgramID_TargetName
+                
+                source_id = call.get('source_section_id')
+                target_name = call.get('target_name')
+                call_type = call.get('type')
+                
+                if source_id and target_name:
+                    # Extract Program ID from Source ID (format: PROG_SECTION)
+                    # This assumes standard naming convention from Agent 2
+                    parts = source_id.split('_', 1)
+                    if len(parts) > 0:
+                        program_id = parts[0]
+                        # Construct Target ID
+                        target_id = f"{program_id}_{target_name.replace(' ', '_')}"
+                        call_id = f"call_{source_id}_{target_id}_{abs(hash(call_type))}"
+                        
+                        batch.insert_or_update(
+                            table='SectionCalls',
+                            columns=['call_id', 'source_section_id', 'target_section_id', 'call_type', 'created_at'],
+                            values=[(
+                                call_id,
+                                source_id,
+                                target_id,
+                                call_type,
+                                spanner.COMMIT_TIMESTAMP
+                            )]
+                        )
+
         # Batch is committed on exit of context manager
         print("Batch commit successful", flush=True)
 
