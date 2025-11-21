@@ -3,11 +3,11 @@ from flask import jsonify
 from google import genai
 import os
 import json
-import logging
+# import logging
 import requests
 
 # --- Initialize Logging ---
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 # --- Initialize Google GenAI ---
 try:
@@ -17,9 +17,9 @@ try:
         project=project_id,
         location="us-central1",
     )
-    logging.info(f"Worker: Gemini initialized for project '{project_id}'")
+    print(f"Worker: Gemini initialized for project '{project_id}'", flush=True)
 except Exception as e:
-    logging.error(f"Worker: Error initializing Gemini: {e}", exc_info=True)
+    print(f"Worker: Error initializing Gemini: {e}", flush=True)
     # For local testing without auth, we might need to mock or handle this gracefully
     client = None
 
@@ -49,18 +49,22 @@ def extract_rules(request):
         section = data.get('section')
         
         if not section:
+            print("Error: Missing section data", flush=True)
             return (jsonify({'error': 'Missing section data'}), 400, headers)
 
         section_content = "\n".join(section.get('content_lines', []))
         section_id = section.get('section_id')
+        print(f"--- Agent 3 Processing Section: {section.get('section_name')} ---", flush=True)
 
         # If client is not available (e.g. local without creds), mock response or fail
         if not client:
              # Mock for local test without credentials if needed, or fail
              # For now, let's return a mock if env var MOCK_AI is set, else fail
              if os.environ.get('MOCK_AI'):
+                 print("Using Mock AI", flush=True)
                  return (jsonify(mock_extraction(section)), 200, headers)
              # Else proceed to try and fail if no client
+             print("Error: Gemini client not initialized", flush=True)
         
         prompt = f"""
         You are a COBOL Modernization Expert. Analyze this code section and extract BUSINESS RULES.
@@ -96,6 +100,7 @@ def extract_rules(request):
             response_text = response_text.split('```')[1].split('```')[0].strip()
             
         result_data = json.loads(response_text)
+        print(f"Extracted {len(result_data.get('rules', []))} rules from {section.get('section_name')}", flush=True)
         
         # Enhance with metadata
         for rule in result_data.get('rules', []):
@@ -108,16 +113,16 @@ def extract_rules(request):
         if agent4_url:
             for rule in result_data.get('rules', []):
                 try:
-                    logging.info(f"Forwarding Rule {rule['rule_name']} to Agent 4")
+                    print(f"Forwarding Rule {rule['rule_name']} to Agent 4", flush=True)
                     payload = {"rule": rule}
-                    requests.post(agent4_url, json=payload)
+                    requests.post(agent4_url, json=payload, timeout=30)
                 except Exception as e:
-                    logging.error(f"Failed to call Agent 4: {e}")
+                    print(f"Error: Failed to call Agent 4: {e}", flush=True)
 
         return (jsonify(result_data), 200, headers)
 
     except Exception as e:
-        logging.exception(f"Extract error: {e}")
+        print(f"Extract error: {e}", flush=True)
         return (jsonify({'error': str(e)}), 500, headers)
 
 def mock_extraction(section):

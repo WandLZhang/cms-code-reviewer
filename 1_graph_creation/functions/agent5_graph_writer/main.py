@@ -1,10 +1,10 @@
 import functions_framework
 from flask import jsonify
-import logging
+# import logging
 import os
 from google.cloud import spanner
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 @functions_framework.http
 def write_graph(request):
@@ -15,8 +15,9 @@ def write_graph(request):
         database_id = os.environ.get("SPANNER_DATABASE", "cobol-graph-db")
         instance = spanner_client.instance(instance_id)
         database = instance.database(database_id)
+        print(f"Writer: Initialized Spanner connection to {instance_id}/{database_id}", flush=True)
     except Exception as e:
-        logging.error(f"Spanner Init Error: {e}")
+        print(f"Writer: Spanner Init Error: {e}", flush=True)
         database = None
     """
     Agent 5: Graph Writer.
@@ -36,13 +37,22 @@ def write_graph(request):
     }
 
     try:
+        print("--- Agent 5 (Writer) Received Request ---", flush=True)
         data = request.get_json()
         program = data.get('program')
         sections = data.get('sections', [])
         rules = data.get('rules', [])
         
+        if program:
+             print(f"Writing Program: {program.get('properties', {}).get('program_id')}", flush=True)
+        if sections:
+             print(f"Writing {len(sections)} sections", flush=True)
+        if rules:
+             print(f"Writing {len(rules)} rules", flush=True)
+        
         if not database:
              # If local/no-auth, fallback to simulated output
+             print("Warning: No Spanner connection, simulating write", flush=True)
              return (jsonify({"status": "simulated", "message": "No Spanner connection"}), 200, headers)
 
         # Use Batch for simpler atomic writes
@@ -128,12 +138,14 @@ def write_graph(request):
                     )
         
         # Batch is committed on exit of context manager
+        print("Batch commit successful", flush=True)
 
+        program_name = program.get('properties', {}).get('program_name') if program else "Unknown"
         return (jsonify({
             "status": "success",
-            "message": f"Committed graph updates for {program.get('properties', {}).get('program_name')}"
+            "message": f"Committed graph updates for {program_name}"
         }), 200, headers)
 
     except Exception as e:
-        logging.exception(f"Write error: {e}")
+        print(f"Write error: {e}", flush=True)
         return (jsonify({'error': str(e)}), 500, headers)

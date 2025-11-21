@@ -3,10 +3,10 @@ from flask import jsonify
 from google import genai
 import os
 import json
-import logging
+# import logging
 import requests
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 # --- Initialize Google GenAI ---
 try:
@@ -16,7 +16,9 @@ try:
         project=project_id,
         location="us-central1",
     )
+    print(f"Worker: Gemini initialized for project '{project_id}'", flush=True)
 except Exception as e:
+    print(f"Worker: Error initializing Gemini: {e}", flush=True)
     client = None
 
 MODEL_NAME = "gemini-2.5-pro"
@@ -45,11 +47,16 @@ def link_entities(request):
         rule = data.get('rule')
         
         if not rule:
+            print("Error: Missing rule data", flush=True)
             return (jsonify({'error': 'Missing rule data'}), 400, headers)
+
+        print(f"--- Agent 4 Linking Rule: {rule.get('rule_name')} ---", flush=True)
 
         if not client:
              if os.environ.get('MOCK_AI'):
+                 print("Using Mock AI", flush=True)
                  return (jsonify(mock_linking(rule)), 200, headers)
+             print("Error: Gemini client not initialized", flush=True)
         
         prompt = f"""
         You are a Data Lineage Expert.
@@ -97,12 +104,13 @@ def link_entities(request):
             "rule_id": rule.get('rule_id'),
             "entity_links": result_data.get('links', [])
         }
+        print(f"Linked {len(result_data.get('links', []))} entities", flush=True)
 
         # Forward to Graph Writer (Persist Rule + Links)
         writer_url = os.environ.get('WRITER_URL')
         if writer_url:
             try:
-                logging.info(f"Forwarding to Graph Writer: {writer_url}")
+                print(f"Forwarding to Graph Writer: {writer_url}", flush=True)
                 writer_payload = {
                     "program": {}, # Context lost in chain, ignored by writer for partial updates?
                     "sections": [],
@@ -113,14 +121,14 @@ def link_entities(request):
                         }
                     ]
                 }
-                requests.post(writer_url, json=writer_payload)
+                requests.post(writer_url, json=writer_payload, timeout=5)
             except Exception as e:
-                logging.error(f"Failed to call Writer: {e}")
+                print(f"Error: Failed to call Writer: {e}", flush=True)
 
         return (jsonify(output), 200, headers)
 
     except Exception as e:
-        logging.exception(f"Linking error: {e}")
+        print(f"Linking error: {e}", flush=True)
         return (jsonify({'error': str(e)}), 500, headers)
 
 def mock_linking(rule):
