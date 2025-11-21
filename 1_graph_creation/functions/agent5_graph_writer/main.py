@@ -89,7 +89,7 @@ def write_graph(request):
                         section.get('type'),
                         section.get('start_line'),
                         section.get('end_line'),
-                        "", # Content omitted
+                        section.get('content', ""), # Content included
                         spanner.COMMIT_TIMESTAMP
                     )]
                 )

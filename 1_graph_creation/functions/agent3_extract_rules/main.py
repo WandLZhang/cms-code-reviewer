@@ -88,7 +88,7 @@ def extract_rules(request):
         
         INSTRUCTIONS:
         1. Identify any logic that governs business behavior (calculations, validations, flow control).
-        2. Identify any DATA ENTITIES used (variables, files).
+        2. Identify any DATA ENTITIES used. Include explicit Variable Names and FILE NAMES (e.g. from READ/WRITE/OPEN/CLOSE).
         3. Identify explicit CONTROL FLOW statements (PERFORM, CALL, GO TO).
         4. Return a JSON object with a list of rules and a list of flow targets.
         
@@ -169,7 +169,7 @@ def extract_rules(request):
                 try:
                     print(f"Forwarding Rule {rule['rule_name']} to Agent 4", flush=True)
                     payload = {"rule": rule}
-                    requests.post(agent4_url, json=payload, timeout=30)
+                    requests.post(agent4_url, json=payload, timeout=3600)
                 except Exception as e:
                     print(f"Error: Failed to call Agent 4: {e}", flush=True)
 
@@ -189,7 +189,8 @@ def extract_rules(request):
                     })
                 
                 writer_payload = {"section_calls": section_calls}
-                requests.post(writer_url, json=writer_payload, timeout=30)
+                print(f"WRITER PAYLOAD: {json.dumps(writer_payload)}", flush=True)
+                requests.post(writer_url, json=writer_payload, timeout=3600)
             except Exception as e:
                 print(f"Error: Failed to call Writer for flow targets: {e}", flush=True)
 

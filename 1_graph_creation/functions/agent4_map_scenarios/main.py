@@ -14,14 +14,13 @@ try:
     client = genai.Client(
         vertexai=True,
         project=project_id,
-        location="us-central1",
     )
     print(f"Worker: Gemini initialized for project '{project_id}'", flush=True)
 except Exception as e:
     print(f"Worker: Error initializing Gemini: {e}", flush=True)
     client = None
 
-MODEL_NAME = "gemini-3.0-pro-preview"
+MODEL_NAME = "gemini-3-pro-preview"
 
 @functions_framework.http
 def link_entities(request):
@@ -68,22 +67,24 @@ def link_entities(request):
         Raw Entities: {rule.get('entities_used', [])}
         
         INSTRUCTIONS:
-        1. Identify the STANDARD Data Entities involved (e.g., "CPT 99214", "Revenue Code 0421", "Diagnosis Code").
-        2. Identify the RELATIONSHIP type (e.g., "Validates", "Calculates", "Routes").
-        3. Return ONLY the entities and relationships. Do NOT invent abstract scenarios.
+        1. Identify the Data Entities involved. 
+           CRITICAL: You MUST preserve the exact COBOL variable name or File Name as the 'entity_name' if it comes from 'Raw Entities'. 
+           Do not abstract "XREF-FILE" to "Cross Reference Data". Keep it as "XREF-FILE".
+        2. Identify the RELATIONSHIP type (e.g., "Validates", "Calculates", "Routes", "Reads", "Updates").
+        3. Return ONLY the entities and relationships.
         
         FORMAT:
         {{
             "links": [
                 {{
-                    "entity_name": "Revenue Code",
-                    "entity_value": "0421", 
-                    "relationship": "Validates Presence"
+                    "entity_name": "XREF-FILE",
+                    "entity_value": "FILE", 
+                    "relationship": "Reads"
                 }},
                 {{
-                    "entity_name": "Payment Amount",
-                    "entity_value": "Variable",
-                    "relationship": "Calculates"
+                    "entity_name": "DALYTRAN-CARD-NUM",
+                    "entity_value": "VARIABLE",
+                    "relationship": "Validates"
                 }}
             ]
         }}
@@ -121,7 +122,8 @@ def link_entities(request):
                         }
                     ]
                 }
-                requests.post(writer_url, json=writer_payload, timeout=5)
+                print(f"WRITER PAYLOAD: {json.dumps(writer_payload)}", flush=True)
+                requests.post(writer_url, json=writer_payload, timeout=3600)
             except Exception as e:
                 print(f"Error: Failed to call Writer: {e}", flush=True)
 

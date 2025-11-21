@@ -3,18 +3,18 @@
 
 -- Programs table - stores COBOL program metadata
 CREATE TABLE Programs (
-  program_id STRING(36) NOT NULL,
+  program_id STRING(256) NOT NULL,
   program_name STRING(100) NOT NULL,
   file_name STRING(200) NOT NULL,
   total_lines INT64,
-  last_analyzed TIMESTAMP NOT NULL,
+  last_analyzed TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
   updated_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
 ) PRIMARY KEY (program_id);
 
 -- Business Entities table - stores identified business entities (variables, constants)
 CREATE TABLE BusinessEntities (
-  entity_id STRING(36) NOT NULL,
+  entity_id STRING(256) NOT NULL,
   entity_name STRING(200) NOT NULL,
   entity_type STRING(50) NOT NULL, -- e.g., 'variable', 'constant', 'copybook'
   description STRING(MAX),
@@ -23,9 +23,9 @@ CREATE TABLE BusinessEntities (
 
 -- Program Relationships table - stores CALL relationships between programs
 CREATE TABLE ProgramRelationships (
-  relationship_id STRING(36) NOT NULL,
-  source_program_id STRING(36) NOT NULL,
-  target_program_id STRING(36) NOT NULL,
+  relationship_id STRING(256) NOT NULL,
+  source_program_id STRING(256) NOT NULL,
+  target_program_id STRING(256) NOT NULL,
   relationship_type STRING(50) NOT NULL, -- e.g., 'CALLS'
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
   FOREIGN KEY (source_program_id) REFERENCES Programs (program_id),
@@ -34,8 +34,8 @@ CREATE TABLE ProgramRelationships (
 
 -- Code Sections table - stores analyzed code sections (Paragraphs, Sections)
 CREATE TABLE CodeSections (
-  section_id STRING(36) NOT NULL,
-  program_id STRING(36) NOT NULL,
+  section_id STRING(256) NOT NULL,
+  program_id STRING(256) NOT NULL,
   section_name STRING(200) NOT NULL,
   section_type STRING(50) NOT NULL, -- e.g., 'DIVISION', 'SECTION', 'PARAGRAPH'
   start_line INT64,
@@ -47,8 +47,8 @@ CREATE TABLE CodeSections (
 
 -- Business Rules table - stores extracted business logic statements
 CREATE TABLE BusinessRules (
-  rule_id STRING(36) NOT NULL,
-  section_id STRING(36) NOT NULL,
+  rule_id STRING(256) NOT NULL,
+  section_id STRING(256) NOT NULL,
   rule_name STRING(200) NOT NULL,
   rule_type STRING(50), -- Nullable, for future classification
   technical_condition STRING(MAX), -- The actual IF/ELSE logic
@@ -59,8 +59,8 @@ CREATE TABLE BusinessRules (
 
 -- Rule Entities table - mapping between rules and entities (Many-to-Many)
 CREATE TABLE RuleEntities (
-  rule_id STRING(36) NOT NULL,
-  entity_id STRING(36) NOT NULL,
+  rule_id STRING(256) NOT NULL,
+  entity_id STRING(256) NOT NULL,
   usage_type STRING(50), -- 'reads', 'updates', 'validates'
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
   FOREIGN KEY (rule_id) REFERENCES BusinessRules (rule_id),
@@ -69,9 +69,9 @@ CREATE TABLE RuleEntities (
 
 -- Section Calls table - stores execution flow (Section -> Section)
 CREATE TABLE SectionCalls (
-  call_id STRING(36) NOT NULL,
-  source_section_id STRING(36) NOT NULL,
-  target_section_id STRING(36) NOT NULL,
+  call_id STRING(256) NOT NULL,
+  source_section_id STRING(256) NOT NULL,
+  target_section_id STRING(256) NOT NULL,
   call_type STRING(50) NOT NULL, -- 'PERFORM', 'GO TO'
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
   FOREIGN KEY (source_section_id) REFERENCES CodeSections (section_id),
@@ -110,5 +110,5 @@ CREATE PROPERTY GRAPH CobolKnowledgeGraph
     SectionCalls
       SOURCE KEY (source_section_id) REFERENCES CodeSections (section_id)
       DESTINATION KEY (target_section_id) REFERENCES CodeSections (section_id)
-      LABEL CALLS
+      LABEL SECTION_CALLS
   );

@@ -25,3 +25,12 @@ test_scripts/
 *.log
 agent1.txt
 agent2.txt
+agent1.pid
+.gitignore
+agent2.pid
+.gitignore
+.gitignore
+agent5_actual_payload.json
+agent5_test_payload.json
+payload.json
+.gitignore
