@@ -6,19 +6,18 @@ from google.cloud import spanner
 
 logging.basicConfig(level=logging.INFO)
 
-# --- Initialize Spanner ---
-try:
-    spanner_client = spanner.Client()
-    instance_id = os.environ.get("SPANNER_INSTANCE", "cobol-graph-instance")
-    database_id = os.environ.get("SPANNER_DATABASE", "cobol-graph-db")
-    instance = spanner_client.instance(instance_id)
-    database = instance.database(database_id)
-except Exception as e:
-    logging.error(f"Spanner Init Error: {e}")
-    database = None
-
 @functions_framework.http
 def write_graph(request):
+    # Lazy Init Spanner to avoid fork issues
+    try:
+        spanner_client = spanner.Client()
+        instance_id = os.environ.get("SPANNER_INSTANCE", "cobol-graph-instance")
+        database_id = os.environ.get("SPANNER_DATABASE", "cobol-graph-db")
+        instance = spanner_client.instance(instance_id)
+        database = instance.database(database_id)
+    except Exception as e:
+        logging.error(f"Spanner Init Error: {e}")
+        database = None
     """
     Agent 5: Graph Writer.
     Commits the processed nodes and edges to Spanner.
@@ -46,11 +45,12 @@ def write_graph(request):
              # If local/no-auth, fallback to simulated output
              return (jsonify({"status": "simulated", "message": "No Spanner connection"}), 200, headers)
 
-        def write_transaction(transaction):
+        # Use Batch for simpler atomic writes
+        with database.batch() as batch:
             # 1. Program
             if program:
                 props = program.get('properties', {})
-                transaction.insert_or_update(
+                batch.insert_or_update(
                     table='Programs',
                     columns=['program_id', 'program_name', 'file_name', 'total_lines', 'last_analyzed', 'created_at', 'updated_at'],
                     values=[(
@@ -66,7 +66,7 @@ def write_graph(request):
 
             # 2. Sections
             for section in sections:
-                transaction.insert_or_update(
+                batch.insert_or_update(
                     table='CodeSections',
                     columns=['section_id', 'program_id', 'section_name', 'section_type', 'start_line', 'end_line', 'content', 'created_at'],
                     values=[(
@@ -86,7 +86,7 @@ def write_graph(request):
                 rule = rule_obj.get('rule')
                 links = rule_obj.get('links', [])
                 
-                transaction.insert_or_update(
+                batch.insert_or_update(
                     table='BusinessRules',
                     columns=['rule_id', 'section_id', 'rule_name', 'technical_condition', 'plain_english', 'created_at'],
                     values=[(
@@ -103,7 +103,7 @@ def write_graph(request):
                     entity_id = f"ent_{link.get('entity_value')}"
                     
                     # Entity Node
-                    transaction.insert_or_update(
+                    batch.insert_or_update(
                         table='BusinessEntities',
                         columns=['entity_id', 'entity_name', 'entity_type', 'description', 'created_at'],
                         values=[(
@@ -116,7 +116,7 @@ def write_graph(request):
                     )
                     
                     # Edge (RuleEntities)
-                    transaction.insert_or_update(
+                    batch.insert_or_update(
                         table='RuleEntities',
                         columns=['rule_id', 'entity_id', 'usage_type', 'created_at'],
                         values=[(
@@ -126,9 +126,8 @@ def write_graph(request):
                             spanner.COMMIT_TIMESTAMP
                         )]
                     )
-
-        # Execute transaction
-        database.run_in_transaction(write_transaction)
+        
+        # Batch is committed on exit of context manager
 
         return (jsonify({
             "status": "success",

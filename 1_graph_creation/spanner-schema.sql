@@ -87,13 +87,13 @@ CREATE PROPERTY GRAPH CobolKnowledgeGraph
     CodeSections AS ContainsSection
       SOURCE KEY (program_id) REFERENCES Programs (program_id)
       DESTINATION KEY (section_id) REFERENCES CodeSections (section_id)
-      LABEL CONTAINS,
+      LABEL HAS_SECTION,
     BusinessRules AS SectionContainsRule
       SOURCE KEY (section_id) REFERENCES CodeSections (section_id)
       DESTINATION KEY (rule_id) REFERENCES BusinessRules (rule_id)
-      LABEL CONTAINS,
+      LABEL HAS_RULE,
     RuleEntities
       SOURCE KEY (rule_id) REFERENCES BusinessRules (rule_id)
       DESTINATION KEY (entity_id) REFERENCES BusinessEntities (entity_id)
-      LABEL USES
+      LABEL REFERENCES_ENTITY
   );
