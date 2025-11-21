@@ -1,10 +1,12 @@
 import functions_framework
 from flask import jsonify
 from google import genai
+from google.genai import types
 import os
 import json
 # import logging
 import requests
+import time
 
 # --- Initialize Logging ---
 # logging.basicConfig(level=logging.INFO)
@@ -23,7 +25,23 @@ except Exception as e:
     # For local testing without auth, we might need to mock or handle this gracefully
     client = None
 
-MODEL_NAME = "gemini-2.5-pro"
+MODEL_NAME = "gemini-3-pro-preview"
+
+def generate_with_retries(model, contents, config, max_retries=3):
+    delay = 2
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model=model, 
+                contents=contents,
+                config=config
+            )
+            return response
+        except Exception as e:
+            print(f"Gemini generation error (attempt {attempt+1}/{max_retries}): {e}", flush=True)
+            time.sleep(delay)
+            delay *= 2
+    raise Exception("Gemini generation failed after retries")
 
 @functions_framework.http
 def extract_rules(request):
@@ -66,11 +84,8 @@ def extract_rules(request):
              # Else proceed to try and fail if no client
              print("Error: Gemini client not initialized", flush=True)
         
-        prompt = f"""
-        You are a COBOL Modernization Expert. Analyze this code section and extract BUSINESS RULES.
-        
-        CODE SECTION ({section.get('section_name')}):
-        {section_content}
+        # Configure Thinking Model
+        system_instruction = """You are a COBOL Modernization Expert. Analyze this code section and extract BUSINESS RULES.
         
         INSTRUCTIONS:
         1. Identify any logic that governs business behavior (calculations, validations, flow control).
@@ -78,22 +93,50 @@ def extract_rules(request):
         3. Return a JSON object with a list of rules.
         
         FORMAT:
-        {{
+        {
             "rules": [
-                {{
+                {
                     "rule_name": "Short Name",
                     "technical_condition": "IF A = B...",
                     "plain_english": "Explanation...",
                     "entities_used": ["VAR-A", "VAR-B"]
-                }}
+                }
             ]
-        }}
+        }"""
+
+        user_content = f"""
+        CODE SECTION ({section.get('section_name')}):
+        {section_content}
         """
+
+        contents = [
+            types.Content(
+                role="user",
+                parts=[
+                    types.Part.from_text(text=user_content)
+                ]
+            )
+        ]
+
+        generate_content_config = types.GenerateContentConfig(
+            temperature=1,
+            top_p=0.95,
+            max_output_tokens=65535,
+            system_instruction=[types.Part.from_text(text=system_instruction)],
+            thinking_config=types.ThinkingConfig(
+                thinking_level="HIGH",
+            ),
+        )
         
-        response = client.models.generate_content(model=MODEL_NAME, contents=prompt)
+        response = generate_with_retries(MODEL_NAME, contents, generate_content_config)
         
         # Parse JSON from response
         response_text = response.text.strip()
+        # Remove markdown code blocks if present
+        if '```json' in response_text:
+            response_text = response_text.split('```json')[1].split('```')[0].strip()
+        elif '```' in response_text:
+            response_text = response_text.split('```')[1].split('```')[0].strip()
         if '```json' in response_text:
             response_text = response_text.split('```json')[1].split('```')[0].strip()
         elif '```' in response_text:

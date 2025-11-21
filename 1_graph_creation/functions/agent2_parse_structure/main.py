@@ -4,8 +4,37 @@ import re
 # import logging
 import os
 import requests
+import time
+import concurrent.futures
 
 # logging.basicConfig(level=logging.INFO)
+
+def process_section_with_retries(section, agent3_url, max_retries=3):
+    """
+    Helper to call Agent 3 with retries.
+    Returns (success: bool, message: str)
+    """
+    delay = 1
+    for attempt in range(max_retries):
+        try:
+            payload = {"section": section}
+            response = requests.post(agent3_url, json=payload, timeout=60)
+            
+            if response.status_code == 200:
+                return True, f"Success: {section['section_name']}"
+            elif response.status_code == 429: # Rate limit
+                print(f"Rate limit for {section['section_name']}, retrying in {delay}s...", flush=True)
+                time.sleep(delay)
+                delay *= 2 # Exponential backoff
+            else:
+                return False, f"Failed: {section['section_name']} Status {response.status_code}"
+                
+        except Exception as e:
+            print(f"Exception for {section['section_name']}: {e}, retrying...", flush=True)
+            time.sleep(delay)
+            delay *= 2
+            
+    return False, f"Failed: {section['section_name']} after {max_retries} attempts"
 
 @functions_framework.http
 def parse_structure(request):
@@ -36,6 +65,8 @@ def parse_structure(request):
         if not content:
              print("Error: Missing content", flush=True)
              return (jsonify({'error': 'Missing content'}), 400, headers)
+             
+        print(f"RECEIVED CONTENT IN AGENT 2:\n{content}", flush=True)
 
         lines = content.splitlines()
         total_lines = len(lines)
@@ -150,20 +181,38 @@ def parse_structure(request):
             except Exception as e:
                 print(f"Error: Failed to call Writer: {e}", flush=True)
 
-        # 2. Fan-out to Agent 3 (Extract Rules)
+        # 2. Fan-out to Agent 3 (Extract Rules) with Parallelism & Retries
         agent3_url = os.environ.get('AGENT3_URL')
         if agent3_url:
             print(f"Fan-out to Agent 3: {agent3_url}", flush=True)
-            for section in sections:
-                # Only process PROCEDURE sections or PARAGRAPHS for rules
-                if section['type'] == 'PARAGRAPH' or (section['type'] == 'DIVISION' and 'PROCEDURE' in section['section_name']):
-                    try:
-                        # print(f"Forwarding Section {section['section_name']} to Agent 3", flush=True)
-                        payload = {"section": section}
-                        # Fire and forget or wait? Sequential here.
-                        requests.post(agent3_url, json=payload, timeout=30) # Longer timeout for AI
-                    except Exception as e:
-                        print(f"Error: Failed to call Agent 3 for {section['section_name']}: {e}", flush=True)
+            
+            # Filter sections to process
+            sections_to_process = [
+                s for s in sections 
+                if s['type'] == 'PARAGRAPH' or (s['type'] == 'DIVISION' and 'PROCEDURE' in s['section_name'])
+            ]
+            total_sections = len(sections_to_process)
+            completed_count = 0
+            
+            print(f"Starting parallel processing for {total_sections} sections...", flush=True)
+            
+            # Use ThreadPoolExecutor for parallelism
+            # Max workers can be tuned. 5-10 is reasonable for local network calls.
+            with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                # Submit all tasks
+                future_to_section = {
+                    executor.submit(process_section_with_retries, section, agent3_url): section 
+                    for section in sections_to_process
+                }
+                
+                # Process as they complete
+                for future in concurrent.futures.as_completed(future_to_section):
+                    completed_count += 1
+                    success, msg = future.result()
+                    
+                    # Progress Indicator
+                    progress = (completed_count / total_sections) * 100
+                    print(f"[{completed_count}/{total_sections} - {progress:.1f}%] {msg}", flush=True)
 
         print("--- Agent 2 Processing Complete ---", flush=True)
         return (jsonify(response_data), 200, headers)

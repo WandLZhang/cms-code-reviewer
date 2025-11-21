@@ -23,3 +23,5 @@ __pycache__/
 test_scripts/
 
 *.log
+agent1.txt
+agent2.txt

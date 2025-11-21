@@ -4,6 +4,7 @@ import os
 import re
 import logging
 import requests
+import threading
 from google.cloud import storage
 
 # --- Initialize Logging ---
@@ -103,31 +104,34 @@ def ingest_source(request):
             "status": "success",
             "program_id": program_id,
             "node": program_node,
-            "raw_content_preview": file_content[:100] + "..." 
+            "raw_content_preview": file_content # Full content requested
         }
 
-        # Forward to Agent 2 if configured
+        # Forward to Agent 2 if configured (Async)
         agent2_url = os.environ.get('AGENT2_URL')
         if agent2_url:
-            try:
-                print(f"Forwarding to Agent 2: {agent2_url}", flush=True)
-                # Agent 2 expects content and program_id/node
-                payload = {
-                    "program_id": program_id,
-                    "node": program_node,
-                    "content": file_content
-                }
-                print(f"Payload for Agent 2 prepared. Program ID: {program_id}, Content length: {len(file_content)}", flush=True)
-                response = requests.post(agent2_url, json=payload, timeout=5)
-                print(f"Agent 2 responded with status: {response.status_code}", flush=True)
-            except requests.exceptions.ConnectionError:
-                 print(f"Error: Failed to connect to Agent 2 at {agent2_url}. Is it running?", flush=True)
-            except Exception as e:
-                print(f"Error: Failed to call Agent 2: {e}", flush=True)
+            def send_to_agent2(url, json_payload):
+                try:
+                    print(f"Async sending to Agent 2: {url}", flush=True)
+                    requests.post(url, json=json_payload, timeout=120) # Long timeout for processing
+                    print("Agent 2 processing completed (Async)", flush=True)
+                except Exception as e:
+                    print(f"Async Agent 2 call failed: {e}", flush=True)
+
+            payload = {
+                "program_id": program_id,
+                "node": program_node,
+                "content": file_content
+            }
+            print(f"Payload for Agent 2 prepared. Spawning async thread.", flush=True)
+            # print(f"FULL PAYLOAD CONTENT: {file_content}", flush=True) # Reduced log noise for async
+            
+            thread = threading.Thread(target=send_to_agent2, args=(agent2_url, payload))
+            thread.start()
         else:
             print("AGENT2_URL not set, skipping forwarding.", flush=True)
 
-        print("--- Agent 1 Processing Complete ---", flush=True)
+        print("--- Agent 1 Processing Complete (Response sent immediately) ---", flush=True)
         return (jsonify(response_data), 200, headers)
 
     except Exception as e:
