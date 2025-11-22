@@ -10,176 +10,234 @@
       "section_id": "sec_CBTRN01C_IDENTIFICATION_DIVISION",
       "name": "IDENTIFICATION DIVISION",
       "type": "DIVISION",
-      "start_line": 1,
-      "end_line": 24,
-      "content": "      ******************************************************************\n      * Program     : CBTRN01C.CBL                                      \n      * Application : CardDemo                                          \n      * Type        : BATCH COBOL Program                                \n      * Function    : Post the records from daily transaction file.     \n      ******************************************************************\n      * Copyright Amazon.com, Inc. or its affiliates.                   \n      * All Rights Reserved.                                            \n      *                                                                 \n      * Licensed under the Apache License, Version 2.0 (the \"License\"). \n      * You may not use this file except in compliance with the License.\n      * You may obtain a copy of the License at                         \n      *                                                                 \n      *    http://www.apache.org/licenses/LICENSE-2.0                   \n      *                                                                 \n      * Unless required by applicable law or agreed to in writing,      \n      * software distributed under the License is distributed on an     \n      * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,    \n      * either express or implied. See the License for the specific     \n      * language governing permissions and limitations under the License\n      ******************************************************************\n       IDENTIFICATION DIVISION.\n       PROGRAM-ID.    CBTRN01C.\n       AUTHOR.        AWS."
+      "start_line": 22,
+      "end_line": 25,
+      "parent_structure_id": null,
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID.    CBTRN01C.\n       AUTHOR.        AWS.\n"
     },
     {
       "section_id": "sec_CBTRN01C_ENVIRONMENT_DIVISION",
       "name": "ENVIRONMENT DIVISION",
       "type": "DIVISION",
       "start_line": 26,
-      "end_line": 58,
-      "content": "       ENVIRONMENT DIVISION.\n       INPUT-OUTPUT SECTION.\n       FILE-CONTROL.\n           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN\n                  ORGANIZATION IS SEQUENTIAL\n                  ACCESS MODE  IS SEQUENTIAL\n                  FILE STATUS  IS DALYTRAN-STATUS.\n\n           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CUST-ID\n                  FILE STATUS  IS CUSTFILE-STATUS.\n\n           SELECT XREF-FILE ASSIGN TO   XREFFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-XREF-CARD-NUM\n                  FILE STATUS  IS XREFFILE-STATUS.\n\n           SELECT CARD-FILE ASSIGN TO   CARDFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CARD-NUM\n                  FILE STATUS  IS CARDFILE-STATUS.\n\n           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-ACCT-ID\n                  FILE STATUS  IS ACCTFILE-STATUS.\n\n           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-TRANS-ID\n                  FILE STATUS  IS TRANFILE-STATUS.\n      *"
+      "end_line": 63,
+      "parent_structure_id": null,
+      "content": "       ENVIRONMENT DIVISION.\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_INPUT-OUTPUT_SECTION",
+      "name": "INPUT-OUTPUT SECTION",
+      "type": "SECTION",
+      "start_line": 27,
+      "end_line": 63,
+      "parent_structure_id": "sec_CBTRN01C_ENVIRONMENT_DIVISION",
+      "content": "       INPUT-OUTPUT SECTION.\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_FILE-CONTROL",
+      "name": "FILE-CONTROL",
+      "type": "PARAGRAPH",
+      "start_line": 28,
+      "end_line": 63,
+      "parent_structure_id": "sec_CBTRN01C_INPUT-OUTPUT_SECTION",
+      "content": "       FILE-CONTROL.\n           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN\n                  ORGANIZATION IS SEQUENTIAL\n                  ACCESS MODE  IS SEQUENTIAL\n                  FILE STATUS  IS DALYTRAN-STATUS.\n\n           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CUST-ID\n                  FILE STATUS  IS CUSTFILE-STATUS.\n\n           SELECT XREF-FILE ASSIGN TO   XREFFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-XREF-CARD-NUM\n                  FILE STATUS  IS XREFFILE-STATUS.\n\n           SELECT CARD-FILE ASSIGN TO   CARDFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CARD-NUM\n                  FILE STATUS  IS CARDFILE-STATUS.\n\n           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-ACCT-ID\n                  FILE STATUS  IS ACCTFILE-STATUS.\n\n           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-TRANS-ID\n                  FILE STATUS  IS TRANFILE-STATUS.\n      *\n"
     },
     {
       "section_id": "sec_CBTRN01C_DATA_DIVISION",
       "name": "DATA DIVISION",
       "type": "DIVISION",
-      "start_line": 60,
-      "end_line": 118,
-      "content": "       DATA DIVISION.\n       FILE SECTION.\n       FD  DALYTRAN-FILE.\n       01  FD-TRAN-RECORD.\n           05 FD-TRAN-ID                        PIC X(16).\n           05 FD-CUST-DATA                      PIC X(334).\n\n       FD  CUSTOMER-FILE.\n       01  FD-CUSTFILE-REC.\n           05 FD-CUST-ID                        PIC 9(09).\n           05 FD-CUST-DATA                      PIC X(491).\n\n       FD  XREF-FILE.\n       01  FD-XREFFILE-REC.\n           05 FD-XREF-CARD-NUM                  PIC X(16).\n           05 FD-XREF-DATA                      PIC X(34).\n\n       FD  CARD-FILE.\n       01  FD-CARDFILE-REC.\n           05 FD-CARD-NUM                       PIC X(16).\n           05 FD-CARD-DATA                      PIC X(134).\n\n       FD  ACCOUNT-FILE.\n       01  FD-ACCTFILE-REC.\n           05 FD-ACCT-ID                        PIC 9(11).\n           05 FD-ACCT-DATA                      PIC X(289).\n\n       FD  TRANSACT-FILE.\n       01  FD-TRANFILE-REC.\n           05 FD-TRANS-ID                       PIC X(16).\n           05 FD-ACCT-DATA                      PIC X(334).\n\n       WORKING-STORAGE SECTION.\n\n      *****************************************************************\n       COPY CVTRA06Y.\n       01  DALYTRAN-STATUS.\n           05  DALYTRAN-STAT1      PIC X.\n           05  DALYTRAN-STAT2      PIC X.\n\n       COPY CVCUS01Y.\n       01  CUSTFILE-STATUS.\n           05  CUSTFILE-STAT1      PIC X.\n           05  CUSTFILE-STAT2      PIC X.\n\n       COPY CVACT03Y.\n       01  XREFFILE-STATUS.\n           05  XREFFILE-STAT1      PIC X.\n           05  XREFFILE-STAT2      PIC X.\n\n       COPY CVACT02Y.\n       01  CARDFILE-STATUS.\n           05  CARDFILE-STAT1      PIC X.\n           05  CARDFILE-STAT2      PIC X.\n\n       COPY CVACT01Y.\n       01  ACCTFILE-STATUS.\n           05  ACCTFILE-STAT1      PIC X.\n           05  ACCTFILE-STAT2      PIC X.\n\n       COPY CVTRA05Y.\n       01  TRANFILE-STATUS.\n           05  TRANFILE-STAT1      PIC X.\n           05  TRANFILE-STAT2      PIC X.\n\n       01  IO-STATUS.\n           05  IO-STAT1            PIC X.\n           05  IO-STAT2            PIC X.\n\n       01  TWO-BYTES-BINARY        PIC 9(4) BINARY.\n       01  TWO-BYTES-ALPHA         REDEFINES TWO-BYTES-BINARY.\n           05  TWO-BYTES-LEFT      PIC X.\n           05  TWO-BYTES-RIGHT     PIC X.\n\n       01  IO-STATUS-04.\n           05  IO-STATUS-0401      PIC 9   VALUE 0.\n           05  IO-STATUS-0403      PIC 999 VALUE 0.\n\n       01  APPL-RESULT             PIC S9(9)   COMP.\n           88  APPL-AOK            VALUE 0.\n           88  APPL-EOF            VALUE 16.\n\n       01  END-OF-DAILY-TRANS-FILE             PIC X(01)    VALUE 'N'.\n       01  ABCODE                  PIC S9(9) BINARY.\n       01  TIMING                  PIC S9(9) BINARY.\n       01  WS-MISC-VARIABLES.\n           05 WS-XREF-READ-STATUS  PIC 9(04).\n           05 WS-ACCT-READ-STATUS  PIC 9(04).\n\n      *****************************************************************"
+      "start_line": 64,
+      "end_line": 153,
+      "parent_structure_id": null,
+      "content": "       DATA DIVISION.\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_FILE_SECTION",
+      "name": "FILE SECTION",
+      "type": "SECTION",
+      "start_line": 65,
+      "end_line": 95,
+      "parent_structure_id": "sec_CBTRN01C_DATA_DIVISION",
+      "content": "       FILE SECTION.\n       FD  DALYTRAN-FILE.\n       01  FD-TRAN-RECORD.\n           05 FD-TRAN-ID                        PIC X(16).\n           05 FD-CUST-DATA                      PIC X(334).\n\n       FD  CUSTOMER-FILE.\n       01  FD-CUSTFILE-REC.\n           05 FD-CUST-ID                        PIC 9(09).\n           05 FD-CUST-DATA                      PIC X(491).\n\n       FD  XREF-FILE.\n       01  FD-XREFFILE-REC.\n           05 FD-XREF-CARD-NUM                  PIC X(16).\n           05 FD-XREF-DATA                      PIC X(34).\n\n       FD  CARD-FILE.\n       01  FD-CARDFILE-REC.\n           05 FD-CARD-NUM                       PIC X(16).\n           05 FD-CARD-DATA                      PIC X(134).\n\n       FD  ACCOUNT-FILE.\n       01  FD-ACCTFILE-REC.\n           05 FD-ACCT-ID                        PIC 9(11).\n           05 FD-ACCT-DATA                      PIC X(289).\n\n       FD  TRANSACT-FILE.\n       01  FD-TRANFILE-REC.\n           05 FD-TRANS-ID                       PIC X(16).\n           05 FD-ACCT-DATA                      PIC X(334).\n\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_WORKING-STORAGE_SECTION",
+      "name": "WORKING-STORAGE SECTION",
+      "type": "SECTION",
+      "start_line": 96,
+      "end_line": 153,
+      "parent_structure_id": "sec_CBTRN01C_DATA_DIVISION",
+      "content": "       WORKING-STORAGE SECTION.\n\n      *****************************************************************\n       COPY CVTRA06Y.\n       01  DALYTRAN-STATUS.\n           05  DALYTRAN-STAT1      PIC X.\n           05  DALYTRAN-STAT2      PIC X.\n\n       COPY CVCUS01Y.\n       01  CUSTFILE-STATUS.\n           05  CUSTFILE-STAT1      PIC X.\n           05  CUSTFILE-STAT2      PIC X.\n\n       COPY CVACT03Y.\n       01  XREFFILE-STATUS.\n           05  XREFFILE-STAT1      PIC X.\n           05  XREFFILE-STAT2      PIC X.\n\n       COPY CVACT02Y.\n       01  CARDFILE-STATUS.\n           05  CARDFILE-STAT1      PIC X.\n           05  CARDFILE-STAT2      PIC X.\n\n       COPY CVACT01Y.\n       01  ACCTFILE-STATUS.\n           05  ACCTFILE-STAT1      PIC X.\n           05  ACCTFILE-STAT2      PIC X.\n\n       COPY CVTRA05Y.\n       01  TRANFILE-STATUS.\n           05  TRANFILE-STAT1      PIC X.\n           05  TRANFILE-STAT2      PIC X.\n\n       01  IO-STATUS.\n           05  IO-STAT1            PIC X.\n           05  IO-STAT2            PIC X.\n\n       01  TWO-BYTES-BINARY        PIC 9(4) BINARY.\n       01  TWO-BYTES-ALPHA         REDEFINES TWO-BYTES-BINARY.\n           05  TWO-BYTES-LEFT      PIC X.\n           05  TWO-BYTES-RIGHT     PIC X.\n\n       01  IO-STATUS-04.\n           05  IO-STATUS-0401      PIC 9   VALUE 0.\n           05  IO-STATUS-0403      PIC 999 VALUE 0.\n\n       01  APPL-RESULT             PIC S9(9)   COMP.\n           88  APPL-AOK            VALUE 0.\n           88  APPL-EOF            VALUE 16.\n\n       01  END-OF-DAILY-TRANS-FILE             PIC X(01)    VALUE 'N'.\n       01  ABCODE                  PIC S9(9) BINARY.\n       01  TIMING                  PIC S9(9) BINARY.\n       01  WS-MISC-VARIABLES.\n           05 WS-XREF-READ-STATUS  PIC 9(04).\n           05 WS-ACCT-READ-STATUS  PIC 9(04).\n\n      *****************************************************************\n"
     },
     {
       "section_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "name": "PROCEDURE DIVISION",
       "type": "DIVISION",
-      "start_line": 120,
-      "end_line": 120,
+      "start_line": 154,
+      "end_line": 494,
+      "parent_structure_id": null,
       "content": "       PROCEDURE DIVISION."
     },
     {
       "section_id": "sec_CBTRN01C_MAIN-PARA",
       "name": "MAIN-PARA",
       "type": "PARAGRAPH",
-      "start_line": 121,
-      "end_line": 158,
+      "start_line": 155,
+      "end_line": 201,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       MAIN-PARA.\n           DISPLAY 'START OF EXECUTION OF PROGRAM CBTRN01C'.\n           PERFORM 0000-DALYTRAN-OPEN.\n           PERFORM 0100-CUSTFILE-OPEN.\n           PERFORM 0200-XREFFILE-OPEN.\n           PERFORM 0300-CARDFILE-OPEN.\n           PERFORM 0400-ACCTFILE-OPEN.\n           PERFORM 0500-TRANFILE-OPEN.\n\n           PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'\n               IF  END-OF-DAILY-TRANS-FILE = 'N'\n                   PERFORM 1000-DALYTRAN-GET-NEXT\n                   IF  END-OF-DAILY-TRANS-FILE = 'N'\n                       DISPLAY DALYTRAN-RECORD\n                   END-IF\n                   MOVE 0                 TO WS-XREF-READ-STATUS\n                   MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM\n                   PERFORM 2000-LOOKUP-XREF\n                   IF WS-XREF-READ-STATUS = 0\n                     MOVE 0            TO WS-ACCT-READ-STATUS\n                     MOVE XREF-ACCT-ID TO ACCT-ID\n                     PERFORM 3000-READ-ACCOUNT\n                     IF WS-ACCT-READ-STATUS NOT = 0\n                         DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'\n                     END-IF\n                   ELSE\n                     DISPLAY 'CARD NUMBER ' DALYTRAN-CARD-NUM\n                     ' COULD NOT BE VERIFIED. SKIPPING TRANSACTION ID-'\n                     DALYTRAN-ID\n                   END-IF\n               END-IF\n           END-PERFORM.\n\n           PERFORM 9000-DALYTRAN-CLOSE.\n           PERFORM 9100-CUSTFILE-CLOSE.\n           PERFORM 9200-XREFFILE-CLOSE.\n           PERFORM 9300-CARDFILE-CLOSE.\n           PERFORM 9400-ACCTFILE-CLOSE.\n           PERFORM 9500-TRANFILE-CLOSE.\n\n           DISPLAY 'END OF EXECUTION OF PROGRAM CBTRN01C'.\n\n           GOBACK."
     },
     {
       "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
       "name": "1000-DALYTRAN-GET-NEXT",
       "type": "PARAGRAPH",
-      "start_line": 163,
-      "end_line": 181,
+      "start_line": 202,
+      "end_line": 226,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       1000-DALYTRAN-GET-NEXT.\n           READ DALYTRAN-FILE INTO DALYTRAN-RECORD.\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               IF  DALYTRAN-STATUS = '10'\n                   MOVE 16 TO APPL-RESULT\n               ELSE\n                   MOVE 12 TO APPL-RESULT\n               END-IF\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               IF  APPL-EOF\n                   MOVE 'Y' TO END-OF-DAILY-TRANS-FILE\n               ELSE\n                   DISPLAY 'ERROR READING DAILY TRANSACTION FILE'\n                   MOVE DALYTRAN-STATUS TO IO-STATUS\n                   PERFORM Z-DISPLAY-IO-STATUS\n                   PERFORM Z-ABEND-PROGRAM\n               END-IF\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
       "name": "2000-LOOKUP-XREF",
       "type": "PARAGRAPH",
-      "start_line": 183,
-      "end_line": 194,
+      "start_line": 227,
+      "end_line": 240,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       2000-LOOKUP-XREF.\n           MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM\n           READ XREF-FILE  RECORD INTO CARD-XREF-RECORD\n           KEY IS FD-XREF-CARD-NUM\n                INVALID KEY\n                  DISPLAY 'INVALID CARD NUMBER FOR XREF'\n                  MOVE 4 TO WS-XREF-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF XREF'\n                  DISPLAY 'CARD NUMBER: ' XREF-CARD-NUM\n                  DISPLAY 'ACCOUNT ID : ' XREF-ACCT-ID\n                  DISPLAY 'CUSTOMER ID: ' XREF-CUST-ID\n           END-READ."
     },
     {
       "section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
       "name": "3000-READ-ACCOUNT",
       "type": "PARAGRAPH",
-      "start_line": 196,
-      "end_line": 204,
+      "start_line": 241,
+      "end_line": 251,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       3000-READ-ACCOUNT.\n           MOVE ACCT-ID TO FD-ACCT-ID\n           READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD\n           KEY IS FD-ACCT-ID\n                INVALID KEY\n                  DISPLAY 'INVALID ACCOUNT NUMBER FOUND'\n                  MOVE 4 TO WS-ACCT-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF ACCOUNT FILE'\n           END-READ."
     },
     {
       "section_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
       "name": "0000-DALYTRAN-OPEN",
       "type": "PARAGRAPH",
-      "start_line": 206,
-      "end_line": 219,
+      "start_line": 252,
+      "end_line": 270,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       0000-DALYTRAN-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING DAILY TRANSACTION FILE'\n               MOVE DALYTRAN-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN",
       "name": "0100-CUSTFILE-OPEN",
       "type": "PARAGRAPH",
-      "start_line": 222,
-      "end_line": 235,
+      "start_line": 271,
+      "end_line": 288,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       0100-CUSTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_0200-XREFFILE-OPEN",
       "name": "0200-XREFFILE-OPEN",
       "type": "PARAGRAPH",
-      "start_line": 237,
-      "end_line": 250,
+      "start_line": 289,
+      "end_line": 306,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       0200-XREFFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_0300-CARDFILE-OPEN",
       "name": "0300-CARDFILE-OPEN",
       "type": "PARAGRAPH",
-      "start_line": 252,
-      "end_line": 265,
+      "start_line": 307,
+      "end_line": 324,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       0300-CARDFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN",
       "name": "0400-ACCTFILE-OPEN",
       "type": "PARAGRAPH",
-      "start_line": 267,
-      "end_line": 280,
+      "start_line": 325,
+      "end_line": 342,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       0400-ACCTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_0500-TRANFILE-OPEN",
       "name": "0500-TRANFILE-OPEN",
       "type": "PARAGRAPH",
-      "start_line": 282,
-      "end_line": 295,
+      "start_line": 343,
+      "end_line": 360,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       0500-TRANFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE",
       "name": "9000-DALYTRAN-CLOSE",
       "type": "PARAGRAPH",
-      "start_line": 297,
-      "end_line": 310,
+      "start_line": 361,
+      "end_line": 378,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       9000-DALYTRAN-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE",
       "name": "9100-CUSTFILE-CLOSE",
       "type": "PARAGRAPH",
-      "start_line": 312,
-      "end_line": 312,
+      "start_line": 379,
+      "end_line": 396,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       9100-CUSTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE",
       "name": "9200-XREFFILE-CLOSE",
       "type": "PARAGRAPH",
-      "start_line": 313,
-      "end_line": 313,
+      "start_line": 397,
+      "end_line": 414,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       9200-XREFFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE",
       "name": "9300-CARDFILE-CLOSE",
       "type": "PARAGRAPH",
-      "start_line": 314,
-      "end_line": 314,
+      "start_line": 415,
+      "end_line": 432,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       9300-CARDFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE",
       "name": "9400-ACCTFILE-CLOSE",
       "type": "PARAGRAPH",
-      "start_line": 315,
-      "end_line": 315,
+      "start_line": 433,
+      "end_line": 450,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       9400-ACCTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE",
       "name": "9500-TRANFILE-CLOSE",
       "type": "PARAGRAPH",
-      "start_line": 316,
-      "end_line": 316,
+      "start_line": 451,
+      "end_line": 468,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       9500-TRANFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
     },
     {
       "section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
       "name": "Z-ABEND-PROGRAM",
       "type": "PARAGRAPH",
-      "start_line": 318,
-      "end_line": 321,
+      "start_line": 469,
+      "end_line": 475,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       Z-ABEND-PROGRAM.\n           DISPLAY 'ABENDING PROGRAM'\n           MOVE 0 TO TIMING\n           MOVE 999 TO ABCODE\n           CALL 'CEE3ABD' USING ABCODE, TIMING."
     },
     {
       "section_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
       "name": "Z-DISPLAY-IO-STATUS",
       "type": "PARAGRAPH",
-      "start_line": 324,
-      "end_line": 333,
+      "start_line": 476,
+      "end_line": 494,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
       "content": "       Z-DISPLAY-IO-STATUS.\n           IF  IO-STATUS NOT NUMERIC\n           OR  IO-STAT1 = '9'\n               MOVE IO-STAT1 TO IO-STATUS-04(1:1)\n               MOVE 0        TO TWO-BYTES-BINARY\n               MOVE IO-STAT2 TO TWO-BYTES-RIGHT\n               MOVE TWO-BYTES-BINARY TO IO-STATUS-0403\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           ELSE\n               MOVE '0000' TO IO-STATUS-04\n               MOVE IO-STATUS TO IO-STATUS-04(3:2)\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           END-IF\n           EXIT.\n\n\n      *\n      * Ver: CardDemo_v2.0-25-gdb72e6b-235 Date: 2025-04-29 11:01:28 CDT\n      *"
     }
   ],
@@ -199,7 +257,11 @@
       "technical_condition": "PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'",
       "plain_english": "Loops until daily transaction file is exhausted",
       "links": [
-        { "entity_name": "END-OF-DAILY-TRANS-FILE", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "END-OF-DAILY-TRANS-FILE",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -209,7 +271,11 @@
       "technical_condition": "IF END-OF-DAILY-TRANS-FILE = 'N'",
       "plain_english": "Checks if EOF flag is not set",
       "links": [
-        { "entity_name": "END-OF-DAILY-TRANS-FILE", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "END-OF-DAILY-TRANS-FILE",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -219,7 +285,11 @@
       "technical_condition": "MOVE 0 TO WS-XREF-READ-STATUS",
       "plain_english": "Resets XREF read status",
       "links": [
-        { "entity_name": "WS-XREF-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "WS-XREF-READ-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -229,8 +299,16 @@
       "technical_condition": "MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM",
       "plain_english": "Moves Card Num from Transaction to XREF Key",
       "links": [
-        { "entity_name": "DALYTRAN-CARD-NUM", "entity_value": "VARIABLE", "relationship": "READS" },
-        { "entity_name": "XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "DALYTRAN-CARD-NUM",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "XREF-CARD-NUM",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -240,7 +318,11 @@
       "technical_condition": "IF WS-XREF-READ-STATUS = 0",
       "plain_english": "Validates XREF lookup success",
       "links": [
-        { "entity_name": "WS-XREF-READ-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "WS-XREF-READ-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -250,7 +332,11 @@
       "technical_condition": "MOVE 0 TO WS-ACCT-READ-STATUS",
       "plain_english": "Resets Account read status",
       "links": [
-        { "entity_name": "WS-ACCT-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "WS-ACCT-READ-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -260,8 +346,16 @@
       "technical_condition": "MOVE XREF-ACCT-ID TO ACCT-ID",
       "plain_english": "Maps Account ID from XREF result to Account lookup key",
       "links": [
-        { "entity_name": "XREF-ACCT-ID", "entity_value": "VARIABLE", "relationship": "READS" },
-        { "entity_name": "ACCT-ID", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "XREF-ACCT-ID",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "ACCT-ID",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -271,7 +365,11 @@
       "technical_condition": "IF WS-ACCT-READ-STATUS NOT = 0",
       "plain_english": "Checks if Account lookup failed",
       "links": [
-        { "entity_name": "WS-ACCT-READ-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "WS-ACCT-READ-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -281,7 +379,11 @@
       "technical_condition": "DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'",
       "plain_english": "Outputs error if account not found",
       "links": [
-        { "entity_name": "ACCT-ID", "entity_value": "VARIABLE", "relationship": "READS" }
+        {
+          "entity_name": "ACCT-ID",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        }
       ]
     },
     {
@@ -291,8 +393,16 @@
       "technical_condition": "READ DALYTRAN-FILE INTO DALYTRAN-RECORD",
       "plain_english": "Reads next record from Daily Transaction File",
       "links": [
-        { "entity_name": "DALYTRAN-FILE", "entity_value": "FILE", "relationship": "READS" },
-        { "entity_name": "DALYTRAN-RECORD", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "DALYTRAN-FILE",
+          "entity_value": "FILE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "DALYTRAN-RECORD",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -302,8 +412,16 @@
       "technical_condition": "IF DALYTRAN-STATUS = '00'",
       "plain_english": "Checks for successful read",
       "links": [
-        { "entity_name": "DALYTRAN-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" },
-        { "entity_name": "APPL-RESULT", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "DALYTRAN-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        },
+        {
+          "entity_name": "APPL-RESULT",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -313,8 +431,16 @@
       "technical_condition": "IF DALYTRAN-STATUS = '10'",
       "plain_english": "Checks for EOF status",
       "links": [
-        { "entity_name": "DALYTRAN-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" },
-        { "entity_name": "APPL-RESULT", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "DALYTRAN-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        },
+        {
+          "entity_name": "APPL-RESULT",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -324,7 +450,11 @@
       "technical_condition": "IF APPL-AOK",
       "plain_english": "Checks if application result is OK",
       "links": [
-        { "entity_name": "APPL-AOK", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "APPL-AOK",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -334,7 +464,11 @@
       "technical_condition": "IF APPL-EOF",
       "plain_english": "Checks if application result is EOF",
       "links": [
-        { "entity_name": "APPL-EOF", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "APPL-EOF",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -344,7 +478,11 @@
       "technical_condition": "MOVE 'Y' TO END-OF-DAILY-TRANS-FILE",
       "plain_english": "Sets EOF flag when end of file reached",
       "links": [
-        { "entity_name": "END-OF-DAILY-TRANS-FILE", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "END-OF-DAILY-TRANS-FILE",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -354,8 +492,16 @@
       "technical_condition": "MOVE DALYTRAN-STATUS TO IO-STATUS",
       "plain_english": "Maps error status to IO status for reporting",
       "links": [
-        { "entity_name": "DALYTRAN-STATUS", "entity_value": "VARIABLE", "relationship": "READS" },
-        { "entity_name": "IO-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "DALYTRAN-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "IO-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -365,8 +511,16 @@
       "technical_condition": "MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM",
       "plain_english": "Maps working storage key to file descriptor key",
       "links": [
-        { "entity_name": "XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "READS" },
-        { "entity_name": "FD-XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "XREF-CARD-NUM",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "FD-XREF-CARD-NUM",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -376,9 +530,21 @@
       "technical_condition": "READ XREF-FILE RECORD INTO CARD-XREF-RECORD KEY IS FD-XREF-CARD-NUM",
       "plain_english": "Reads XREF file using key",
       "links": [
-        { "entity_name": "XREF-FILE", "entity_value": "FILE", "relationship": "READS" },
-        { "entity_name": "CARD-XREF-RECORD", "entity_value": "VARIABLE", "relationship": "UPDATES" },
-        { "entity_name": "FD-XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "XREF-FILE",
+          "entity_value": "FILE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "CARD-XREF-RECORD",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        },
+        {
+          "entity_name": "FD-XREF-CARD-NUM",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -388,7 +554,11 @@
       "technical_condition": "INVALID KEY MOVE 4 TO WS-XREF-READ-STATUS",
       "plain_english": "Sets error status if key not found",
       "links": [
-        { "entity_name": "WS-XREF-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "WS-XREF-READ-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -398,8 +568,16 @@
       "technical_condition": "MOVE ACCT-ID TO FD-ACCT-ID",
       "plain_english": "Maps Account ID to File Key",
       "links": [
-        { "entity_name": "ACCT-ID", "entity_value": "VARIABLE", "relationship": "READS" },
-        { "entity_name": "FD-ACCT-ID", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "ACCT-ID",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "FD-ACCT-ID",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -409,9 +587,21 @@
       "technical_condition": "READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD KEY IS FD-ACCT-ID",
       "plain_english": "Reads Account File",
       "links": [
-        { "entity_name": "ACCOUNT-FILE", "entity_value": "FILE", "relationship": "READS" },
-        { "entity_name": "ACCOUNT-RECORD", "entity_value": "VARIABLE", "relationship": "UPDATES" },
-        { "entity_name": "FD-ACCT-ID", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+        {
+          "entity_name": "ACCOUNT-FILE",
+          "entity_value": "FILE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "ACCOUNT-RECORD",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        },
+        {
+          "entity_name": "FD-ACCT-ID",
+          "entity_value": "VARIABLE",
+          "relationship": "VALIDATES"
+        }
       ]
     },
     {
@@ -421,7 +611,11 @@
       "technical_condition": "INVALID KEY MOVE 4 TO WS-ACCT-READ-STATUS",
       "plain_english": "Sets status if Account not found",
       "links": [
-        { "entity_name": "WS-ACCT-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "WS-ACCT-READ-STATUS",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -431,7 +625,11 @@
       "technical_condition": "MOVE 999 TO ABCODE",
       "plain_english": "Sets abend code",
       "links": [
-        { "entity_name": "ABCODE", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+        {
+          "entity_name": "ABCODE",
+          "entity_value": "VARIABLE",
+          "relationship": "UPDATES"
+        }
       ]
     },
     {
@@ -441,28 +639,3818 @@
       "technical_condition": "CALL 'CEE3ABD' USING ABCODE, TIMING",
       "plain_english": "Calls external abend routine",
       "links": [
-        { "entity_name": "ABCODE", "entity_value": "VARIABLE", "relationship": "READS" },
-        { "entity_name": "TIMING", "entity_value": "VARIABLE", "relationship": "READS" }
+        {
+          "entity_name": "ABCODE",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        },
+        {
+          "entity_name": "TIMING",
+          "entity_value": "VARIABLE",
+          "relationship": "READS"
+        }
       ]
     }
   ],
   "section_calls": [
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0000-DALYTRAN-OPEN_001", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0100-CUSTFILE-OPEN_002", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0200-XREFFILE-OPEN_003", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0200-XREFFILE-OPEN", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0300-CARDFILE-OPEN_004", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0300-CARDFILE-OPEN", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0400-ACCTFILE-OPEN_005", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0500-TRANFILE-OPEN_006", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0500-TRANFILE-OPEN", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_007", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_2000-LOOKUP-XREF_008", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_2000-LOOKUP-XREF", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_3000-READ-ACCOUNT_009", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_3000-READ-ACCOUNT", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9000-DALYTRAN-CLOSE_010", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9100-CUSTFILE-CLOSE_011", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9200-XREFFILE-CLOSE_012", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9300-CARDFILE-CLOSE_013", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9400-ACCTFILE-CLOSE_014", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9500-TRANFILE-CLOSE_015", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_sec_CBTRN01C_Z-ABEND-PROGRAM_016", "source_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT", "target_section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM", "type": "PERFORM" },
-    { "call_id": "call_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_sec_CBTRN01C_Z-DISPLAY-IO-STATUS_017", "source_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT", "target_section_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS", "type": "PERFORM" }
-  ]
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0000-DALYTRAN-OPEN_001",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0100-CUSTFILE-OPEN_002",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0200-XREFFILE-OPEN_003",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_0200-XREFFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0300-CARDFILE-OPEN_004",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_0300-CARDFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0400-ACCTFILE-OPEN_005",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0500-TRANFILE-OPEN_006",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_0500-TRANFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_007",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_2000-LOOKUP-XREF_008",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_3000-READ-ACCOUNT_009",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9000-DALYTRAN-CLOSE_010",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9100-CUSTFILE-CLOSE_011",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9200-XREFFILE-CLOSE_012",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9300-CARDFILE-CLOSE_013",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9400-ACCTFILE-CLOSE_014",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9500-TRANFILE-CLOSE_015",
+      "source_section_id": "sec_CBTRN01C_MAIN-PARA",
+      "target_section_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_sec_CBTRN01C_Z-ABEND-PROGRAM_016",
+      "source_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "target_section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "call_id": "call_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_sec_CBTRN01C_Z-DISPLAY-IO-STATUS_017",
+      "source_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "target_section_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    }
+  ],
+  "control_flow": [
+    {
+      "flow_id": "flow_CBTRN01C_157",
+      "source_line_id": "CBTRN01C_157",
+      "target_structure_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_158",
+      "source_line_id": "CBTRN01C_158",
+      "target_structure_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_159",
+      "source_line_id": "CBTRN01C_159",
+      "target_structure_id": "sec_CBTRN01C_0200-XREFFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_160",
+      "source_line_id": "CBTRN01C_160",
+      "target_structure_id": "sec_CBTRN01C_0300-CARDFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_161",
+      "source_line_id": "CBTRN01C_161",
+      "target_structure_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_162",
+      "source_line_id": "CBTRN01C_162",
+      "target_structure_id": "sec_CBTRN01C_0500-TRANFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_166",
+      "source_line_id": "CBTRN01C_166",
+      "target_structure_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_172",
+      "source_line_id": "CBTRN01C_172",
+      "target_structure_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_176",
+      "source_line_id": "CBTRN01C_176",
+      "target_structure_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_188",
+      "source_line_id": "CBTRN01C_188",
+      "target_structure_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_189",
+      "source_line_id": "CBTRN01C_189",
+      "target_structure_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_190",
+      "source_line_id": "CBTRN01C_190",
+      "target_structure_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_191",
+      "source_line_id": "CBTRN01C_191",
+      "target_structure_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_192",
+      "source_line_id": "CBTRN01C_192",
+      "target_structure_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_193",
+      "source_line_id": "CBTRN01C_193",
+      "target_structure_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_221",
+      "source_line_id": "CBTRN01C_221",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_222",
+      "source_line_id": "CBTRN01C_222",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_265",
+      "source_line_id": "CBTRN01C_265",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_266",
+      "source_line_id": "CBTRN01C_266",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_284",
+      "source_line_id": "CBTRN01C_284",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_285",
+      "source_line_id": "CBTRN01C_285",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_302",
+      "source_line_id": "CBTRN01C_302",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_303",
+      "source_line_id": "CBTRN01C_303",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_320",
+      "source_line_id": "CBTRN01C_320",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_321",
+      "source_line_id": "CBTRN01C_321",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_338",
+      "source_line_id": "CBTRN01C_338",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_339",
+      "source_line_id": "CBTRN01C_339",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_356",
+      "source_line_id": "CBTRN01C_356",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_357",
+      "source_line_id": "CBTRN01C_357",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_374",
+      "source_line_id": "CBTRN01C_374",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_375",
+      "source_line_id": "CBTRN01C_375",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_410",
+      "source_line_id": "CBTRN01C_410",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_411",
+      "source_line_id": "CBTRN01C_411",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_428",
+      "source_line_id": "CBTRN01C_428",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_429",
+      "source_line_id": "CBTRN01C_429",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_446",
+      "source_line_id": "CBTRN01C_446",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_447",
+      "source_line_id": "CBTRN01C_447",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_464",
+      "source_line_id": "CBTRN01C_464",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_465",
+      "source_line_id": "CBTRN01C_465",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    }
+  ],
+  "source_code_lines": [
+    {
+      "line_id": "CBTRN01C_1",
+      "program_id": "CBTRN01C",
+      "line_number": 1,
+      "content": "      ******************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_2",
+      "program_id": "CBTRN01C",
+      "line_number": 2,
+      "content": "      * Program     : CBTRN01C.CBL                                      ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_3",
+      "program_id": "CBTRN01C",
+      "line_number": 3,
+      "content": "      * Application : CardDemo                                          ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_4",
+      "program_id": "CBTRN01C",
+      "line_number": 4,
+      "content": "      * Type        : BATCH COBOL Program                                ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_5",
+      "program_id": "CBTRN01C",
+      "line_number": 5,
+      "content": "      * Function    : Post the records from daily transaction file.     ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_6",
+      "program_id": "CBTRN01C",
+      "line_number": 6,
+      "content": "      ******************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_7",
+      "program_id": "CBTRN01C",
+      "line_number": 7,
+      "content": "      * Copyright Amazon.com, Inc. or its affiliates.                   ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_8",
+      "program_id": "CBTRN01C",
+      "line_number": 8,
+      "content": "      * All Rights Reserved.                                            ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_9",
+      "program_id": "CBTRN01C",
+      "line_number": 9,
+      "content": "      *                                                                 ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_10",
+      "program_id": "CBTRN01C",
+      "line_number": 10,
+      "content": "      * Licensed under the Apache License, Version 2.0 (the \"License\"). ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_11",
+      "program_id": "CBTRN01C",
+      "line_number": 11,
+      "content": "      * You may not use this file except in compliance with the License.",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_12",
+      "program_id": "CBTRN01C",
+      "line_number": 12,
+      "content": "      * You may obtain a copy of the License at                         ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_13",
+      "program_id": "CBTRN01C",
+      "line_number": 13,
+      "content": "      *                                                                 ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_14",
+      "program_id": "CBTRN01C",
+      "line_number": 14,
+      "content": "      *    http://www.apache.org/licenses/LICENSE-2.0                   ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_15",
+      "program_id": "CBTRN01C",
+      "line_number": 15,
+      "content": "      *                                                                 ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_16",
+      "program_id": "CBTRN01C",
+      "line_number": 16,
+      "content": "      * Unless required by applicable law or agreed to in writing,      ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_17",
+      "program_id": "CBTRN01C",
+      "line_number": 17,
+      "content": "      * software distributed under the License is distributed on an     ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_18",
+      "program_id": "CBTRN01C",
+      "line_number": 18,
+      "content": "      * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,    ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_19",
+      "program_id": "CBTRN01C",
+      "line_number": 19,
+      "content": "      * either express or implied. See the License for the specific     ",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_20",
+      "program_id": "CBTRN01C",
+      "line_number": 20,
+      "content": "      * language governing permissions and limitations under the License",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_21",
+      "program_id": "CBTRN01C",
+      "line_number": 21,
+      "content": "      ******************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_22",
+      "program_id": "CBTRN01C",
+      "line_number": 22,
+      "content": "       IDENTIFICATION DIVISION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_23",
+      "program_id": "CBTRN01C",
+      "line_number": 23,
+      "content": "       PROGRAM-ID.    CBTRN01C.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_24",
+      "program_id": "CBTRN01C",
+      "line_number": 24,
+      "content": "       AUTHOR.        AWS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_25",
+      "program_id": "CBTRN01C",
+      "line_number": 25,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_26",
+      "program_id": "CBTRN01C",
+      "line_number": 26,
+      "content": "       ENVIRONMENT DIVISION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_27",
+      "program_id": "CBTRN01C",
+      "line_number": 27,
+      "content": "       INPUT-OUTPUT SECTION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_28",
+      "program_id": "CBTRN01C",
+      "line_number": 28,
+      "content": "       FILE-CONTROL.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_29",
+      "program_id": "CBTRN01C",
+      "line_number": 29,
+      "content": "           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_30",
+      "program_id": "CBTRN01C",
+      "line_number": 30,
+      "content": "                  ORGANIZATION IS SEQUENTIAL",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_31",
+      "program_id": "CBTRN01C",
+      "line_number": 31,
+      "content": "                  ACCESS MODE  IS SEQUENTIAL",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_32",
+      "program_id": "CBTRN01C",
+      "line_number": 32,
+      "content": "                  FILE STATUS  IS DALYTRAN-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_33",
+      "program_id": "CBTRN01C",
+      "line_number": 33,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_34",
+      "program_id": "CBTRN01C",
+      "line_number": 34,
+      "content": "           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_35",
+      "program_id": "CBTRN01C",
+      "line_number": 35,
+      "content": "                  ORGANIZATION IS INDEXED",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_36",
+      "program_id": "CBTRN01C",
+      "line_number": 36,
+      "content": "                  ACCESS MODE  IS RANDOM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_37",
+      "program_id": "CBTRN01C",
+      "line_number": 37,
+      "content": "                  RECORD KEY   IS FD-CUST-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_38",
+      "program_id": "CBTRN01C",
+      "line_number": 38,
+      "content": "                  FILE STATUS  IS CUSTFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_39",
+      "program_id": "CBTRN01C",
+      "line_number": 39,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_40",
+      "program_id": "CBTRN01C",
+      "line_number": 40,
+      "content": "           SELECT XREF-FILE ASSIGN TO   XREFFILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_41",
+      "program_id": "CBTRN01C",
+      "line_number": 41,
+      "content": "                  ORGANIZATION IS INDEXED",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_42",
+      "program_id": "CBTRN01C",
+      "line_number": 42,
+      "content": "                  ACCESS MODE  IS RANDOM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_43",
+      "program_id": "CBTRN01C",
+      "line_number": 43,
+      "content": "                  RECORD KEY   IS FD-XREF-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_44",
+      "program_id": "CBTRN01C",
+      "line_number": 44,
+      "content": "                  FILE STATUS  IS XREFFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_45",
+      "program_id": "CBTRN01C",
+      "line_number": 45,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_46",
+      "program_id": "CBTRN01C",
+      "line_number": 46,
+      "content": "           SELECT CARD-FILE ASSIGN TO   CARDFILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_47",
+      "program_id": "CBTRN01C",
+      "line_number": 47,
+      "content": "                  ORGANIZATION IS INDEXED",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_48",
+      "program_id": "CBTRN01C",
+      "line_number": 48,
+      "content": "                  ACCESS MODE  IS RANDOM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_49",
+      "program_id": "CBTRN01C",
+      "line_number": 49,
+      "content": "                  RECORD KEY   IS FD-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_50",
+      "program_id": "CBTRN01C",
+      "line_number": 50,
+      "content": "                  FILE STATUS  IS CARDFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_51",
+      "program_id": "CBTRN01C",
+      "line_number": 51,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_52",
+      "program_id": "CBTRN01C",
+      "line_number": 52,
+      "content": "           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_53",
+      "program_id": "CBTRN01C",
+      "line_number": 53,
+      "content": "                  ORGANIZATION IS INDEXED",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_54",
+      "program_id": "CBTRN01C",
+      "line_number": 54,
+      "content": "                  ACCESS MODE  IS RANDOM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_55",
+      "program_id": "CBTRN01C",
+      "line_number": 55,
+      "content": "                  RECORD KEY   IS FD-ACCT-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_56",
+      "program_id": "CBTRN01C",
+      "line_number": 56,
+      "content": "                  FILE STATUS  IS ACCTFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_57",
+      "program_id": "CBTRN01C",
+      "line_number": 57,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_58",
+      "program_id": "CBTRN01C",
+      "line_number": 58,
+      "content": "           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_59",
+      "program_id": "CBTRN01C",
+      "line_number": 59,
+      "content": "                  ORGANIZATION IS INDEXED",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_60",
+      "program_id": "CBTRN01C",
+      "line_number": 60,
+      "content": "                  ACCESS MODE  IS RANDOM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_61",
+      "program_id": "CBTRN01C",
+      "line_number": 61,
+      "content": "                  RECORD KEY   IS FD-TRANS-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_62",
+      "program_id": "CBTRN01C",
+      "line_number": 62,
+      "content": "                  FILE STATUS  IS TRANFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_63",
+      "program_id": "CBTRN01C",
+      "line_number": 63,
+      "content": "      *",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_64",
+      "program_id": "CBTRN01C",
+      "line_number": 64,
+      "content": "       DATA DIVISION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_65",
+      "program_id": "CBTRN01C",
+      "line_number": 65,
+      "content": "       FILE SECTION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_66",
+      "program_id": "CBTRN01C",
+      "line_number": 66,
+      "content": "       FD  DALYTRAN-FILE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_67",
+      "program_id": "CBTRN01C",
+      "line_number": 67,
+      "content": "       01  FD-TRAN-RECORD.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_68",
+      "program_id": "CBTRN01C",
+      "line_number": 68,
+      "content": "           05 FD-TRAN-ID                        PIC X(16).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_69",
+      "program_id": "CBTRN01C",
+      "line_number": 69,
+      "content": "           05 FD-CUST-DATA                      PIC X(334).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_70",
+      "program_id": "CBTRN01C",
+      "line_number": 70,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_71",
+      "program_id": "CBTRN01C",
+      "line_number": 71,
+      "content": "       FD  CUSTOMER-FILE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_72",
+      "program_id": "CBTRN01C",
+      "line_number": 72,
+      "content": "       01  FD-CUSTFILE-REC.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_73",
+      "program_id": "CBTRN01C",
+      "line_number": 73,
+      "content": "           05 FD-CUST-ID                        PIC 9(09).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_74",
+      "program_id": "CBTRN01C",
+      "line_number": 74,
+      "content": "           05 FD-CUST-DATA                      PIC X(491).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_75",
+      "program_id": "CBTRN01C",
+      "line_number": 75,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_76",
+      "program_id": "CBTRN01C",
+      "line_number": 76,
+      "content": "       FD  XREF-FILE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_77",
+      "program_id": "CBTRN01C",
+      "line_number": 77,
+      "content": "       01  FD-XREFFILE-REC.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_78",
+      "program_id": "CBTRN01C",
+      "line_number": 78,
+      "content": "           05 FD-XREF-CARD-NUM                  PIC X(16).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_79",
+      "program_id": "CBTRN01C",
+      "line_number": 79,
+      "content": "           05 FD-XREF-DATA                      PIC X(34).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_80",
+      "program_id": "CBTRN01C",
+      "line_number": 80,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_81",
+      "program_id": "CBTRN01C",
+      "line_number": 81,
+      "content": "       FD  CARD-FILE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_82",
+      "program_id": "CBTRN01C",
+      "line_number": 82,
+      "content": "       01  FD-CARDFILE-REC.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_83",
+      "program_id": "CBTRN01C",
+      "line_number": 83,
+      "content": "           05 FD-CARD-NUM                       PIC X(16).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_84",
+      "program_id": "CBTRN01C",
+      "line_number": 84,
+      "content": "           05 FD-CARD-DATA                      PIC X(134).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_85",
+      "program_id": "CBTRN01C",
+      "line_number": 85,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_86",
+      "program_id": "CBTRN01C",
+      "line_number": 86,
+      "content": "       FD  ACCOUNT-FILE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_87",
+      "program_id": "CBTRN01C",
+      "line_number": 87,
+      "content": "       01  FD-ACCTFILE-REC.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_88",
+      "program_id": "CBTRN01C",
+      "line_number": 88,
+      "content": "           05 FD-ACCT-ID                        PIC 9(11).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_89",
+      "program_id": "CBTRN01C",
+      "line_number": 89,
+      "content": "           05 FD-ACCT-DATA                      PIC X(289).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_90",
+      "program_id": "CBTRN01C",
+      "line_number": 90,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_91",
+      "program_id": "CBTRN01C",
+      "line_number": 91,
+      "content": "       FD  TRANSACT-FILE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_92",
+      "program_id": "CBTRN01C",
+      "line_number": 92,
+      "content": "       01  FD-TRANFILE-REC.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_93",
+      "program_id": "CBTRN01C",
+      "line_number": 93,
+      "content": "           05 FD-TRANS-ID                       PIC X(16).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_94",
+      "program_id": "CBTRN01C",
+      "line_number": 94,
+      "content": "           05 FD-ACCT-DATA                      PIC X(334).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_95",
+      "program_id": "CBTRN01C",
+      "line_number": 95,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_96",
+      "program_id": "CBTRN01C",
+      "line_number": 96,
+      "content": "       WORKING-STORAGE SECTION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_97",
+      "program_id": "CBTRN01C",
+      "line_number": 97,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_98",
+      "program_id": "CBTRN01C",
+      "line_number": 98,
+      "content": "      *****************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_99",
+      "program_id": "CBTRN01C",
+      "line_number": 99,
+      "content": "       COPY CVTRA06Y.",
+      "type": "DIRECTIVE"
+    },
+    {
+      "line_id": "CBTRN01C_100",
+      "program_id": "CBTRN01C",
+      "line_number": 100,
+      "content": "       01  DALYTRAN-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_101",
+      "program_id": "CBTRN01C",
+      "line_number": 101,
+      "content": "           05  DALYTRAN-STAT1      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_102",
+      "program_id": "CBTRN01C",
+      "line_number": 102,
+      "content": "           05  DALYTRAN-STAT2      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_103",
+      "program_id": "CBTRN01C",
+      "line_number": 103,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_104",
+      "program_id": "CBTRN01C",
+      "line_number": 104,
+      "content": "       COPY CVCUS01Y.",
+      "type": "DIRECTIVE"
+    },
+    {
+      "line_id": "CBTRN01C_105",
+      "program_id": "CBTRN01C",
+      "line_number": 105,
+      "content": "       01  CUSTFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_106",
+      "program_id": "CBTRN01C",
+      "line_number": 106,
+      "content": "           05  CUSTFILE-STAT1      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_107",
+      "program_id": "CBTRN01C",
+      "line_number": 107,
+      "content": "           05  CUSTFILE-STAT2      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_108",
+      "program_id": "CBTRN01C",
+      "line_number": 108,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_109",
+      "program_id": "CBTRN01C",
+      "line_number": 109,
+      "content": "       COPY CVACT03Y.",
+      "type": "DIRECTIVE"
+    },
+    {
+      "line_id": "CBTRN01C_110",
+      "program_id": "CBTRN01C",
+      "line_number": 110,
+      "content": "       01  XREFFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_111",
+      "program_id": "CBTRN01C",
+      "line_number": 111,
+      "content": "           05  XREFFILE-STAT1      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_112",
+      "program_id": "CBTRN01C",
+      "line_number": 112,
+      "content": "           05  XREFFILE-STAT2      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_113",
+      "program_id": "CBTRN01C",
+      "line_number": 113,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_114",
+      "program_id": "CBTRN01C",
+      "line_number": 114,
+      "content": "       COPY CVACT02Y.",
+      "type": "DIRECTIVE"
+    },
+    {
+      "line_id": "CBTRN01C_115",
+      "program_id": "CBTRN01C",
+      "line_number": 115,
+      "content": "       01  CARDFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_116",
+      "program_id": "CBTRN01C",
+      "line_number": 116,
+      "content": "           05  CARDFILE-STAT1      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_117",
+      "program_id": "CBTRN01C",
+      "line_number": 117,
+      "content": "           05  CARDFILE-STAT2      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_118",
+      "program_id": "CBTRN01C",
+      "line_number": 118,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_119",
+      "program_id": "CBTRN01C",
+      "line_number": 119,
+      "content": "       COPY CVACT01Y.",
+      "type": "DIRECTIVE"
+    },
+    {
+      "line_id": "CBTRN01C_120",
+      "program_id": "CBTRN01C",
+      "line_number": 120,
+      "content": "       01  ACCTFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_121",
+      "program_id": "CBTRN01C",
+      "line_number": 121,
+      "content": "           05  ACCTFILE-STAT1      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_122",
+      "program_id": "CBTRN01C",
+      "line_number": 122,
+      "content": "           05  ACCTFILE-STAT2      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_123",
+      "program_id": "CBTRN01C",
+      "line_number": 123,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_124",
+      "program_id": "CBTRN01C",
+      "line_number": 124,
+      "content": "       COPY CVTRA05Y.",
+      "type": "DIRECTIVE"
+    },
+    {
+      "line_id": "CBTRN01C_125",
+      "program_id": "CBTRN01C",
+      "line_number": 125,
+      "content": "       01  TRANFILE-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_126",
+      "program_id": "CBTRN01C",
+      "line_number": 126,
+      "content": "           05  TRANFILE-STAT1      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_127",
+      "program_id": "CBTRN01C",
+      "line_number": 127,
+      "content": "           05  TRANFILE-STAT2      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_128",
+      "program_id": "CBTRN01C",
+      "line_number": 128,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_129",
+      "program_id": "CBTRN01C",
+      "line_number": 129,
+      "content": "       01  IO-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_130",
+      "program_id": "CBTRN01C",
+      "line_number": 130,
+      "content": "           05  IO-STAT1            PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_131",
+      "program_id": "CBTRN01C",
+      "line_number": 131,
+      "content": "           05  IO-STAT2            PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_132",
+      "program_id": "CBTRN01C",
+      "line_number": 132,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_133",
+      "program_id": "CBTRN01C",
+      "line_number": 133,
+      "content": "       01  TWO-BYTES-BINARY        PIC 9(4) BINARY.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_134",
+      "program_id": "CBTRN01C",
+      "line_number": 134,
+      "content": "       01  TWO-BYTES-ALPHA         REDEFINES TWO-BYTES-BINARY.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_135",
+      "program_id": "CBTRN01C",
+      "line_number": 135,
+      "content": "           05  TWO-BYTES-LEFT      PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_136",
+      "program_id": "CBTRN01C",
+      "line_number": 136,
+      "content": "           05  TWO-BYTES-RIGHT     PIC X.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_137",
+      "program_id": "CBTRN01C",
+      "line_number": 137,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_138",
+      "program_id": "CBTRN01C",
+      "line_number": 138,
+      "content": "       01  IO-STATUS-04.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_139",
+      "program_id": "CBTRN01C",
+      "line_number": 139,
+      "content": "           05  IO-STATUS-0401      PIC 9   VALUE 0.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_140",
+      "program_id": "CBTRN01C",
+      "line_number": 140,
+      "content": "           05  IO-STATUS-0403      PIC 999 VALUE 0.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_141",
+      "program_id": "CBTRN01C",
+      "line_number": 141,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_142",
+      "program_id": "CBTRN01C",
+      "line_number": 142,
+      "content": "       01  APPL-RESULT             PIC S9(9)   COMP.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_143",
+      "program_id": "CBTRN01C",
+      "line_number": 143,
+      "content": "           88  APPL-AOK            VALUE 0.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_144",
+      "program_id": "CBTRN01C",
+      "line_number": 144,
+      "content": "           88  APPL-EOF            VALUE 16.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_145",
+      "program_id": "CBTRN01C",
+      "line_number": 145,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_146",
+      "program_id": "CBTRN01C",
+      "line_number": 146,
+      "content": "       01  END-OF-DAILY-TRANS-FILE             PIC X(01)    VALUE 'N'.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_147",
+      "program_id": "CBTRN01C",
+      "line_number": 147,
+      "content": "       01  ABCODE                  PIC S9(9) BINARY.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_148",
+      "program_id": "CBTRN01C",
+      "line_number": 148,
+      "content": "       01  TIMING                  PIC S9(9) BINARY.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_149",
+      "program_id": "CBTRN01C",
+      "line_number": 149,
+      "content": "       01  WS-MISC-VARIABLES.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_150",
+      "program_id": "CBTRN01C",
+      "line_number": 150,
+      "content": "           05 WS-XREF-READ-STATUS  PIC 9(04).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_151",
+      "program_id": "CBTRN01C",
+      "line_number": 151,
+      "content": "           05 WS-ACCT-READ-STATUS  PIC 9(04).",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_152",
+      "program_id": "CBTRN01C",
+      "line_number": 152,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_153",
+      "program_id": "CBTRN01C",
+      "line_number": 153,
+      "content": "      *****************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_154",
+      "program_id": "CBTRN01C",
+      "line_number": 154,
+      "content": "       PROCEDURE DIVISION.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_155",
+      "program_id": "CBTRN01C",
+      "line_number": 155,
+      "content": "       MAIN-PARA.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_156",
+      "program_id": "CBTRN01C",
+      "line_number": 156,
+      "content": "           DISPLAY 'START OF EXECUTION OF PROGRAM CBTRN01C'.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_157",
+      "program_id": "CBTRN01C",
+      "line_number": 157,
+      "content": "           PERFORM 0000-DALYTRAN-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_158",
+      "program_id": "CBTRN01C",
+      "line_number": 158,
+      "content": "           PERFORM 0100-CUSTFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_159",
+      "program_id": "CBTRN01C",
+      "line_number": 159,
+      "content": "           PERFORM 0200-XREFFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_160",
+      "program_id": "CBTRN01C",
+      "line_number": 160,
+      "content": "           PERFORM 0300-CARDFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_161",
+      "program_id": "CBTRN01C",
+      "line_number": 161,
+      "content": "           PERFORM 0400-ACCTFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_162",
+      "program_id": "CBTRN01C",
+      "line_number": 162,
+      "content": "           PERFORM 0500-TRANFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_163",
+      "program_id": "CBTRN01C",
+      "line_number": 163,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_164",
+      "program_id": "CBTRN01C",
+      "line_number": 164,
+      "content": "           PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_165",
+      "program_id": "CBTRN01C",
+      "line_number": 165,
+      "content": "               IF  END-OF-DAILY-TRANS-FILE = 'N'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_166",
+      "program_id": "CBTRN01C",
+      "line_number": 166,
+      "content": "                   PERFORM 1000-DALYTRAN-GET-NEXT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_167",
+      "program_id": "CBTRN01C",
+      "line_number": 167,
+      "content": "                   IF  END-OF-DAILY-TRANS-FILE = 'N'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_168",
+      "program_id": "CBTRN01C",
+      "line_number": 168,
+      "content": "                       DISPLAY DALYTRAN-RECORD",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_169",
+      "program_id": "CBTRN01C",
+      "line_number": 169,
+      "content": "                   END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_170",
+      "program_id": "CBTRN01C",
+      "line_number": 170,
+      "content": "                   MOVE 0                 TO WS-XREF-READ-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_171",
+      "program_id": "CBTRN01C",
+      "line_number": 171,
+      "content": "                   MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_172",
+      "program_id": "CBTRN01C",
+      "line_number": 172,
+      "content": "                   PERFORM 2000-LOOKUP-XREF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_173",
+      "program_id": "CBTRN01C",
+      "line_number": 173,
+      "content": "                   IF WS-XREF-READ-STATUS = 0",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_174",
+      "program_id": "CBTRN01C",
+      "line_number": 174,
+      "content": "                     MOVE 0            TO WS-ACCT-READ-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_175",
+      "program_id": "CBTRN01C",
+      "line_number": 175,
+      "content": "                     MOVE XREF-ACCT-ID TO ACCT-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_176",
+      "program_id": "CBTRN01C",
+      "line_number": 176,
+      "content": "                     PERFORM 3000-READ-ACCOUNT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_177",
+      "program_id": "CBTRN01C",
+      "line_number": 177,
+      "content": "                     IF WS-ACCT-READ-STATUS NOT = 0",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_178",
+      "program_id": "CBTRN01C",
+      "line_number": 178,
+      "content": "                         DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_179",
+      "program_id": "CBTRN01C",
+      "line_number": 179,
+      "content": "                     END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_180",
+      "program_id": "CBTRN01C",
+      "line_number": 180,
+      "content": "                   ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_181",
+      "program_id": "CBTRN01C",
+      "line_number": 181,
+      "content": "                     DISPLAY 'CARD NUMBER ' DALYTRAN-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_182",
+      "program_id": "CBTRN01C",
+      "line_number": 182,
+      "content": "                     ' COULD NOT BE VERIFIED. SKIPPING TRANSACTION ID-'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_183",
+      "program_id": "CBTRN01C",
+      "line_number": 183,
+      "content": "                     DALYTRAN-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_184",
+      "program_id": "CBTRN01C",
+      "line_number": 184,
+      "content": "                   END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_185",
+      "program_id": "CBTRN01C",
+      "line_number": 185,
+      "content": "               END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_186",
+      "program_id": "CBTRN01C",
+      "line_number": 186,
+      "content": "           END-PERFORM.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_187",
+      "program_id": "CBTRN01C",
+      "line_number": 187,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_188",
+      "program_id": "CBTRN01C",
+      "line_number": 188,
+      "content": "           PERFORM 9000-DALYTRAN-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_189",
+      "program_id": "CBTRN01C",
+      "line_number": 189,
+      "content": "           PERFORM 9100-CUSTFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_190",
+      "program_id": "CBTRN01C",
+      "line_number": 190,
+      "content": "           PERFORM 9200-XREFFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_191",
+      "program_id": "CBTRN01C",
+      "line_number": 191,
+      "content": "           PERFORM 9300-CARDFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_192",
+      "program_id": "CBTRN01C",
+      "line_number": 192,
+      "content": "           PERFORM 9400-ACCTFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_193",
+      "program_id": "CBTRN01C",
+      "line_number": 193,
+      "content": "           PERFORM 9500-TRANFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_194",
+      "program_id": "CBTRN01C",
+      "line_number": 194,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_195",
+      "program_id": "CBTRN01C",
+      "line_number": 195,
+      "content": "           DISPLAY 'END OF EXECUTION OF PROGRAM CBTRN01C'.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_196",
+      "program_id": "CBTRN01C",
+      "line_number": 196,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_197",
+      "program_id": "CBTRN01C",
+      "line_number": 197,
+      "content": "           GOBACK.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_198",
+      "program_id": "CBTRN01C",
+      "line_number": 198,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_199",
+      "program_id": "CBTRN01C",
+      "line_number": 199,
+      "content": "      *****************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_200",
+      "program_id": "CBTRN01C",
+      "line_number": 200,
+      "content": "      * READS FILE                                                    *",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_201",
+      "program_id": "CBTRN01C",
+      "line_number": 201,
+      "content": "      *****************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_202",
+      "program_id": "CBTRN01C",
+      "line_number": 202,
+      "content": "       1000-DALYTRAN-GET-NEXT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_203",
+      "program_id": "CBTRN01C",
+      "line_number": 203,
+      "content": "           READ DALYTRAN-FILE INTO DALYTRAN-RECORD.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_204",
+      "program_id": "CBTRN01C",
+      "line_number": 204,
+      "content": "           IF  DALYTRAN-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_205",
+      "program_id": "CBTRN01C",
+      "line_number": 205,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_206",
+      "program_id": "CBTRN01C",
+      "line_number": 206,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_207",
+      "program_id": "CBTRN01C",
+      "line_number": 207,
+      "content": "               IF  DALYTRAN-STATUS = '10'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_208",
+      "program_id": "CBTRN01C",
+      "line_number": 208,
+      "content": "                   MOVE 16 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_209",
+      "program_id": "CBTRN01C",
+      "line_number": 209,
+      "content": "               ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_210",
+      "program_id": "CBTRN01C",
+      "line_number": 210,
+      "content": "                   MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_211",
+      "program_id": "CBTRN01C",
+      "line_number": 211,
+      "content": "               END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_212",
+      "program_id": "CBTRN01C",
+      "line_number": 212,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_213",
+      "program_id": "CBTRN01C",
+      "line_number": 213,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_214",
+      "program_id": "CBTRN01C",
+      "line_number": 214,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_215",
+      "program_id": "CBTRN01C",
+      "line_number": 215,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_216",
+      "program_id": "CBTRN01C",
+      "line_number": 216,
+      "content": "               IF  APPL-EOF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_217",
+      "program_id": "CBTRN01C",
+      "line_number": 217,
+      "content": "                   MOVE 'Y' TO END-OF-DAILY-TRANS-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_218",
+      "program_id": "CBTRN01C",
+      "line_number": 218,
+      "content": "               ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_219",
+      "program_id": "CBTRN01C",
+      "line_number": 219,
+      "content": "                   DISPLAY 'ERROR READING DAILY TRANSACTION FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_220",
+      "program_id": "CBTRN01C",
+      "line_number": 220,
+      "content": "                   MOVE DALYTRAN-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_221",
+      "program_id": "CBTRN01C",
+      "line_number": 221,
+      "content": "                   PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_222",
+      "program_id": "CBTRN01C",
+      "line_number": 222,
+      "content": "                   PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_223",
+      "program_id": "CBTRN01C",
+      "line_number": 223,
+      "content": "               END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_224",
+      "program_id": "CBTRN01C",
+      "line_number": 224,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_225",
+      "program_id": "CBTRN01C",
+      "line_number": 225,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_226",
+      "program_id": "CBTRN01C",
+      "line_number": 226,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_227",
+      "program_id": "CBTRN01C",
+      "line_number": 227,
+      "content": "       2000-LOOKUP-XREF.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_228",
+      "program_id": "CBTRN01C",
+      "line_number": 228,
+      "content": "           MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_229",
+      "program_id": "CBTRN01C",
+      "line_number": 229,
+      "content": "           READ XREF-FILE  RECORD INTO CARD-XREF-RECORD",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_230",
+      "program_id": "CBTRN01C",
+      "line_number": 230,
+      "content": "           KEY IS FD-XREF-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_231",
+      "program_id": "CBTRN01C",
+      "line_number": 231,
+      "content": "                INVALID KEY",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_232",
+      "program_id": "CBTRN01C",
+      "line_number": 232,
+      "content": "                  DISPLAY 'INVALID CARD NUMBER FOR XREF'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_233",
+      "program_id": "CBTRN01C",
+      "line_number": 233,
+      "content": "                  MOVE 4 TO WS-XREF-READ-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_234",
+      "program_id": "CBTRN01C",
+      "line_number": 234,
+      "content": "                NOT INVALID KEY",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_235",
+      "program_id": "CBTRN01C",
+      "line_number": 235,
+      "content": "                  DISPLAY 'SUCCESSFUL READ OF XREF'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_236",
+      "program_id": "CBTRN01C",
+      "line_number": 236,
+      "content": "                  DISPLAY 'CARD NUMBER: ' XREF-CARD-NUM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_237",
+      "program_id": "CBTRN01C",
+      "line_number": 237,
+      "content": "                  DISPLAY 'ACCOUNT ID : ' XREF-ACCT-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_238",
+      "program_id": "CBTRN01C",
+      "line_number": 238,
+      "content": "                  DISPLAY 'CUSTOMER ID: ' XREF-CUST-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_239",
+      "program_id": "CBTRN01C",
+      "line_number": 239,
+      "content": "           END-READ.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_240",
+      "program_id": "CBTRN01C",
+      "line_number": 240,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_241",
+      "program_id": "CBTRN01C",
+      "line_number": 241,
+      "content": "       3000-READ-ACCOUNT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_242",
+      "program_id": "CBTRN01C",
+      "line_number": 242,
+      "content": "           MOVE ACCT-ID TO FD-ACCT-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_243",
+      "program_id": "CBTRN01C",
+      "line_number": 243,
+      "content": "           READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_244",
+      "program_id": "CBTRN01C",
+      "line_number": 244,
+      "content": "           KEY IS FD-ACCT-ID",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_245",
+      "program_id": "CBTRN01C",
+      "line_number": 245,
+      "content": "                INVALID KEY",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_246",
+      "program_id": "CBTRN01C",
+      "line_number": 246,
+      "content": "                  DISPLAY 'INVALID ACCOUNT NUMBER FOUND'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_247",
+      "program_id": "CBTRN01C",
+      "line_number": 247,
+      "content": "                  MOVE 4 TO WS-ACCT-READ-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_248",
+      "program_id": "CBTRN01C",
+      "line_number": 248,
+      "content": "                NOT INVALID KEY",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_249",
+      "program_id": "CBTRN01C",
+      "line_number": 249,
+      "content": "                  DISPLAY 'SUCCESSFUL READ OF ACCOUNT FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_250",
+      "program_id": "CBTRN01C",
+      "line_number": 250,
+      "content": "           END-READ.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_251",
+      "program_id": "CBTRN01C",
+      "line_number": 251,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_252",
+      "program_id": "CBTRN01C",
+      "line_number": 252,
+      "content": "       0000-DALYTRAN-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_253",
+      "program_id": "CBTRN01C",
+      "line_number": 253,
+      "content": "           MOVE 8 TO APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_254",
+      "program_id": "CBTRN01C",
+      "line_number": 254,
+      "content": "           OPEN INPUT DALYTRAN-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_255",
+      "program_id": "CBTRN01C",
+      "line_number": 255,
+      "content": "           IF  DALYTRAN-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_256",
+      "program_id": "CBTRN01C",
+      "line_number": 256,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_257",
+      "program_id": "CBTRN01C",
+      "line_number": 257,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_258",
+      "program_id": "CBTRN01C",
+      "line_number": 258,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_259",
+      "program_id": "CBTRN01C",
+      "line_number": 259,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_260",
+      "program_id": "CBTRN01C",
+      "line_number": 260,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_261",
+      "program_id": "CBTRN01C",
+      "line_number": 261,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_262",
+      "program_id": "CBTRN01C",
+      "line_number": 262,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_263",
+      "program_id": "CBTRN01C",
+      "line_number": 263,
+      "content": "               DISPLAY 'ERROR OPENING DAILY TRANSACTION FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_264",
+      "program_id": "CBTRN01C",
+      "line_number": 264,
+      "content": "               MOVE DALYTRAN-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_265",
+      "program_id": "CBTRN01C",
+      "line_number": 265,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_266",
+      "program_id": "CBTRN01C",
+      "line_number": 266,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_267",
+      "program_id": "CBTRN01C",
+      "line_number": 267,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_268",
+      "program_id": "CBTRN01C",
+      "line_number": 268,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_269",
+      "program_id": "CBTRN01C",
+      "line_number": 269,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_270",
+      "program_id": "CBTRN01C",
+      "line_number": 270,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_271",
+      "program_id": "CBTRN01C",
+      "line_number": 271,
+      "content": "       0100-CUSTFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_272",
+      "program_id": "CBTRN01C",
+      "line_number": 272,
+      "content": "           MOVE 8 TO APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_273",
+      "program_id": "CBTRN01C",
+      "line_number": 273,
+      "content": "           OPEN INPUT CUSTOMER-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_274",
+      "program_id": "CBTRN01C",
+      "line_number": 274,
+      "content": "           IF  CUSTFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_275",
+      "program_id": "CBTRN01C",
+      "line_number": 275,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_276",
+      "program_id": "CBTRN01C",
+      "line_number": 276,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_277",
+      "program_id": "CBTRN01C",
+      "line_number": 277,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_278",
+      "program_id": "CBTRN01C",
+      "line_number": 278,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_279",
+      "program_id": "CBTRN01C",
+      "line_number": 279,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_280",
+      "program_id": "CBTRN01C",
+      "line_number": 280,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_281",
+      "program_id": "CBTRN01C",
+      "line_number": 281,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_282",
+      "program_id": "CBTRN01C",
+      "line_number": 282,
+      "content": "               DISPLAY 'ERROR OPENING CUSTOMER FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_283",
+      "program_id": "CBTRN01C",
+      "line_number": 283,
+      "content": "               MOVE CUSTFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_284",
+      "program_id": "CBTRN01C",
+      "line_number": 284,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_285",
+      "program_id": "CBTRN01C",
+      "line_number": 285,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_286",
+      "program_id": "CBTRN01C",
+      "line_number": 286,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_287",
+      "program_id": "CBTRN01C",
+      "line_number": 287,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_288",
+      "program_id": "CBTRN01C",
+      "line_number": 288,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_289",
+      "program_id": "CBTRN01C",
+      "line_number": 289,
+      "content": "       0200-XREFFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_290",
+      "program_id": "CBTRN01C",
+      "line_number": 290,
+      "content": "           MOVE 8 TO APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_291",
+      "program_id": "CBTRN01C",
+      "line_number": 291,
+      "content": "           OPEN INPUT XREF-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_292",
+      "program_id": "CBTRN01C",
+      "line_number": 292,
+      "content": "           IF  XREFFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_293",
+      "program_id": "CBTRN01C",
+      "line_number": 293,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_294",
+      "program_id": "CBTRN01C",
+      "line_number": 294,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_295",
+      "program_id": "CBTRN01C",
+      "line_number": 295,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_296",
+      "program_id": "CBTRN01C",
+      "line_number": 296,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_297",
+      "program_id": "CBTRN01C",
+      "line_number": 297,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_298",
+      "program_id": "CBTRN01C",
+      "line_number": 298,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_299",
+      "program_id": "CBTRN01C",
+      "line_number": 299,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_300",
+      "program_id": "CBTRN01C",
+      "line_number": 300,
+      "content": "               DISPLAY 'ERROR OPENING CROSS REF FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_301",
+      "program_id": "CBTRN01C",
+      "line_number": 301,
+      "content": "               MOVE XREFFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_302",
+      "program_id": "CBTRN01C",
+      "line_number": 302,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_303",
+      "program_id": "CBTRN01C",
+      "line_number": 303,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_304",
+      "program_id": "CBTRN01C",
+      "line_number": 304,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_305",
+      "program_id": "CBTRN01C",
+      "line_number": 305,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_306",
+      "program_id": "CBTRN01C",
+      "line_number": 306,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_307",
+      "program_id": "CBTRN01C",
+      "line_number": 307,
+      "content": "       0300-CARDFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_308",
+      "program_id": "CBTRN01C",
+      "line_number": 308,
+      "content": "           MOVE 8 TO APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_309",
+      "program_id": "CBTRN01C",
+      "line_number": 309,
+      "content": "           OPEN INPUT CARD-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_310",
+      "program_id": "CBTRN01C",
+      "line_number": 310,
+      "content": "           IF  CARDFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_311",
+      "program_id": "CBTRN01C",
+      "line_number": 311,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_312",
+      "program_id": "CBTRN01C",
+      "line_number": 312,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_313",
+      "program_id": "CBTRN01C",
+      "line_number": 313,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_314",
+      "program_id": "CBTRN01C",
+      "line_number": 314,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_315",
+      "program_id": "CBTRN01C",
+      "line_number": 315,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_316",
+      "program_id": "CBTRN01C",
+      "line_number": 316,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_317",
+      "program_id": "CBTRN01C",
+      "line_number": 317,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_318",
+      "program_id": "CBTRN01C",
+      "line_number": 318,
+      "content": "               DISPLAY 'ERROR OPENING CARD FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_319",
+      "program_id": "CBTRN01C",
+      "line_number": 319,
+      "content": "               MOVE CARDFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_320",
+      "program_id": "CBTRN01C",
+      "line_number": 320,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_321",
+      "program_id": "CBTRN01C",
+      "line_number": 321,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_322",
+      "program_id": "CBTRN01C",
+      "line_number": 322,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_323",
+      "program_id": "CBTRN01C",
+      "line_number": 323,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_324",
+      "program_id": "CBTRN01C",
+      "line_number": 324,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_325",
+      "program_id": "CBTRN01C",
+      "line_number": 325,
+      "content": "       0400-ACCTFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_326",
+      "program_id": "CBTRN01C",
+      "line_number": 326,
+      "content": "           MOVE 8 TO APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_327",
+      "program_id": "CBTRN01C",
+      "line_number": 327,
+      "content": "           OPEN INPUT ACCOUNT-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_328",
+      "program_id": "CBTRN01C",
+      "line_number": 328,
+      "content": "           IF  ACCTFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_329",
+      "program_id": "CBTRN01C",
+      "line_number": 329,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_330",
+      "program_id": "CBTRN01C",
+      "line_number": 330,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_331",
+      "program_id": "CBTRN01C",
+      "line_number": 331,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_332",
+      "program_id": "CBTRN01C",
+      "line_number": 332,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_333",
+      "program_id": "CBTRN01C",
+      "line_number": 333,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_334",
+      "program_id": "CBTRN01C",
+      "line_number": 334,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_335",
+      "program_id": "CBTRN01C",
+      "line_number": 335,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_336",
+      "program_id": "CBTRN01C",
+      "line_number": 336,
+      "content": "               DISPLAY 'ERROR OPENING ACCOUNT FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_337",
+      "program_id": "CBTRN01C",
+      "line_number": 337,
+      "content": "               MOVE ACCTFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_338",
+      "program_id": "CBTRN01C",
+      "line_number": 338,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_339",
+      "program_id": "CBTRN01C",
+      "line_number": 339,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_340",
+      "program_id": "CBTRN01C",
+      "line_number": 340,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_341",
+      "program_id": "CBTRN01C",
+      "line_number": 341,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_342",
+      "program_id": "CBTRN01C",
+      "line_number": 342,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_343",
+      "program_id": "CBTRN01C",
+      "line_number": 343,
+      "content": "       0500-TRANFILE-OPEN.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_344",
+      "program_id": "CBTRN01C",
+      "line_number": 344,
+      "content": "           MOVE 8 TO APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_345",
+      "program_id": "CBTRN01C",
+      "line_number": 345,
+      "content": "           OPEN INPUT TRANSACT-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_346",
+      "program_id": "CBTRN01C",
+      "line_number": 346,
+      "content": "           IF  TRANFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_347",
+      "program_id": "CBTRN01C",
+      "line_number": 347,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_348",
+      "program_id": "CBTRN01C",
+      "line_number": 348,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_349",
+      "program_id": "CBTRN01C",
+      "line_number": 349,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_350",
+      "program_id": "CBTRN01C",
+      "line_number": 350,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_351",
+      "program_id": "CBTRN01C",
+      "line_number": 351,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_352",
+      "program_id": "CBTRN01C",
+      "line_number": 352,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_353",
+      "program_id": "CBTRN01C",
+      "line_number": 353,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_354",
+      "program_id": "CBTRN01C",
+      "line_number": 354,
+      "content": "               DISPLAY 'ERROR OPENING TRANSACTION FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_355",
+      "program_id": "CBTRN01C",
+      "line_number": 355,
+      "content": "               MOVE TRANFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_356",
+      "program_id": "CBTRN01C",
+      "line_number": 356,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_357",
+      "program_id": "CBTRN01C",
+      "line_number": 357,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_358",
+      "program_id": "CBTRN01C",
+      "line_number": 358,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_359",
+      "program_id": "CBTRN01C",
+      "line_number": 359,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_360",
+      "program_id": "CBTRN01C",
+      "line_number": 360,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_361",
+      "program_id": "CBTRN01C",
+      "line_number": 361,
+      "content": "       9000-DALYTRAN-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_362",
+      "program_id": "CBTRN01C",
+      "line_number": 362,
+      "content": "           ADD 8 TO ZERO GIVING APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_363",
+      "program_id": "CBTRN01C",
+      "line_number": 363,
+      "content": "           CLOSE DALYTRAN-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_364",
+      "program_id": "CBTRN01C",
+      "line_number": 364,
+      "content": "           IF  DALYTRAN-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_365",
+      "program_id": "CBTRN01C",
+      "line_number": 365,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_366",
+      "program_id": "CBTRN01C",
+      "line_number": 366,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_367",
+      "program_id": "CBTRN01C",
+      "line_number": 367,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_368",
+      "program_id": "CBTRN01C",
+      "line_number": 368,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_369",
+      "program_id": "CBTRN01C",
+      "line_number": 369,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_370",
+      "program_id": "CBTRN01C",
+      "line_number": 370,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_371",
+      "program_id": "CBTRN01C",
+      "line_number": 371,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_372",
+      "program_id": "CBTRN01C",
+      "line_number": 372,
+      "content": "               DISPLAY 'ERROR CLOSING CUSTOMER FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_373",
+      "program_id": "CBTRN01C",
+      "line_number": 373,
+      "content": "               MOVE CUSTFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_374",
+      "program_id": "CBTRN01C",
+      "line_number": 374,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_375",
+      "program_id": "CBTRN01C",
+      "line_number": 375,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_376",
+      "program_id": "CBTRN01C",
+      "line_number": 376,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_377",
+      "program_id": "CBTRN01C",
+      "line_number": 377,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_378",
+      "program_id": "CBTRN01C",
+      "line_number": 378,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_379",
+      "program_id": "CBTRN01C",
+      "line_number": 379,
+      "content": "       9100-CUSTFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_380",
+      "program_id": "CBTRN01C",
+      "line_number": 380,
+      "content": "           ADD 8 TO ZERO GIVING APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_381",
+      "program_id": "CBTRN01C",
+      "line_number": 381,
+      "content": "           CLOSE CUSTOMER-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_382",
+      "program_id": "CBTRN01C",
+      "line_number": 382,
+      "content": "           IF  CUSTFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_383",
+      "program_id": "CBTRN01C",
+      "line_number": 383,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_384",
+      "program_id": "CBTRN01C",
+      "line_number": 384,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_385",
+      "program_id": "CBTRN01C",
+      "line_number": 385,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_386",
+      "program_id": "CBTRN01C",
+      "line_number": 386,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_387",
+      "program_id": "CBTRN01C",
+      "line_number": 387,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_388",
+      "program_id": "CBTRN01C",
+      "line_number": 388,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_389",
+      "program_id": "CBTRN01C",
+      "line_number": 389,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_390",
+      "program_id": "CBTRN01C",
+      "line_number": 390,
+      "content": "               DISPLAY 'ERROR CLOSING CUSTOMER FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_391",
+      "program_id": "CBTRN01C",
+      "line_number": 391,
+      "content": "               MOVE CUSTFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_392",
+      "program_id": "CBTRN01C",
+      "line_number": 392,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_393",
+      "program_id": "CBTRN01C",
+      "line_number": 393,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_394",
+      "program_id": "CBTRN01C",
+      "line_number": 394,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_395",
+      "program_id": "CBTRN01C",
+      "line_number": 395,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_396",
+      "program_id": "CBTRN01C",
+      "line_number": 396,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_397",
+      "program_id": "CBTRN01C",
+      "line_number": 397,
+      "content": "       9200-XREFFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_398",
+      "program_id": "CBTRN01C",
+      "line_number": 398,
+      "content": "           ADD 8 TO ZERO GIVING APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_399",
+      "program_id": "CBTRN01C",
+      "line_number": 399,
+      "content": "           CLOSE XREF-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_400",
+      "program_id": "CBTRN01C",
+      "line_number": 400,
+      "content": "           IF  XREFFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_401",
+      "program_id": "CBTRN01C",
+      "line_number": 401,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_402",
+      "program_id": "CBTRN01C",
+      "line_number": 402,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_403",
+      "program_id": "CBTRN01C",
+      "line_number": 403,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_404",
+      "program_id": "CBTRN01C",
+      "line_number": 404,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_405",
+      "program_id": "CBTRN01C",
+      "line_number": 405,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_406",
+      "program_id": "CBTRN01C",
+      "line_number": 406,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_407",
+      "program_id": "CBTRN01C",
+      "line_number": 407,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_408",
+      "program_id": "CBTRN01C",
+      "line_number": 408,
+      "content": "               DISPLAY 'ERROR CLOSING CROSS REF FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_409",
+      "program_id": "CBTRN01C",
+      "line_number": 409,
+      "content": "               MOVE XREFFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_410",
+      "program_id": "CBTRN01C",
+      "line_number": 410,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_411",
+      "program_id": "CBTRN01C",
+      "line_number": 411,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_412",
+      "program_id": "CBTRN01C",
+      "line_number": 412,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_413",
+      "program_id": "CBTRN01C",
+      "line_number": 413,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_414",
+      "program_id": "CBTRN01C",
+      "line_number": 414,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_415",
+      "program_id": "CBTRN01C",
+      "line_number": 415,
+      "content": "       9300-CARDFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_416",
+      "program_id": "CBTRN01C",
+      "line_number": 416,
+      "content": "           ADD 8 TO ZERO GIVING APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_417",
+      "program_id": "CBTRN01C",
+      "line_number": 417,
+      "content": "           CLOSE CARD-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_418",
+      "program_id": "CBTRN01C",
+      "line_number": 418,
+      "content": "           IF  CARDFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_419",
+      "program_id": "CBTRN01C",
+      "line_number": 419,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_420",
+      "program_id": "CBTRN01C",
+      "line_number": 420,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_421",
+      "program_id": "CBTRN01C",
+      "line_number": 421,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_422",
+      "program_id": "CBTRN01C",
+      "line_number": 422,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_423",
+      "program_id": "CBTRN01C",
+      "line_number": 423,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_424",
+      "program_id": "CBTRN01C",
+      "line_number": 424,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_425",
+      "program_id": "CBTRN01C",
+      "line_number": 425,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_426",
+      "program_id": "CBTRN01C",
+      "line_number": 426,
+      "content": "               DISPLAY 'ERROR CLOSING CARD FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_427",
+      "program_id": "CBTRN01C",
+      "line_number": 427,
+      "content": "               MOVE CARDFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_428",
+      "program_id": "CBTRN01C",
+      "line_number": 428,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_429",
+      "program_id": "CBTRN01C",
+      "line_number": 429,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_430",
+      "program_id": "CBTRN01C",
+      "line_number": 430,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_431",
+      "program_id": "CBTRN01C",
+      "line_number": 431,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_432",
+      "program_id": "CBTRN01C",
+      "line_number": 432,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_433",
+      "program_id": "CBTRN01C",
+      "line_number": 433,
+      "content": "       9400-ACCTFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_434",
+      "program_id": "CBTRN01C",
+      "line_number": 434,
+      "content": "           ADD 8 TO ZERO GIVING APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_435",
+      "program_id": "CBTRN01C",
+      "line_number": 435,
+      "content": "           CLOSE ACCOUNT-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_436",
+      "program_id": "CBTRN01C",
+      "line_number": 436,
+      "content": "           IF  ACCTFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_437",
+      "program_id": "CBTRN01C",
+      "line_number": 437,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_438",
+      "program_id": "CBTRN01C",
+      "line_number": 438,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_439",
+      "program_id": "CBTRN01C",
+      "line_number": 439,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_440",
+      "program_id": "CBTRN01C",
+      "line_number": 440,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_441",
+      "program_id": "CBTRN01C",
+      "line_number": 441,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_442",
+      "program_id": "CBTRN01C",
+      "line_number": 442,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_443",
+      "program_id": "CBTRN01C",
+      "line_number": 443,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_444",
+      "program_id": "CBTRN01C",
+      "line_number": 444,
+      "content": "               DISPLAY 'ERROR CLOSING ACCOUNT FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_445",
+      "program_id": "CBTRN01C",
+      "line_number": 445,
+      "content": "               MOVE ACCTFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_446",
+      "program_id": "CBTRN01C",
+      "line_number": 446,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_447",
+      "program_id": "CBTRN01C",
+      "line_number": 447,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_448",
+      "program_id": "CBTRN01C",
+      "line_number": 448,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_449",
+      "program_id": "CBTRN01C",
+      "line_number": 449,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_450",
+      "program_id": "CBTRN01C",
+      "line_number": 450,
+      "content": "      *---------------------------------------------------------------*",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_451",
+      "program_id": "CBTRN01C",
+      "line_number": 451,
+      "content": "       9500-TRANFILE-CLOSE.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_452",
+      "program_id": "CBTRN01C",
+      "line_number": 452,
+      "content": "           ADD 8 TO ZERO GIVING APPL-RESULT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_453",
+      "program_id": "CBTRN01C",
+      "line_number": 453,
+      "content": "           CLOSE TRANSACT-FILE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_454",
+      "program_id": "CBTRN01C",
+      "line_number": 454,
+      "content": "           IF  TRANFILE-STATUS = '00'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_455",
+      "program_id": "CBTRN01C",
+      "line_number": 455,
+      "content": "               MOVE 0 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_456",
+      "program_id": "CBTRN01C",
+      "line_number": 456,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_457",
+      "program_id": "CBTRN01C",
+      "line_number": 457,
+      "content": "               MOVE 12 TO APPL-RESULT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_458",
+      "program_id": "CBTRN01C",
+      "line_number": 458,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_459",
+      "program_id": "CBTRN01C",
+      "line_number": 459,
+      "content": "           IF  APPL-AOK",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_460",
+      "program_id": "CBTRN01C",
+      "line_number": 460,
+      "content": "               CONTINUE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_461",
+      "program_id": "CBTRN01C",
+      "line_number": 461,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_462",
+      "program_id": "CBTRN01C",
+      "line_number": 462,
+      "content": "               DISPLAY 'ERROR CLOSING TRANSACTION FILE'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_463",
+      "program_id": "CBTRN01C",
+      "line_number": 463,
+      "content": "               MOVE TRANFILE-STATUS TO IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_464",
+      "program_id": "CBTRN01C",
+      "line_number": 464,
+      "content": "               PERFORM Z-DISPLAY-IO-STATUS",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_465",
+      "program_id": "CBTRN01C",
+      "line_number": 465,
+      "content": "               PERFORM Z-ABEND-PROGRAM",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_466",
+      "program_id": "CBTRN01C",
+      "line_number": 466,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_467",
+      "program_id": "CBTRN01C",
+      "line_number": 467,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_468",
+      "program_id": "CBTRN01C",
+      "line_number": 468,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_469",
+      "program_id": "CBTRN01C",
+      "line_number": 469,
+      "content": "       Z-ABEND-PROGRAM.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_470",
+      "program_id": "CBTRN01C",
+      "line_number": 470,
+      "content": "           DISPLAY 'ABENDING PROGRAM'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_471",
+      "program_id": "CBTRN01C",
+      "line_number": 471,
+      "content": "           MOVE 0 TO TIMING",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_472",
+      "program_id": "CBTRN01C",
+      "line_number": 472,
+      "content": "           MOVE 999 TO ABCODE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_473",
+      "program_id": "CBTRN01C",
+      "line_number": 473,
+      "content": "           CALL 'CEE3ABD' USING ABCODE, TIMING.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_474",
+      "program_id": "CBTRN01C",
+      "line_number": 474,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_475",
+      "program_id": "CBTRN01C",
+      "line_number": 475,
+      "content": "      *****************************************************************",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_476",
+      "program_id": "CBTRN01C",
+      "line_number": 476,
+      "content": "       Z-DISPLAY-IO-STATUS.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_477",
+      "program_id": "CBTRN01C",
+      "line_number": 477,
+      "content": "           IF  IO-STATUS NOT NUMERIC",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_478",
+      "program_id": "CBTRN01C",
+      "line_number": 478,
+      "content": "           OR  IO-STAT1 = '9'",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_479",
+      "program_id": "CBTRN01C",
+      "line_number": 479,
+      "content": "               MOVE IO-STAT1 TO IO-STATUS-04(1:1)",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_480",
+      "program_id": "CBTRN01C",
+      "line_number": 480,
+      "content": "               MOVE 0        TO TWO-BYTES-BINARY",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_481",
+      "program_id": "CBTRN01C",
+      "line_number": 481,
+      "content": "               MOVE IO-STAT2 TO TWO-BYTES-RIGHT",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_482",
+      "program_id": "CBTRN01C",
+      "line_number": 482,
+      "content": "               MOVE TWO-BYTES-BINARY TO IO-STATUS-0403",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_483",
+      "program_id": "CBTRN01C",
+      "line_number": 483,
+      "content": "               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_484",
+      "program_id": "CBTRN01C",
+      "line_number": 484,
+      "content": "           ELSE",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_485",
+      "program_id": "CBTRN01C",
+      "line_number": 485,
+      "content": "               MOVE '0000' TO IO-STATUS-04",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_486",
+      "program_id": "CBTRN01C",
+      "line_number": 486,
+      "content": "               MOVE IO-STATUS TO IO-STATUS-04(3:2)",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_487",
+      "program_id": "CBTRN01C",
+      "line_number": 487,
+      "content": "               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_488",
+      "program_id": "CBTRN01C",
+      "line_number": 488,
+      "content": "           END-IF",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_489",
+      "program_id": "CBTRN01C",
+      "line_number": 489,
+      "content": "           EXIT.",
+      "type": "CODE"
+    },
+    {
+      "line_id": "CBTRN01C_490",
+      "program_id": "CBTRN01C",
+      "line_number": 490,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_491",
+      "program_id": "CBTRN01C",
+      "line_number": 491,
+      "content": "",
+      "type": "BLANK"
+    },
+    {
+      "line_id": "CBTRN01C_492",
+      "program_id": "CBTRN01C",
+      "line_number": 492,
+      "content": "      *",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_493",
+      "program_id": "CBTRN01C",
+      "line_number": 493,
+      "content": "      * Ver: CardDemo_v2.0-25-gdb72e6b-235 Date: 2025-04-29 11:01:28 CDT",
+      "type": "COMMENT"
+    },
+    {
+      "line_id": "CBTRN01C_494",
+      "program_id": "CBTRN01C",
+      "line_number": 494,
+      "content": "      *",
+      "type": "COMMENT"
+    }
+  ],
+  "line_references": []
 }
