@@ -1,0 +1,468 @@
+{
+  "program": {
+    "program_id": "CBTRN01C",
+    "program_name": "CBTRN01C",
+    "file_name": "CBTRN01C.cbl",
+    "total_lines": 333
+  },
+  "sections": [
+    {
+      "section_id": "sec_CBTRN01C_IDENTIFICATION_DIVISION",
+      "name": "IDENTIFICATION DIVISION",
+      "type": "DIVISION",
+      "start_line": 1,
+      "end_line": 24,
+      "content": "      ******************************************************************\n      * Program     : CBTRN01C.CBL                                      \n      * Application : CardDemo                                          \n      * Type        : BATCH COBOL Program                                \n      * Function    : Post the records from daily transaction file.     \n      ******************************************************************\n      * Copyright Amazon.com, Inc. or its affiliates.                   \n      * All Rights Reserved.                                            \n      *                                                                 \n      * Licensed under the Apache License, Version 2.0 (the \"License\"). \n      * You may not use this file except in compliance with the License.\n      * You may obtain a copy of the License at                         \n      *                                                                 \n      *    http://www.apache.org/licenses/LICENSE-2.0                   \n      *                                                                 \n      * Unless required by applicable law or agreed to in writing,      \n      * software distributed under the License is distributed on an     \n      * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,    \n      * either express or implied. See the License for the specific     \n      * language governing permissions and limitations under the License\n      ******************************************************************\n       IDENTIFICATION DIVISION.\n       PROGRAM-ID.    CBTRN01C.\n       AUTHOR.        AWS."
+    },
+    {
+      "section_id": "sec_CBTRN01C_ENVIRONMENT_DIVISION",
+      "name": "ENVIRONMENT DIVISION",
+      "type": "DIVISION",
+      "start_line": 26,
+      "end_line": 58,
+      "content": "       ENVIRONMENT DIVISION.\n       INPUT-OUTPUT SECTION.\n       FILE-CONTROL.\n           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN\n                  ORGANIZATION IS SEQUENTIAL\n                  ACCESS MODE  IS SEQUENTIAL\n                  FILE STATUS  IS DALYTRAN-STATUS.\n\n           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CUST-ID\n                  FILE STATUS  IS CUSTFILE-STATUS.\n\n           SELECT XREF-FILE ASSIGN TO   XREFFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-XREF-CARD-NUM\n                  FILE STATUS  IS XREFFILE-STATUS.\n\n           SELECT CARD-FILE ASSIGN TO   CARDFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CARD-NUM\n                  FILE STATUS  IS CARDFILE-STATUS.\n\n           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-ACCT-ID\n                  FILE STATUS  IS ACCTFILE-STATUS.\n\n           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-TRANS-ID\n                  FILE STATUS  IS TRANFILE-STATUS.\n      *"
+    },
+    {
+      "section_id": "sec_CBTRN01C_DATA_DIVISION",
+      "name": "DATA DIVISION",
+      "type": "DIVISION",
+      "start_line": 60,
+      "end_line": 118,
+      "content": "       DATA DIVISION.\n       FILE SECTION.\n       FD  DALYTRAN-FILE.\n       01  FD-TRAN-RECORD.\n           05 FD-TRAN-ID                        PIC X(16).\n           05 FD-CUST-DATA                      PIC X(334).\n\n       FD  CUSTOMER-FILE.\n       01  FD-CUSTFILE-REC.\n           05 FD-CUST-ID                        PIC 9(09).\n           05 FD-CUST-DATA                      PIC X(491).\n\n       FD  XREF-FILE.\n       01  FD-XREFFILE-REC.\n           05 FD-XREF-CARD-NUM                  PIC X(16).\n           05 FD-XREF-DATA                      PIC X(34).\n\n       FD  CARD-FILE.\n       01  FD-CARDFILE-REC.\n           05 FD-CARD-NUM                       PIC X(16).\n           05 FD-CARD-DATA                      PIC X(134).\n\n       FD  ACCOUNT-FILE.\n       01  FD-ACCTFILE-REC.\n           05 FD-ACCT-ID                        PIC 9(11).\n           05 FD-ACCT-DATA                      PIC X(289).\n\n       FD  TRANSACT-FILE.\n       01  FD-TRANFILE-REC.\n           05 FD-TRANS-ID                       PIC X(16).\n           05 FD-ACCT-DATA                      PIC X(334).\n\n       WORKING-STORAGE SECTION.\n\n      *****************************************************************\n       COPY CVTRA06Y.\n       01  DALYTRAN-STATUS.\n           05  DALYTRAN-STAT1      PIC X.\n           05  DALYTRAN-STAT2      PIC X.\n\n       COPY CVCUS01Y.\n       01  CUSTFILE-STATUS.\n           05  CUSTFILE-STAT1      PIC X.\n           05  CUSTFILE-STAT2      PIC X.\n\n       COPY CVACT03Y.\n       01  XREFFILE-STATUS.\n           05  XREFFILE-STAT1      PIC X.\n           05  XREFFILE-STAT2      PIC X.\n\n       COPY CVACT02Y.\n       01  CARDFILE-STATUS.\n           05  CARDFILE-STAT1      PIC X.\n           05  CARDFILE-STAT2      PIC X.\n\n       COPY CVACT01Y.\n       01  ACCTFILE-STATUS.\n           05  ACCTFILE-STAT1      PIC X.\n           05  ACCTFILE-STAT2      PIC X.\n\n       COPY CVTRA05Y.\n       01  TRANFILE-STATUS.\n           05  TRANFILE-STAT1      PIC X.\n           05  TRANFILE-STAT2      PIC X.\n\n       01  IO-STATUS.\n           05  IO-STAT1            PIC X.\n           05  IO-STAT2            PIC X.\n\n       01  TWO-BYTES-BINARY        PIC 9(4) BINARY.\n       01  TWO-BYTES-ALPHA         REDEFINES TWO-BYTES-BINARY.\n           05  TWO-BYTES-LEFT      PIC X.\n           05  TWO-BYTES-RIGHT     PIC X.\n\n       01  IO-STATUS-04.\n           05  IO-STATUS-0401      PIC 9   VALUE 0.\n           05  IO-STATUS-0403      PIC 999 VALUE 0.\n\n       01  APPL-RESULT             PIC S9(9)   COMP.\n           88  APPL-AOK            VALUE 0.\n           88  APPL-EOF            VALUE 16.\n\n       01  END-OF-DAILY-TRANS-FILE             PIC X(01)    VALUE 'N'.\n       01  ABCODE                  PIC S9(9) BINARY.\n       01  TIMING                  PIC S9(9) BINARY.\n       01  WS-MISC-VARIABLES.\n           05 WS-XREF-READ-STATUS  PIC 9(04).\n           05 WS-ACCT-READ-STATUS  PIC 9(04).\n\n      *****************************************************************"
+    },
+    {
+      "section_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "name": "PROCEDURE DIVISION",
+      "type": "DIVISION",
+      "start_line": 120,
+      "end_line": 120,
+      "content": "       PROCEDURE DIVISION."
+    },
+    {
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "name": "MAIN-PARA",
+      "type": "PARAGRAPH",
+      "start_line": 121,
+      "end_line": 158,
+      "content": "       MAIN-PARA.\n           DISPLAY 'START OF EXECUTION OF PROGRAM CBTRN01C'.\n           PERFORM 0000-DALYTRAN-OPEN.\n           PERFORM 0100-CUSTFILE-OPEN.\n           PERFORM 0200-XREFFILE-OPEN.\n           PERFORM 0300-CARDFILE-OPEN.\n           PERFORM 0400-ACCTFILE-OPEN.\n           PERFORM 0500-TRANFILE-OPEN.\n\n           PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'\n               IF  END-OF-DAILY-TRANS-FILE = 'N'\n                   PERFORM 1000-DALYTRAN-GET-NEXT\n                   IF  END-OF-DAILY-TRANS-FILE = 'N'\n                       DISPLAY DALYTRAN-RECORD\n                   END-IF\n                   MOVE 0                 TO WS-XREF-READ-STATUS\n                   MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM\n                   PERFORM 2000-LOOKUP-XREF\n                   IF WS-XREF-READ-STATUS = 0\n                     MOVE 0            TO WS-ACCT-READ-STATUS\n                     MOVE XREF-ACCT-ID TO ACCT-ID\n                     PERFORM 3000-READ-ACCOUNT\n                     IF WS-ACCT-READ-STATUS NOT = 0\n                         DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'\n                     END-IF\n                   ELSE\n                     DISPLAY 'CARD NUMBER ' DALYTRAN-CARD-NUM\n                     ' COULD NOT BE VERIFIED. SKIPPING TRANSACTION ID-'\n                     DALYTRAN-ID\n                   END-IF\n               END-IF\n           END-PERFORM.\n\n           PERFORM 9000-DALYTRAN-CLOSE.\n           PERFORM 9100-CUSTFILE-CLOSE.\n           PERFORM 9200-XREFFILE-CLOSE.\n           PERFORM 9300-CARDFILE-CLOSE.\n           PERFORM 9400-ACCTFILE-CLOSE.\n           PERFORM 9500-TRANFILE-CLOSE.\n\n           DISPLAY 'END OF EXECUTION OF PROGRAM CBTRN01C'.\n\n           GOBACK."
+    },
+    {
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "name": "1000-DALYTRAN-GET-NEXT",
+      "type": "PARAGRAPH",
+      "start_line": 163,
+      "end_line": 181,
+      "content": "       1000-DALYTRAN-GET-NEXT.\n           READ DALYTRAN-FILE INTO DALYTRAN-RECORD.\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               IF  DALYTRAN-STATUS = '10'\n                   MOVE 16 TO APPL-RESULT\n               ELSE\n                   MOVE 12 TO APPL-RESULT\n               END-IF\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               IF  APPL-EOF\n                   MOVE 'Y' TO END-OF-DAILY-TRANS-FILE\n               ELSE\n                   DISPLAY 'ERROR READING DAILY TRANSACTION FILE'\n                   MOVE DALYTRAN-STATUS TO IO-STATUS\n                   PERFORM Z-DISPLAY-IO-STATUS\n                   PERFORM Z-ABEND-PROGRAM\n               END-IF\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "name": "2000-LOOKUP-XREF",
+      "type": "PARAGRAPH",
+      "start_line": 183,
+      "end_line": 194,
+      "content": "       2000-LOOKUP-XREF.\n           MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM\n           READ XREF-FILE  RECORD INTO CARD-XREF-RECORD\n           KEY IS FD-XREF-CARD-NUM\n                INVALID KEY\n                  DISPLAY 'INVALID CARD NUMBER FOR XREF'\n                  MOVE 4 TO WS-XREF-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF XREF'\n                  DISPLAY 'CARD NUMBER: ' XREF-CARD-NUM\n                  DISPLAY 'ACCOUNT ID : ' XREF-ACCT-ID\n                  DISPLAY 'CUSTOMER ID: ' XREF-CUST-ID\n           END-READ."
+    },
+    {
+      "section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "name": "3000-READ-ACCOUNT",
+      "type": "PARAGRAPH",
+      "start_line": 196,
+      "end_line": 204,
+      "content": "       3000-READ-ACCOUNT.\n           MOVE ACCT-ID TO FD-ACCT-ID\n           READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD\n           KEY IS FD-ACCT-ID\n                INVALID KEY\n                  DISPLAY 'INVALID ACCOUNT NUMBER FOUND'\n                  MOVE 4 TO WS-ACCT-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF ACCOUNT FILE'\n           END-READ."
+    },
+    {
+      "section_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
+      "name": "0000-DALYTRAN-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 206,
+      "end_line": 219,
+      "content": "       0000-DALYTRAN-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING DAILY TRANSACTION FILE'\n               MOVE DALYTRAN-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN",
+      "name": "0100-CUSTFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 222,
+      "end_line": 235,
+      "content": "       0100-CUSTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_0200-XREFFILE-OPEN",
+      "name": "0200-XREFFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 237,
+      "end_line": 250,
+      "content": "       0200-XREFFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_0300-CARDFILE-OPEN",
+      "name": "0300-CARDFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 252,
+      "end_line": 265,
+      "content": "       0300-CARDFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN",
+      "name": "0400-ACCTFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 267,
+      "end_line": 280,
+      "content": "       0400-ACCTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_0500-TRANFILE-OPEN",
+      "name": "0500-TRANFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 282,
+      "end_line": 295,
+      "content": "       0500-TRANFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE",
+      "name": "9000-DALYTRAN-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 297,
+      "end_line": 310,
+      "content": "       9000-DALYTRAN-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE",
+      "name": "9100-CUSTFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 312,
+      "end_line": 312,
+      "content": "       9100-CUSTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE",
+      "name": "9200-XREFFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 313,
+      "end_line": 313,
+      "content": "       9200-XREFFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE",
+      "name": "9300-CARDFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 314,
+      "end_line": 314,
+      "content": "       9300-CARDFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE",
+      "name": "9400-ACCTFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 315,
+      "end_line": 315,
+      "content": "       9400-ACCTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE",
+      "name": "9500-TRANFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 316,
+      "end_line": 316,
+      "content": "       9500-TRANFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT."
+    },
+    {
+      "section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "name": "Z-ABEND-PROGRAM",
+      "type": "PARAGRAPH",
+      "start_line": 318,
+      "end_line": 321,
+      "content": "       Z-ABEND-PROGRAM.\n           DISPLAY 'ABENDING PROGRAM'\n           MOVE 0 TO TIMING\n           MOVE 999 TO ABCODE\n           CALL 'CEE3ABD' USING ABCODE, TIMING."
+    },
+    {
+      "section_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "name": "Z-DISPLAY-IO-STATUS",
+      "type": "PARAGRAPH",
+      "start_line": 324,
+      "end_line": 333,
+      "content": "       Z-DISPLAY-IO-STATUS.\n           IF  IO-STATUS NOT NUMERIC\n           OR  IO-STAT1 = '9'\n               MOVE IO-STAT1 TO IO-STATUS-04(1:1)\n               MOVE 0        TO TWO-BYTES-BINARY\n               MOVE IO-STAT2 TO TWO-BYTES-RIGHT\n               MOVE TWO-BYTES-BINARY TO IO-STATUS-0403\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           ELSE\n               MOVE '0000' TO IO-STATUS-04\n               MOVE IO-STATUS TO IO-STATUS-04(3:2)\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           END-IF\n           EXIT.\n\n\n      *\n      * Ver: CardDemo_v2.0-25-gdb72e6b-235 Date: 2025-04-29 11:01:28 CDT\n      *"
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_001",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Display Start",
+      "technical_condition": "DISPLAY 'START OF EXECUTION...'",
+      "plain_english": "Outputs start message",
+      "links": []
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_002",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Main Loop",
+      "technical_condition": "PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'",
+      "plain_english": "Loops until daily transaction file is exhausted",
+      "links": [
+        { "entity_name": "END-OF-DAILY-TRANS-FILE", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_003",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Check EOF",
+      "technical_condition": "IF END-OF-DAILY-TRANS-FILE = 'N'",
+      "plain_english": "Checks if EOF flag is not set",
+      "links": [
+        { "entity_name": "END-OF-DAILY-TRANS-FILE", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_004",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Initialize XREF Status",
+      "technical_condition": "MOVE 0 TO WS-XREF-READ-STATUS",
+      "plain_english": "Resets XREF read status",
+      "links": [
+        { "entity_name": "WS-XREF-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_005",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Prepare XREF Key",
+      "technical_condition": "MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM",
+      "plain_english": "Moves Card Num from Transaction to XREF Key",
+      "links": [
+        { "entity_name": "DALYTRAN-CARD-NUM", "entity_value": "VARIABLE", "relationship": "READS" },
+        { "entity_name": "XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_006",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Check XREF Success",
+      "technical_condition": "IF WS-XREF-READ-STATUS = 0",
+      "plain_english": "Validates XREF lookup success",
+      "links": [
+        { "entity_name": "WS-XREF-READ-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_007",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Initialize Account Status",
+      "technical_condition": "MOVE 0 TO WS-ACCT-READ-STATUS",
+      "plain_english": "Resets Account read status",
+      "links": [
+        { "entity_name": "WS-ACCT-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_008",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Map Account ID",
+      "technical_condition": "MOVE XREF-ACCT-ID TO ACCT-ID",
+      "plain_english": "Maps Account ID from XREF result to Account lookup key",
+      "links": [
+        { "entity_name": "XREF-ACCT-ID", "entity_value": "VARIABLE", "relationship": "READS" },
+        { "entity_name": "ACCT-ID", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_009",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Check Account Success",
+      "technical_condition": "IF WS-ACCT-READ-STATUS NOT = 0",
+      "plain_english": "Checks if Account lookup failed",
+      "links": [
+        { "entity_name": "WS-ACCT-READ-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_MAIN-PARA_010",
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "rule_name": "Display Account Error",
+      "technical_condition": "DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'",
+      "plain_english": "Outputs error if account not found",
+      "links": [
+        { "entity_name": "ACCT-ID", "entity_value": "VARIABLE", "relationship": "READS" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_001",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Read Daily Trans",
+      "technical_condition": "READ DALYTRAN-FILE INTO DALYTRAN-RECORD",
+      "plain_english": "Reads next record from Daily Transaction File",
+      "links": [
+        { "entity_name": "DALYTRAN-FILE", "entity_value": "FILE", "relationship": "READS" },
+        { "entity_name": "DALYTRAN-RECORD", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_002",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Check Read Status 00",
+      "technical_condition": "IF DALYTRAN-STATUS = '00'",
+      "plain_english": "Checks for successful read",
+      "links": [
+        { "entity_name": "DALYTRAN-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" },
+        { "entity_name": "APPL-RESULT", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_003",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Check Read Status 10",
+      "technical_condition": "IF DALYTRAN-STATUS = '10'",
+      "plain_english": "Checks for EOF status",
+      "links": [
+        { "entity_name": "DALYTRAN-STATUS", "entity_value": "VARIABLE", "relationship": "VALIDATES" },
+        { "entity_name": "APPL-RESULT", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_004",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Check APPL-AOK",
+      "technical_condition": "IF APPL-AOK",
+      "plain_english": "Checks if application result is OK",
+      "links": [
+        { "entity_name": "APPL-AOK", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_005",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Check APPL-EOF",
+      "technical_condition": "IF APPL-EOF",
+      "plain_english": "Checks if application result is EOF",
+      "links": [
+        { "entity_name": "APPL-EOF", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_006",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Set EOF Flag",
+      "technical_condition": "MOVE 'Y' TO END-OF-DAILY-TRANS-FILE",
+      "plain_english": "Sets EOF flag when end of file reached",
+      "links": [
+        { "entity_name": "END-OF-DAILY-TRANS-FILE", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_007",
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "rule_name": "Handle Error",
+      "technical_condition": "MOVE DALYTRAN-STATUS TO IO-STATUS",
+      "plain_english": "Maps error status to IO status for reporting",
+      "links": [
+        { "entity_name": "DALYTRAN-STATUS", "entity_value": "VARIABLE", "relationship": "READS" },
+        { "entity_name": "IO-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_2000-LOOKUP-XREF_001",
+      "section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "rule_name": "Map XREF Key",
+      "technical_condition": "MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM",
+      "plain_english": "Maps working storage key to file descriptor key",
+      "links": [
+        { "entity_name": "XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "READS" },
+        { "entity_name": "FD-XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_2000-LOOKUP-XREF_002",
+      "section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "rule_name": "Read XREF",
+      "technical_condition": "READ XREF-FILE RECORD INTO CARD-XREF-RECORD KEY IS FD-XREF-CARD-NUM",
+      "plain_english": "Reads XREF file using key",
+      "links": [
+        { "entity_name": "XREF-FILE", "entity_value": "FILE", "relationship": "READS" },
+        { "entity_name": "CARD-XREF-RECORD", "entity_value": "VARIABLE", "relationship": "UPDATES" },
+        { "entity_name": "FD-XREF-CARD-NUM", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_2000-LOOKUP-XREF_003",
+      "section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "rule_name": "Handle Invalid Key",
+      "technical_condition": "INVALID KEY MOVE 4 TO WS-XREF-READ-STATUS",
+      "plain_english": "Sets error status if key not found",
+      "links": [
+        { "entity_name": "WS-XREF-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_3000-READ-ACCOUNT_001",
+      "section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "rule_name": "Map Account Key",
+      "technical_condition": "MOVE ACCT-ID TO FD-ACCT-ID",
+      "plain_english": "Maps Account ID to File Key",
+      "links": [
+        { "entity_name": "ACCT-ID", "entity_value": "VARIABLE", "relationship": "READS" },
+        { "entity_name": "FD-ACCT-ID", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_3000-READ-ACCOUNT_002",
+      "section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "rule_name": "Read Account File",
+      "technical_condition": "READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD KEY IS FD-ACCT-ID",
+      "plain_english": "Reads Account File",
+      "links": [
+        { "entity_name": "ACCOUNT-FILE", "entity_value": "FILE", "relationship": "READS" },
+        { "entity_name": "ACCOUNT-RECORD", "entity_value": "VARIABLE", "relationship": "UPDATES" },
+        { "entity_name": "FD-ACCT-ID", "entity_value": "VARIABLE", "relationship": "VALIDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_3000-READ-ACCOUNT_003",
+      "section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "rule_name": "Handle Invalid Account",
+      "technical_condition": "INVALID KEY MOVE 4 TO WS-ACCT-READ-STATUS",
+      "plain_english": "Sets status if Account not found",
+      "links": [
+        { "entity_name": "WS-ACCT-READ-STATUS", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_Z-ABEND-PROGRAM_001",
+      "section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "rule_name": "Set Abend Code",
+      "technical_condition": "MOVE 999 TO ABCODE",
+      "plain_english": "Sets abend code",
+      "links": [
+        { "entity_name": "ABCODE", "entity_value": "VARIABLE", "relationship": "UPDATES" }
+      ]
+    },
+    {
+      "rule_id": "rule_sec_CBTRN01C_Z-ABEND-PROGRAM_002",
+      "section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "rule_name": "Call Abend Routine",
+      "technical_condition": "CALL 'CEE3ABD' USING ABCODE, TIMING",
+      "plain_english": "Calls external abend routine",
+      "links": [
+        { "entity_name": "ABCODE", "entity_value": "VARIABLE", "relationship": "READS" },
+        { "entity_name": "TIMING", "entity_value": "VARIABLE", "relationship": "READS" }
+      ]
+    }
+  ],
+  "section_calls": [
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0000-DALYTRAN-OPEN_001", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0100-CUSTFILE-OPEN_002", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0200-XREFFILE-OPEN_003", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0200-XREFFILE-OPEN", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0300-CARDFILE-OPEN_004", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0300-CARDFILE-OPEN", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0400-ACCTFILE-OPEN_005", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_0500-TRANFILE-OPEN_006", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_0500-TRANFILE-OPEN", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_007", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_2000-LOOKUP-XREF_008", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_2000-LOOKUP-XREF", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_3000-READ-ACCOUNT_009", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_3000-READ-ACCOUNT", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9000-DALYTRAN-CLOSE_010", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9100-CUSTFILE-CLOSE_011", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9200-XREFFILE-CLOSE_012", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9300-CARDFILE-CLOSE_013", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9400-ACCTFILE-CLOSE_014", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_MAIN-PARA_sec_CBTRN01C_9500-TRANFILE-CLOSE_015", "source_section_id": "sec_CBTRN01C_MAIN-PARA", "target_section_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_sec_CBTRN01C_Z-ABEND-PROGRAM_016", "source_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT", "target_section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM", "type": "PERFORM" },
+    { "call_id": "call_sec_CBTRN01C_1000-DALYTRAN-GET-NEXT_sec_CBTRN01C_Z-DISPLAY-IO-STATUS_017", "source_section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT", "target_section_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS", "type": "PERFORM" }
+  ]
+}

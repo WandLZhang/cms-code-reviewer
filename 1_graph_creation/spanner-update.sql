@@ -1,18 +1,28 @@
 -- Incremental Schema Update
 -- Run this to add Execution Flow support to an existing database.
 
--- 1. Add SectionCalls table (Commented out as it already exists)
--- CREATE TABLE SectionCalls (
---   call_id STRING(36) NOT NULL,
---   source_section_id STRING(36) NOT NULL,
---   target_section_id STRING(36) NOT NULL,
---   call_type STRING(50) NOT NULL, -- 'PERFORM', 'GO TO'
---   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
---   FOREIGN KEY (source_section_id) REFERENCES CodeSections (section_id),
---   FOREIGN KEY (target_section_id) REFERENCES CodeSections (section_id),
--- ) PRIMARY KEY (call_id);
+-- 1. Add RuleEntities table if missing
+CREATE TABLE RuleEntities (
+  rule_id STRING(256) NOT NULL,
+  entity_id STRING(256) NOT NULL,
+  usage_type STRING(50),
+  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
+  FOREIGN KEY (rule_id) REFERENCES BusinessRules (rule_id),
+  FOREIGN KEY (entity_id) REFERENCES BusinessEntities (entity_id),
+) PRIMARY KEY (rule_id, entity_id);
 
--- 2. Update Graph Definition (Replaces existing graph)
+-- 2. Add SectionCalls table if missing
+CREATE TABLE SectionCalls (
+  call_id STRING(256) NOT NULL,
+  source_section_id STRING(256) NOT NULL,
+  target_section_id STRING(256) NOT NULL,
+  call_type STRING(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
+  FOREIGN KEY (source_section_id) REFERENCES CodeSections (section_id),
+  FOREIGN KEY (target_section_id) REFERENCES CodeSections (section_id),
+) PRIMARY KEY (call_id);
+
+-- 3. Update Graph Definition (Replaces existing graph)
 CREATE OR REPLACE PROPERTY GRAPH CobolKnowledgeGraph
   NODE TABLES (
     Programs LABEL Program,
