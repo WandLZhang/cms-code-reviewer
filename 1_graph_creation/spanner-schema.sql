@@ -1,7 +1,7 @@
--- Spanner Schema for COBOL Modernization Knowledge Graph
--- This schema stores analyzed COBOL programs, business rules, and relationships based on code structure.
+-- Spanner Schema for COBOL Modernization Knowledge Graph (Line-Centric Model)
+-- This schema stores analyzed COBOL programs at the line level for perfect fidelity and traceability.
 
--- Programs table - stores COBOL program metadata
+-- 1. Programs table (Metadata)
 CREATE TABLE Programs (
   program_id STRING(256) NOT NULL,
   program_name STRING(100) NOT NULL,
@@ -12,103 +12,100 @@ CREATE TABLE Programs (
   updated_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
 ) PRIMARY KEY (program_id);
 
--- Business Entities table - stores identified business entities (variables, constants)
-CREATE TABLE BusinessEntities (
-  entity_id STRING(256) NOT NULL,
-  entity_name STRING(200) NOT NULL,
-  entity_type STRING(50) NOT NULL, -- e.g., 'variable', 'constant', 'copybook'
-  description STRING(MAX),
-  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
-) PRIMARY KEY (entity_id);
-
--- Program Relationships table - stores CALL relationships between programs
-CREATE TABLE ProgramRelationships (
-  relationship_id STRING(256) NOT NULL,
-  source_program_id STRING(256) NOT NULL,
-  target_program_id STRING(256) NOT NULL,
-  relationship_type STRING(50) NOT NULL, -- e.g., 'CALLS'
-  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
-  FOREIGN KEY (source_program_id) REFERENCES Programs (program_id),
-  FOREIGN KEY (target_program_id) REFERENCES Programs (program_id),
-) PRIMARY KEY (relationship_id);
-
--- Code Sections table - stores analyzed code sections (Paragraphs, Sections)
-CREATE TABLE CodeSections (
-  section_id STRING(256) NOT NULL,
+-- 2. Source Code Lines (The Atomic Unit)
+-- Every single line of code is a record.
+CREATE TABLE SourceCodeLines (
+  line_id STRING(256) NOT NULL, -- Format: {program_id}_{line_number}
   program_id STRING(256) NOT NULL,
-  section_name STRING(200) NOT NULL,
-  section_type STRING(50) NOT NULL, -- e.g., 'DIVISION', 'SECTION', 'PARAGRAPH'
-  start_line INT64,
-  end_line INT64,
-  content STRING(MAX),
+  line_number INT64 NOT NULL,
+  content STRING(MAX) NOT NULL, -- Raw text
+  type STRING(50) NOT NULL, -- 'CODE', 'COMMENT', 'BLANK', 'DIRECTIVE'
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
   FOREIGN KEY (program_id) REFERENCES Programs (program_id),
-) PRIMARY KEY (section_id);
+) PRIMARY KEY (line_id);
 
--- Business Rules table - stores extracted business logic statements
-CREATE TABLE BusinessRules (
-  rule_id STRING(256) NOT NULL,
-  section_id STRING(256) NOT NULL,
-  rule_name STRING(200) NOT NULL,
-  rule_type STRING(50), -- Nullable, for future classification
-  technical_condition STRING(MAX), -- The actual IF/ELSE logic
-  plain_english STRING(MAX), -- Explanation of the logic
+-- 3. Code Structure (The Hierarchy)
+-- Divisions, Sections, Paragraphs.
+CREATE TABLE CodeStructure (
+  structure_id STRING(256) NOT NULL,
+  program_id STRING(256) NOT NULL,
+  parent_structure_id STRING(256), -- Recursive relationship (e.g. Section -> Division)
+  name STRING(200) NOT NULL,
+  type STRING(50) NOT NULL, -- 'DIVISION', 'SECTION', 'PARAGRAPH'
+  start_line_number INT64 NOT NULL,
+  end_line_number INT64 NOT NULL,
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
-  FOREIGN KEY (section_id) REFERENCES CodeSections (section_id),
-) PRIMARY KEY (rule_id);
+  FOREIGN KEY (program_id) REFERENCES Programs (program_id),
+  FOREIGN KEY (parent_structure_id) REFERENCES CodeStructure (structure_id),
+) PRIMARY KEY (structure_id);
 
--- Rule Entities table - mapping between rules and entities (Many-to-Many)
-CREATE TABLE RuleEntities (
-  rule_id STRING(256) NOT NULL,
+-- 4. Data Entities (Variables, Files)
+CREATE TABLE DataEntities (
   entity_id STRING(256) NOT NULL,
-  usage_type STRING(50), -- 'reads', 'updates', 'validates'
+  program_id STRING(256) NOT NULL,
+  name STRING(200) NOT NULL,
+  type STRING(50) NOT NULL, -- 'VARIABLE', 'FILE', 'COPYBOOK'
+  definition_line_id STRING(256), -- Where it is defined
+  description STRING(MAX),
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
-  FOREIGN KEY (rule_id) REFERENCES BusinessRules (rule_id),
-  FOREIGN KEY (entity_id) REFERENCES BusinessEntities (entity_id),
-) PRIMARY KEY (rule_id, entity_id);
+  FOREIGN KEY (program_id) REFERENCES Programs (program_id),
+  FOREIGN KEY (definition_line_id) REFERENCES SourceCodeLines (line_id),
+) PRIMARY KEY (entity_id);
 
--- Section Calls table - stores execution flow (Section -> Section)
-CREATE TABLE SectionCalls (
-  call_id STRING(256) NOT NULL,
-  source_section_id STRING(256) NOT NULL,
-  target_section_id STRING(256) NOT NULL,
-  call_type STRING(50) NOT NULL, -- 'PERFORM', 'GO TO'
+-- 5. Line References (The Usage Edges)
+-- Links lines to the entities they use.
+CREATE TABLE LineReferences (
+  reference_id STRING(256) NOT NULL,
+  source_line_id STRING(256) NOT NULL,
+  target_entity_id STRING(256) NOT NULL,
+  usage_type STRING(50) NOT NULL, -- 'READS', 'WRITES', 'DECLARATION'
   created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
-  FOREIGN KEY (source_section_id) REFERENCES CodeSections (section_id),
-  FOREIGN KEY (target_section_id) REFERENCES CodeSections (section_id),
-) PRIMARY KEY (call_id);
+  FOREIGN KEY (source_line_id) REFERENCES SourceCodeLines (line_id),
+  FOREIGN KEY (target_entity_id) REFERENCES DataEntities (entity_id),
+) PRIMARY KEY (reference_id);
 
--- Create indexes for common queries
-CREATE INDEX ProgramsByName ON Programs(program_name);
-CREATE INDEX RulesByType ON BusinessRules(rule_type);
+-- 6. Control Flow (The Execution Edges)
+-- Links lines (PERFORM/GO TO) to target Structures (Paragraphs).
+CREATE TABLE ControlFlow (
+  flow_id STRING(256) NOT NULL,
+  source_line_id STRING(256) NOT NULL,
+  target_structure_id STRING(256) NOT NULL,
+  type STRING(50) NOT NULL, -- 'PERFORM', 'GO_TO', 'CALL'
+  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
+  FOREIGN KEY (source_line_id) REFERENCES SourceCodeLines (line_id),
+  FOREIGN KEY (target_structure_id) REFERENCES CodeStructure (structure_id),
+) PRIMARY KEY (flow_id);
 
 -- Spanner Graph Definition
-CREATE PROPERTY GRAPH CobolKnowledgeGraph
+CREATE PROPERTY GRAPH CobolLineGraph
   NODE TABLES (
     Programs LABEL Program,
-    BusinessEntities LABEL Entity,
-    CodeSections LABEL Section,
-    BusinessRules LABEL Rule
+    SourceCodeLines LABEL Line,
+    CodeStructure LABEL Structure,
+    DataEntities LABEL Entity
   )
   EDGE TABLES (
-    ProgramRelationships
-      SOURCE KEY (source_program_id) REFERENCES Programs (program_id)
-      DESTINATION KEY (target_program_id) REFERENCES Programs (program_id)
-      LABEL CALLS,
-    CodeSections AS ContainsSection
-      SOURCE KEY (program_id) REFERENCES Programs (program_id)
-      DESTINATION KEY (section_id) REFERENCES CodeSections (section_id)
-      LABEL HAS_SECTION,
-    BusinessRules AS SectionContainsRule
-      SOURCE KEY (section_id) REFERENCES CodeSections (section_id)
-      DESTINATION KEY (rule_id) REFERENCES BusinessRules (rule_id)
-      LABEL HAS_RULE,
-    RuleEntities
-      SOURCE KEY (rule_id) REFERENCES BusinessRules (rule_id)
-      DESTINATION KEY (entity_id) REFERENCES BusinessEntities (entity_id)
-      LABEL REFERENCES_ENTITY,
-    SectionCalls
-      SOURCE KEY (source_section_id) REFERENCES CodeSections (section_id)
-      DESTINATION KEY (target_section_id) REFERENCES CodeSections (section_id)
-      LABEL SECTION_CALLS
+    -- Hierarchy: Structure contains Lines
+    SourceCodeLines AS ContainsLine
+      SOURCE KEY (program_id) REFERENCES Programs (program_id) -- Simplification, could traverse Structure
+      DESTINATION KEY (line_id) REFERENCES SourceCodeLines (line_id)
+      LABEL HAS_LINE,
+    
+    -- Hierarchy: Structure Parent/Child
+    CodeStructure AS ParentStructure
+      SOURCE KEY (parent_structure_id) REFERENCES CodeStructure (structure_id)
+      DESTINATION KEY (structure_id) REFERENCES CodeStructure (structure_id)
+      LABEL CONTAINS,
+
+    -- Usage: Line uses Entity
+    LineReferences
+      SOURCE KEY (source_line_id) REFERENCES SourceCodeLines (line_id)
+      DESTINATION KEY (target_entity_id) REFERENCES DataEntities (entity_id)
+      LABEL REFERENCES,
+
+    -- Flow: Line calls Structure
+    ControlFlow
+      SOURCE KEY (source_line_id) REFERENCES SourceCodeLines (line_id)
+      DESTINATION KEY (target_structure_id) REFERENCES CodeStructure (structure_id)
+      LABEL CALLS
   );
