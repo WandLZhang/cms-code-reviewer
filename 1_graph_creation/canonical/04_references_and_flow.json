@@ -1,0 +1,1146 @@
+{
+  "control_flow": [
+    {
+      "flow_id": "flow_CBTRN01C_157",
+      "source_line_id": "CBTRN01C_157",
+      "target_structure_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_158",
+      "source_line_id": "CBTRN01C_158",
+      "target_structure_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_159",
+      "source_line_id": "CBTRN01C_159",
+      "target_structure_id": "sec_CBTRN01C_0200-XREFFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_160",
+      "source_line_id": "CBTRN01C_160",
+      "target_structure_id": "sec_CBTRN01C_0300-CARDFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_161",
+      "source_line_id": "CBTRN01C_161",
+      "target_structure_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_162",
+      "source_line_id": "CBTRN01C_162",
+      "target_structure_id": "sec_CBTRN01C_0500-TRANFILE-OPEN",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_166",
+      "source_line_id": "CBTRN01C_166",
+      "target_structure_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_172",
+      "source_line_id": "CBTRN01C_172",
+      "target_structure_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_176",
+      "source_line_id": "CBTRN01C_176",
+      "target_structure_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_188",
+      "source_line_id": "CBTRN01C_188",
+      "target_structure_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_189",
+      "source_line_id": "CBTRN01C_189",
+      "target_structure_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_190",
+      "source_line_id": "CBTRN01C_190",
+      "target_structure_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_191",
+      "source_line_id": "CBTRN01C_191",
+      "target_structure_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_192",
+      "source_line_id": "CBTRN01C_192",
+      "target_structure_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_193",
+      "source_line_id": "CBTRN01C_193",
+      "target_structure_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_221",
+      "source_line_id": "CBTRN01C_221",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_222",
+      "source_line_id": "CBTRN01C_222",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_265",
+      "source_line_id": "CBTRN01C_265",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_266",
+      "source_line_id": "CBTRN01C_266",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_284",
+      "source_line_id": "CBTRN01C_284",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_285",
+      "source_line_id": "CBTRN01C_285",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_302",
+      "source_line_id": "CBTRN01C_302",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_303",
+      "source_line_id": "CBTRN01C_303",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_320",
+      "source_line_id": "CBTRN01C_320",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_321",
+      "source_line_id": "CBTRN01C_321",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_338",
+      "source_line_id": "CBTRN01C_338",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_339",
+      "source_line_id": "CBTRN01C_339",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_356",
+      "source_line_id": "CBTRN01C_356",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_357",
+      "source_line_id": "CBTRN01C_357",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_374",
+      "source_line_id": "CBTRN01C_374",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_375",
+      "source_line_id": "CBTRN01C_375",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_410",
+      "source_line_id": "CBTRN01C_410",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_411",
+      "source_line_id": "CBTRN01C_411",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_428",
+      "source_line_id": "CBTRN01C_428",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_429",
+      "source_line_id": "CBTRN01C_429",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_446",
+      "source_line_id": "CBTRN01C_446",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_447",
+      "source_line_id": "CBTRN01C_447",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_464",
+      "source_line_id": "CBTRN01C_464",
+      "target_structure_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "type": "PERFORM"
+    },
+    {
+      "flow_id": "flow_CBTRN01C_465",
+      "source_line_id": "CBTRN01C_465",
+      "target_structure_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "type": "PERFORM"
+    }
+  ],
+  "line_references": [
+    {
+      "reference_id": "ref_CBTRN01C_164_END-OF-DAILY-TRANS-FILE",
+      "source_line_id": "CBTRN01C_164",
+      "target_entity_name": "END-OF-DAILY-TRANS-FILE",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_165_END-OF-DAILY-TRANS-FILE",
+      "source_line_id": "CBTRN01C_165",
+      "target_entity_name": "END-OF-DAILY-TRANS-FILE",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_167_END-OF-DAILY-TRANS-FILE",
+      "source_line_id": "CBTRN01C_167",
+      "target_entity_name": "END-OF-DAILY-TRANS-FILE",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_170_WS-XREF-READ-STATUS",
+      "source_line_id": "CBTRN01C_170",
+      "target_entity_name": "WS-XREF-READ-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_171_DALYTRAN-CARD-NUM",
+      "source_line_id": "CBTRN01C_171",
+      "target_entity_name": "DALYTRAN-CARD-NUM",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_171_XREF-CARD-NUM",
+      "source_line_id": "CBTRN01C_171",
+      "target_entity_name": "XREF-CARD-NUM",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_173_WS-XREF-READ-STATUS",
+      "source_line_id": "CBTRN01C_173",
+      "target_entity_name": "WS-XREF-READ-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_174_WS-ACCT-READ-STATUS",
+      "source_line_id": "CBTRN01C_174",
+      "target_entity_name": "WS-ACCT-READ-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_175_XREF-ACCT-ID",
+      "source_line_id": "CBTRN01C_175",
+      "target_entity_name": "XREF-ACCT-ID",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_175_ACCT-ID",
+      "source_line_id": "CBTRN01C_175",
+      "target_entity_name": "ACCT-ID",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_177_WS-ACCT-READ-STATUS",
+      "source_line_id": "CBTRN01C_177",
+      "target_entity_name": "WS-ACCT-READ-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_178_ACCT-ID",
+      "source_line_id": "CBTRN01C_178",
+      "target_entity_name": "ACCT-ID",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_181_DALYTRAN-CARD-NUM",
+      "source_line_id": "CBTRN01C_181",
+      "target_entity_name": "DALYTRAN-CARD-NUM",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_183_DALYTRAN-ID",
+      "source_line_id": "CBTRN01C_183",
+      "target_entity_name": "DALYTRAN-ID",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_204_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_204",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_205_APPL-RESULT",
+      "source_line_id": "CBTRN01C_205",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_207_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_207",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_208_APPL-RESULT",
+      "source_line_id": "CBTRN01C_208",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_210_APPL-RESULT",
+      "source_line_id": "CBTRN01C_210",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_217_END-OF-DAILY-TRANS-FILE",
+      "source_line_id": "CBTRN01C_217",
+      "target_entity_name": "END-OF-DAILY-TRANS-FILE",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_220_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_220",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_220_IO-STATUS",
+      "source_line_id": "CBTRN01C_220",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_228_XREF-CARD-NUM",
+      "source_line_id": "CBTRN01C_228",
+      "target_entity_name": "XREF-CARD-NUM",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_228_FD-XREF-CARD-NUM",
+      "source_line_id": "CBTRN01C_228",
+      "target_entity_name": "FD-XREF-CARD-NUM",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_233_WS-XREF-READ-STATUS",
+      "source_line_id": "CBTRN01C_233",
+      "target_entity_name": "WS-XREF-READ-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_236_XREF-CARD-NUM",
+      "source_line_id": "CBTRN01C_236",
+      "target_entity_name": "XREF-CARD-NUM",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_237_XREF-ACCT-ID",
+      "source_line_id": "CBTRN01C_237",
+      "target_entity_name": "XREF-ACCT-ID",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_238_XREF-CUST-ID",
+      "source_line_id": "CBTRN01C_238",
+      "target_entity_name": "XREF-CUST-ID",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_242_ACCT-ID",
+      "source_line_id": "CBTRN01C_242",
+      "target_entity_name": "ACCT-ID",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_242_FD-ACCT-ID",
+      "source_line_id": "CBTRN01C_242",
+      "target_entity_name": "FD-ACCT-ID",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_247_WS-ACCT-READ-STATUS",
+      "source_line_id": "CBTRN01C_247",
+      "target_entity_name": "WS-ACCT-READ-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_253_APPL-RESULT",
+      "source_line_id": "CBTRN01C_253",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_255_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_255",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_256_APPL-RESULT",
+      "source_line_id": "CBTRN01C_256",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_258_APPL-RESULT",
+      "source_line_id": "CBTRN01C_258",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_264_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_264",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_264_IO-STATUS",
+      "source_line_id": "CBTRN01C_264",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_253_APPL-RESULT",
+      "source_line_id": "CBTRN01C_253",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_254_DALYTRAN-FILE",
+      "source_line_id": "CBTRN01C_254",
+      "target_entity_name": "DALYTRAN-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_255_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_255",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_256_APPL-RESULT",
+      "source_line_id": "CBTRN01C_256",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_258_APPL-RESULT",
+      "source_line_id": "CBTRN01C_258",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_260_APPL-AOK",
+      "source_line_id": "CBTRN01C_260",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_264_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_264",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_264_IO-STATUS",
+      "source_line_id": "CBTRN01C_264",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_272_APPL-RESULT",
+      "source_line_id": "CBTRN01C_272",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_273_CUSTOMER-FILE",
+      "source_line_id": "CBTRN01C_273",
+      "target_entity_name": "CUSTOMER-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_274_CUSTFILE-STATUS",
+      "source_line_id": "CBTRN01C_274",
+      "target_entity_name": "CUSTFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_275_APPL-RESULT",
+      "source_line_id": "CBTRN01C_275",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_277_APPL-RESULT",
+      "source_line_id": "CBTRN01C_277",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_279_APPL-AOK",
+      "source_line_id": "CBTRN01C_279",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_283_CUSTFILE-STATUS",
+      "source_line_id": "CBTRN01C_283",
+      "target_entity_name": "CUSTFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_283_IO-STATUS",
+      "source_line_id": "CBTRN01C_283",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_290_APPL-RESULT",
+      "source_line_id": "CBTRN01C_290",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_291_XREF-FILE",
+      "source_line_id": "CBTRN01C_291",
+      "target_entity_name": "XREF-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_292_XREFFILE-STATUS",
+      "source_line_id": "CBTRN01C_292",
+      "target_entity_name": "XREFFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_293_APPL-RESULT",
+      "source_line_id": "CBTRN01C_293",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_295_APPL-RESULT",
+      "source_line_id": "CBTRN01C_295",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_297_APPL-AOK",
+      "source_line_id": "CBTRN01C_297",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_301_XREFFILE-STATUS",
+      "source_line_id": "CBTRN01C_301",
+      "target_entity_name": "XREFFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_301_IO-STATUS",
+      "source_line_id": "CBTRN01C_301",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_308_APPL-RESULT",
+      "source_line_id": "CBTRN01C_308",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_309_CARD-FILE",
+      "source_line_id": "CBTRN01C_309",
+      "target_entity_name": "CARD-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_310_CARDFILE-STATUS",
+      "source_line_id": "CBTRN01C_310",
+      "target_entity_name": "CARDFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_311_APPL-RESULT",
+      "source_line_id": "CBTRN01C_311",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_313_APPL-RESULT",
+      "source_line_id": "CBTRN01C_313",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_315_APPL-AOK",
+      "source_line_id": "CBTRN01C_315",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_319_CARDFILE-STATUS",
+      "source_line_id": "CBTRN01C_319",
+      "target_entity_name": "CARDFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_319_IO-STATUS",
+      "source_line_id": "CBTRN01C_319",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_326_APPL-RESULT",
+      "source_line_id": "CBTRN01C_326",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_327_ACCOUNT-FILE",
+      "source_line_id": "CBTRN01C_327",
+      "target_entity_name": "ACCOUNT-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_328_ACCTFILE-STATUS",
+      "source_line_id": "CBTRN01C_328",
+      "target_entity_name": "ACCTFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_329_APPL-RESULT",
+      "source_line_id": "CBTRN01C_329",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_331_APPL-RESULT",
+      "source_line_id": "CBTRN01C_331",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_333_APPL-AOK",
+      "source_line_id": "CBTRN01C_333",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_337_ACCTFILE-STATUS",
+      "source_line_id": "CBTRN01C_337",
+      "target_entity_name": "ACCTFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_337_IO-STATUS",
+      "source_line_id": "CBTRN01C_337",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_344_APPL-RESULT",
+      "source_line_id": "CBTRN01C_344",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_345_TRANSACT-FILE",
+      "source_line_id": "CBTRN01C_345",
+      "target_entity_name": "TRANSACT-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_346_TRANFILE-STATUS",
+      "source_line_id": "CBTRN01C_346",
+      "target_entity_name": "TRANFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_347_APPL-RESULT",
+      "source_line_id": "CBTRN01C_347",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_349_APPL-RESULT",
+      "source_line_id": "CBTRN01C_349",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_351_APPL-AOK",
+      "source_line_id": "CBTRN01C_351",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_355_TRANFILE-STATUS",
+      "source_line_id": "CBTRN01C_355",
+      "target_entity_name": "TRANFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_355_IO-STATUS",
+      "source_line_id": "CBTRN01C_355",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_362_APPL-RESULT",
+      "source_line_id": "CBTRN01C_362",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_363_DALYTRAN-FILE",
+      "source_line_id": "CBTRN01C_363",
+      "target_entity_name": "DALYTRAN-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_364_DALYTRAN-STATUS",
+      "source_line_id": "CBTRN01C_364",
+      "target_entity_name": "DALYTRAN-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_365_APPL-RESULT",
+      "source_line_id": "CBTRN01C_365",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_367_APPL-RESULT",
+      "source_line_id": "CBTRN01C_367",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_369_APPL-AOK",
+      "source_line_id": "CBTRN01C_369",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_373_CUSTFILE-STATUS",
+      "source_line_id": "CBTRN01C_373",
+      "target_entity_name": "CUSTFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_373_IO-STATUS",
+      "source_line_id": "CBTRN01C_373",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_380_APPL-RESULT",
+      "source_line_id": "CBTRN01C_380",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_381_CUSTOMER-FILE",
+      "source_line_id": "CBTRN01C_381",
+      "target_entity_name": "CUSTOMER-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_382_CUSTFILE-STATUS",
+      "source_line_id": "CBTRN01C_382",
+      "target_entity_name": "CUSTFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_383_APPL-RESULT",
+      "source_line_id": "CBTRN01C_383",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_385_APPL-RESULT",
+      "source_line_id": "CBTRN01C_385",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_387_APPL-AOK",
+      "source_line_id": "CBTRN01C_387",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_391_CUSTFILE-STATUS",
+      "source_line_id": "CBTRN01C_391",
+      "target_entity_name": "CUSTFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_391_IO-STATUS",
+      "source_line_id": "CBTRN01C_391",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_398_APPL-RESULT",
+      "source_line_id": "CBTRN01C_398",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_399_XREF-FILE",
+      "source_line_id": "CBTRN01C_399",
+      "target_entity_name": "XREF-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_400_XREFFILE-STATUS",
+      "source_line_id": "CBTRN01C_400",
+      "target_entity_name": "XREFFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_401_APPL-RESULT",
+      "source_line_id": "CBTRN01C_401",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_403_APPL-RESULT",
+      "source_line_id": "CBTRN01C_403",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_405_APPL-AOK",
+      "source_line_id": "CBTRN01C_405",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_409_XREFFILE-STATUS",
+      "source_line_id": "CBTRN01C_409",
+      "target_entity_name": "XREFFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_409_IO-STATUS",
+      "source_line_id": "CBTRN01C_409",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_416_APPL-RESULT",
+      "source_line_id": "CBTRN01C_416",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_417_CARD-FILE",
+      "source_line_id": "CBTRN01C_417",
+      "target_entity_name": "CARD-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_418_CARDFILE-STATUS",
+      "source_line_id": "CBTRN01C_418",
+      "target_entity_name": "CARDFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_419_APPL-RESULT",
+      "source_line_id": "CBTRN01C_419",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_421_APPL-RESULT",
+      "source_line_id": "CBTRN01C_421",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_423_APPL-AOK",
+      "source_line_id": "CBTRN01C_423",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_427_CARDFILE-STATUS",
+      "source_line_id": "CBTRN01C_427",
+      "target_entity_name": "CARDFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_427_IO-STATUS",
+      "source_line_id": "CBTRN01C_427",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_434_APPL-RESULT",
+      "source_line_id": "CBTRN01C_434",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_435_ACCOUNT-FILE",
+      "source_line_id": "CBTRN01C_435",
+      "target_entity_name": "ACCOUNT-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_436_ACCTFILE-STATUS",
+      "source_line_id": "CBTRN01C_436",
+      "target_entity_name": "ACCTFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_437_APPL-RESULT",
+      "source_line_id": "CBTRN01C_437",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_439_APPL-RESULT",
+      "source_line_id": "CBTRN01C_439",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_441_APPL-AOK",
+      "source_line_id": "CBTRN01C_441",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_445_ACCTFILE-STATUS",
+      "source_line_id": "CBTRN01C_445",
+      "target_entity_name": "ACCTFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_445_IO-STATUS",
+      "source_line_id": "CBTRN01C_445",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_452_APPL-RESULT",
+      "source_line_id": "CBTRN01C_452",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_453_TRANSACT-FILE",
+      "source_line_id": "CBTRN01C_453",
+      "target_entity_name": "TRANSACT-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_454_TRANFILE-STATUS",
+      "source_line_id": "CBTRN01C_454",
+      "target_entity_name": "TRANFILE-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_455_APPL-RESULT",
+      "source_line_id": "CBTRN01C_455",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_457_APPL-RESULT",
+      "source_line_id": "CBTRN01C_457",
+      "target_entity_name": "APPL-RESULT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_459_APPL-AOK",
+      "source_line_id": "CBTRN01C_459",
+      "target_entity_name": "APPL-AOK",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_463_TRANFILE-STATUS",
+      "source_line_id": "CBTRN01C_463",
+      "target_entity_name": "TRANFILE-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_463_IO-STATUS",
+      "source_line_id": "CBTRN01C_463",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_471_TIMING",
+      "source_line_id": "CBTRN01C_471",
+      "target_entity_name": "TIMING",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_472_ABCODE",
+      "source_line_id": "CBTRN01C_472",
+      "target_entity_name": "ABCODE",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_473_ABCODE",
+      "source_line_id": "CBTRN01C_473",
+      "target_entity_name": "ABCODE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_473_TIMING",
+      "source_line_id": "CBTRN01C_473",
+      "target_entity_name": "TIMING",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_477_IO-STATUS",
+      "source_line_id": "CBTRN01C_477",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_478_IO-STAT1",
+      "source_line_id": "CBTRN01C_478",
+      "target_entity_name": "IO-STAT1",
+      "usage_type": "VALIDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_479_IO-STAT1",
+      "source_line_id": "CBTRN01C_479",
+      "target_entity_name": "IO-STAT1",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_479_IO-STATUS-04",
+      "source_line_id": "CBTRN01C_479",
+      "target_entity_name": "IO-STATUS-04",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_480_TWO-BYTES-BINARY",
+      "source_line_id": "CBTRN01C_480",
+      "target_entity_name": "TWO-BYTES-BINARY",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_481_IO-STAT2",
+      "source_line_id": "CBTRN01C_481",
+      "target_entity_name": "IO-STAT2",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_481_TWO-BYTES-RIGHT",
+      "source_line_id": "CBTRN01C_481",
+      "target_entity_name": "TWO-BYTES-RIGHT",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_482_TWO-BYTES-BINARY",
+      "source_line_id": "CBTRN01C_482",
+      "target_entity_name": "TWO-BYTES-BINARY",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_482_IO-STATUS-0403",
+      "source_line_id": "CBTRN01C_482",
+      "target_entity_name": "IO-STATUS-0403",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_483_IO-STATUS-04",
+      "source_line_id": "CBTRN01C_483",
+      "target_entity_name": "IO-STATUS-04",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_485_IO-STATUS-04",
+      "source_line_id": "CBTRN01C_485",
+      "target_entity_name": "IO-STATUS-04",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_486_IO-STATUS",
+      "source_line_id": "CBTRN01C_486",
+      "target_entity_name": "IO-STATUS",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_486_IO-STATUS-04",
+      "source_line_id": "CBTRN01C_486",
+      "target_entity_name": "IO-STATUS-04",
+      "usage_type": "UPDATES"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_487_IO-STATUS-04",
+      "source_line_id": "CBTRN01C_487",
+      "target_entity_name": "IO-STATUS-04",
+      "usage_type": "READS"
+    }
+  ]
+}

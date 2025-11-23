@@ -1,0 +1,224 @@
+{
+  "entities": [
+    {
+      "entity_name": "DALYTRAN-FILE",
+      "entity_type": "FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CUSTOMER-FILE",
+      "entity_type": "FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREF-FILE",
+      "entity_type": "FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARD-FILE",
+      "entity_type": "FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCOUNT-FILE",
+      "entity_type": "FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TRANSACT-FILE",
+      "entity_type": "FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "DALYTRAN-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CUSTFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREFFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARDFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCTFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TRANFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS-04",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "APPL-RESULT",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "APPL-AOK",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "APPL-EOF",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "END-OF-DAILY-TRANS-FILE",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ABCODE",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TIMING",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "WS-XREF-READ-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "WS-ACCT-READ-STATUS",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRAN-RECORD",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CUSTFILE-REC",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-XREFFILE-REC",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CARDFILE-REC",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-ACCTFILE-REC",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRANFILE-REC",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRAN-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CUST-DATA",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CUST-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-XREF-CARD-NUM",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-XREF-DATA",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CARD-NUM",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CARD-DATA",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-ACCT-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-ACCT-DATA",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRANS-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "DALYTRAN-CARD-NUM",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREF-CARD-NUM",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREF-ACCT-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCT-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "DALYTRAN-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREF-CUST-ID",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    }
+  ]
+}
