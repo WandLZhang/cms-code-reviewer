@@ -381,6 +381,18 @@
       "usage_type": "UPDATES"
     },
     {
+      "reference_id": "ref_CBTRN01C_229_XREF-FILE",
+      "source_line_id": "CBTRN01C_229",
+      "target_entity_name": "XREF-FILE",
+      "usage_type": "READS"
+    },
+    {
+      "reference_id": "ref_CBTRN01C_229_CARD-XREF-RECORD",
+      "source_line_id": "CBTRN01C_229",
+      "target_entity_name": "CARD-XREF-RECORD",
+      "usage_type": "UPDATES"
+    },
+    {
       "reference_id": "ref_CBTRN01C_233_WS-XREF-READ-STATUS",
       "source_line_id": "CBTRN01C_233",
       "target_entity_name": "WS-XREF-READ-STATUS",

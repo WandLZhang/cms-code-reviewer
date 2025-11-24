@@ -95,7 +95,7 @@ CREATE PROPERTY GRAPH CobolLineGraph
     CodeStructure AS ParentStructure
       SOURCE KEY (parent_structure_id) REFERENCES CodeStructure (structure_id)
       DESTINATION KEY (structure_id) REFERENCES CodeStructure (structure_id)
-      LABEL CONTAINS,
+      LABEL CONTAINS_CHILD,
 
     -- Usage: Line uses Entity
     LineReferences

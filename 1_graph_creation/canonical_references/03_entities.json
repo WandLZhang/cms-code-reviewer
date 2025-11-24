@@ -219,6 +219,36 @@
       "entity_name": "XREF-CUST-ID",
       "entity_type": "VARIABLE",
       "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STAT1",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STAT2",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TWO-BYTES-BINARY",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TWO-BYTES-RIGHT",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS-0403",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARD-XREF-RECORD",
+      "entity_type": "VARIABLE",
+      "program_id": "CBTRN01C"
     }
   ]
 }
