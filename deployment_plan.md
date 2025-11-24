@@ -14,23 +14,23 @@ We use Cloud Spanner Enterprise edition to support Spanner Graph.
 
 2.  **Create Instance (Enterprise):**
     ```bash
-    gcloud spanner instances create cobol-graph-instance \
+    gcloud spanner instances create cobol-graph-v2 \
         --config=regional-us-central1 \
         --description="COBOL Graph" \
         --nodes=1 \
         --edition=ENTERPRISE
     ```
-    *(Note: If you have a Standard instance, update it: `gcloud spanner instances update cobol-graph-instance --edition=ENTERPRISE`)*
+    *(Note: If you have a Standard instance, update it: `gcloud spanner instances update cobol-graph-v2 --edition=ENTERPRISE`)*
 
 3.  **Create Database:**
     ```bash
-    gcloud spanner databases create cobol-graph-db --instance=cobol-graph-instance
+    gcloud spanner databases create cobol-graph-db --instance=cobol-graph-v2
     ```
 
 4.  **Apply Schema (including Graph Definition):**
     ```bash
     gcloud spanner databases ddl update cobol-graph-db \
-        --instance=cobol-graph-instance \
+        --instance=cobol-graph-v2 \
         --ddl-file=1_graph_creation/spanner-schema.sql
     ```
 

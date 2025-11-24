@@ -24,23 +24,23 @@ def main():
     instance = spanner_client.instance(args.instance_id)
     database = instance.database(args.database_id)
 
-    # 1. Traceability: Show lines referencing 'XREF-FILE'
-    # Adapted for Line-Centric Schema: Entity <-[:REFERENCES]- Line
-    query_traceability = """
+    # 1. Life of a Transaction ("The Policy Map")
+    # Maps the Main Control Flow to the Data Checks.
+    query_policy_map = """
     GRAPH CobolLineGraph
-    MATCH (e:Entity {name: 'XREF-FILE'})<-[:REFERENCES]-(l:Line)
-    RETURN l.line_number, l.content, e.name
+    MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
+    MATCH (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
+    MATCH (sub)-[:CONTAINS_LINE]->(update_line:Line)-[:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
+    MATCH (decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
+    WHERE decision_line.structure_id = main.structure_id
+    RETURN 
+      call_line.line_number AS Sequence,
+      sub.name AS Routine,
+      entity.name AS Entity_Checked,
+      decision_line.content AS Logic_Gate
+    ORDER BY call_line.line_number
     """
-    run_query(database, query_traceability, "Traceability (XREF-FILE)")
-
-    # 2. Execution Flow (One Hop): Show calls from lines
-    # Adapted: Line -[:CALLS]-> Structure
-    query_flow = """
-    GRAPH CobolLineGraph
-    MATCH (l:Line)-[:CALLS]->(s:Structure)
-    RETURN l.line_number, l.content, s.name
-    """
-    run_query(database, query_flow, "Execution Flow (Line -> Structure)")
+    run_query(database, query_policy_map, "Life of a Transaction (Policy Map)")
 
 if __name__ == '__main__':
     main()

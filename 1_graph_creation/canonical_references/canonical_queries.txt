@@ -3,28 +3,22 @@
  CANONICAL QUERIES (GQL)
 ------------------------------------------------------------------------------
 
-1. TRACEABILITY ("The Killer Query")
-   "Show me every line of logic that touches Revenue Code 0421"
-
-   Context (CardDemo): "Show me logic touching XREF-FILE or DALYTRAN-CARD-NUM"
+1. LIFE OF A TRANSACTION ("The Policy Map")
+   "Show me the sequence of validation gates a transaction must pass through."
    
-   MATCH (input:Entity {name: 'XREF-FILE'})<-[:REFERENCES_ENTITY]-(rule:Rule)
-   MATCH (rule)<-[:HAS_RULE]-(section:Section)<-[:HAS_SECTION]-(prog:Program)
+   Context: "Map the 'Process Transaction' flow to its data checks (Provider/XREF, Beneficiary/Account)."
+
+   MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
+   MATCH (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
+   MATCH (sub)-[:CONTAINS_LINE]->(update_line:Line)-[:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
+   MATCH (decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
+   WHERE decision_line.structure_id = main.structure_id
    RETURN 
-     prog.program_name AS Program,
-     section.section_name AS Paragraph,
-     rule.technical_condition AS Logic,
-     rule.plain_english AS Meaning
-   ORDER BY prog.program_name
-
-2. EXECUTION FLOW ("The Tree Query")
-   "Show the execution path starting from 1000-PROCESS-CLAIM"
-   
-   Context (CardDemo): "Show decision tree for Transaction Verification (CBTRN01C)"
-
-   MATCH path = (start:Section {name: 'MAIN-PARA'})-[:SECTION_CALLS*]->(sub:Section)
-   WHERE start.program_id = 'CBTRN01C'
-   RETURN path
+     call_line.line_number AS Sequence,
+     sub.name AS Routine,
+     entity.name AS Entity_Checked,
+     decision_line.content AS Logic_Gate
+   ORDER BY call_line.line_number
 
 ------------------------------------------------------------------------------
 */

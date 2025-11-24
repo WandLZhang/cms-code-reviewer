@@ -79,25 +79,20 @@ def main():
     database.run_in_transaction(insert_program)
 
 
-    # 2. Load SourceCodeLines
-    print("Loading SourceCodeLines...")
-    # Fix type to uppercase to match schema enum if needed, but schema says STRING(50) so it's flexible.
-    # Mapping: JSON 'line_id', 'program_id', 'line_number', 'content', 'type' -> Spanner columns
-    source_lines = source_lines_data['source_code_lines']
-    insert_data(database, 'SourceCodeLines', source_lines)
-
-    # 3. Load CodeStructure
+    # 3. Load CodeStructure (Must load first to calculate structure_id for lines)
     print("Loading CodeStructure...")
     structure_data = load_json(os.path.join(base_dir, '02_structure.json'))
-    # JSON keys: section_id, name, type, start_line, end_line, parent_structure_id, content
-    # Schema: structure_id, program_id, parent_structure_id, name, type, start_line_number, end_line_number
-    
-    # Need to transform JSON keys to Schema keys
     structure_records = []
-    for item in structure_data['structure']:
+    line_to_structure_map = {} # Map line_number -> structure_id (Paragraph priority)
+
+    # Sort structures to process Divisions, then Sections, then Paragraphs
+    # This ensures Paragraphs overwrite broader scopes in the map
+    sorted_structures = sorted(structure_data['structure'], key=lambda x: {'DIVISION': 1, 'SECTION': 2, 'PARAGRAPH': 3}.get(x['type'], 0))
+
+    for item in sorted_structures:
         record = {
             'structure_id': item['section_id'],
-            'program_id': program_meta['program_id'], # derived from context
+            'program_id': program_meta['program_id'], 
             'parent_structure_id': item['parent_structure_id'],
             'name': item['name'],
             'type': item['type'],
@@ -105,7 +100,21 @@ def main():
             'end_line_number': item['end_line']
         }
         structure_records.append(record)
+        
+        # Map lines to this structure
+        for line_num in range(item['start_line'], item['end_line'] + 1):
+            line_to_structure_map[line_num] = item['section_id']
+
     insert_data(database, 'CodeStructure', structure_records)
+
+    # 2. Load SourceCodeLines
+    print("Loading SourceCodeLines...")
+    source_lines = source_lines_data['source_code_lines']
+    # Add structure_id to each line record
+    for line in source_lines:
+        line['structure_id'] = line_to_structure_map.get(line['line_number'])
+        
+    insert_data(database, 'SourceCodeLines', source_lines)
 
     # 4. Load DataEntities
     print("Loading DataEntities...")

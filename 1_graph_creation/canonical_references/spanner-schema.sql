@@ -12,19 +12,7 @@ CREATE TABLE Programs (
   updated_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
 ) PRIMARY KEY (program_id);
 
--- 2. Source Code Lines (The Atomic Unit)
--- Every single line of code is a record.
-CREATE TABLE SourceCodeLines (
-  line_id STRING(256) NOT NULL, -- Format: {program_id}_{line_number}
-  program_id STRING(256) NOT NULL,
-  line_number INT64 NOT NULL,
-  content STRING(MAX) NOT NULL, -- Raw text
-  type STRING(50) NOT NULL, -- 'CODE', 'COMMENT', 'BLANK', 'DIRECTIVE'
-  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
-  FOREIGN KEY (program_id) REFERENCES Programs (program_id),
-) PRIMARY KEY (line_id);
-
--- 3. Code Structure (The Hierarchy)
+-- 2. Code Structure (The Hierarchy)
 -- Divisions, Sections, Paragraphs.
 CREATE TABLE CodeStructure (
   structure_id STRING(256) NOT NULL,
@@ -38,6 +26,20 @@ CREATE TABLE CodeStructure (
   FOREIGN KEY (program_id) REFERENCES Programs (program_id),
   FOREIGN KEY (parent_structure_id) REFERENCES CodeStructure (structure_id),
 ) PRIMARY KEY (structure_id);
+
+-- 3. Source Code Lines (The Atomic Unit)
+-- Every single line of code is a record.
+CREATE TABLE SourceCodeLines (
+  line_id STRING(256) NOT NULL, -- Format: {program_id}_{line_number}
+  program_id STRING(256) NOT NULL,
+  structure_id STRING(256), -- The smallest containing structure (e.g. Paragraph)
+  line_number INT64 NOT NULL,
+  content STRING(MAX) NOT NULL, -- Raw text
+  type STRING(50) NOT NULL, -- 'CODE', 'COMMENT', 'BLANK', 'DIRECTIVE'
+  created_at TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
+  FOREIGN KEY (program_id) REFERENCES Programs (program_id),
+  FOREIGN KEY (structure_id) REFERENCES CodeStructure (structure_id),
+) PRIMARY KEY (line_id);
 
 -- 4. Data Entities (Variables, Files)
 CREATE TABLE DataEntities (
@@ -77,12 +79,12 @@ CREATE TABLE ControlFlow (
 ) PRIMARY KEY (flow_id);
 
 -- Spanner Graph Definition
-CREATE PROPERTY GRAPH CobolLineGraph
+CREATE OR REPLACE PROPERTY GRAPH CobolLineGraph
   NODE TABLES (
-    Programs LABEL Program,
-    SourceCodeLines LABEL Line,
-    CodeStructure LABEL Structure,
-    DataEntities LABEL Entity
+    Programs KEY (program_id, program_name) LABEL Program PROPERTIES (program_name, file_name),
+    SourceCodeLines KEY (line_id, line_number) LABEL Line PROPERTIES (content, line_number, type),
+    CodeStructure KEY (structure_id, name) LABEL Structure PROPERTIES (name, type, start_line_number, end_line_number),
+    DataEntities KEY (entity_id, name) LABEL Entity PROPERTIES (name, type, description)
   )
   EDGE TABLES (
     -- Hierarchy: Structure contains Lines
@@ -96,6 +98,12 @@ CREATE PROPERTY GRAPH CobolLineGraph
       SOURCE KEY (parent_structure_id) REFERENCES CodeStructure (structure_id)
       DESTINATION KEY (structure_id) REFERENCES CodeStructure (structure_id)
       LABEL CONTAINS_CHILD,
+
+    -- Hierarchy: Structure contains Lines (NEW)
+    SourceCodeLines AS StructureContainsLine
+      SOURCE KEY (structure_id) REFERENCES CodeStructure (structure_id)
+      DESTINATION KEY (line_id) REFERENCES SourceCodeLines (line_id)
+      LABEL CONTAINS_LINE,
 
     -- Usage: Line uses Entity
     LineReferences
