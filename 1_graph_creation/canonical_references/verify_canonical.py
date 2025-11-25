@@ -31,8 +31,7 @@ def main():
     MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
     MATCH (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
     MATCH (sub)-[:CONTAINS_LINE]->(update_line:Line)-[:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
-    MATCH (decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
-    WHERE decision_line.structure_id = main.structure_id
+    MATCH (main)-[:CONTAINS_LINE]->(decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
     RETURN 
       call_line.line_number AS Sequence,
       sub.name AS Routine,

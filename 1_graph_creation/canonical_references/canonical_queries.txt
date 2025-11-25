@@ -21,4 +21,50 @@
    ORDER BY call_line.line_number
 
 ------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+ TARGET GRAPH VISUALIZATION (ASCII ART)
+------------------------------------------------------------------------------
+Query Context: "Life of a Transaction" - Policy Map
+Shows the sequence of validation gates a transaction must pass through.
+
+                                   [Structure]
+                                 ( MAIN-PARA )
+                                       |
+            +--------------------------+--------------------------+
+            |                                                     |
+            | [CALLS]                                             | [CALLS]
+            v                                                     v
+      [Structure]                                           [Structure]
+( 2000-LOOKUP-XREF )                                  ( 3000-READ-ACCOUNT )
+            |                                                     |
+            +-----------+                                         +-----------+
+            |           |                                         |           |
+    [READS] |           | [UPDATES]                       [READS] |           | [UPDATES]
+            v           v                                         v           v
+        [Entity]    [Entity]                                  [Entity]    [Entity]
+     ( XREF-FILE ) ( WS-XREF-                                ( ACCT-ID ) ( WS-ACCT-
+                     READ-STATUS )                                         READ-STATUS )
+                        ^                                                     ^
+                        |                                                     |
+                        +-----------------------------------------------------+
+                                          |
+                                     [VALIDATES]
+                                          |
+                                     ( MAIN-PARA )
+
+------------------------------------------------------------------------------
+ GRAPH LEGEND
+------------------------------------------------------------------------------
+Nodes: ( Name )
+ - Structure: COBOL Paragraphs (Logic containers)
+ - Entity: Files (Data Stores) or Variables (Data Elements)
+
+Edges: [ TYPE ]
+ - CALLS: Control flow transfer (PERFORM)
+ - READS: Data ingestion
+ - UPDATES: State modification (setting return codes)
+ - VALIDATES: Decision logic (IF condition checking the return code)
+------------------------------------------------------------------------------
+
+
 */
