@@ -1,0 +1,284 @@
+{
+  "structure": [
+    {
+      "section_id": "sec_CBTRN01C_IDENTIFICATION_DIVISION",
+      "program_id": "CBTRN01C",
+      "name": "IDENTIFICATION DIVISION",
+      "type": "DIVISION",
+      "start_line": 22,
+      "end_line": 25,
+      "parent_structure_id": null,
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID.    CBTRN01C.\n       AUTHOR.        AWS.\n\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_PROGRAM-ID",
+      "program_id": "CBTRN01C",
+      "name": "PROGRAM-ID",
+      "type": "PARAGRAPH",
+      "start_line": 23,
+      "end_line": 23,
+      "parent_structure_id": "sec_CBTRN01C_IDENTIFICATION_DIVISION",
+      "content": "       PROGRAM-ID.    CBTRN01C.\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_AUTHOR",
+      "program_id": "CBTRN01C",
+      "name": "AUTHOR",
+      "type": "PARAGRAPH",
+      "start_line": 24,
+      "end_line": 25,
+      "parent_structure_id": "sec_CBTRN01C_IDENTIFICATION_DIVISION",
+      "content": "       AUTHOR.        AWS.\n\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_ENVIRONMENT_DIVISION",
+      "program_id": "CBTRN01C",
+      "name": "ENVIRONMENT DIVISION",
+      "type": "DIVISION",
+      "start_line": 26,
+      "end_line": 63,
+      "parent_structure_id": null,
+      "content": "       ENVIRONMENT DIVISION.\n       INPUT-OUTPUT SECTION.\n       FILE-CONTROL.\n           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN\n                  ORGANIZATION IS SEQUENTIAL\n                  ACCESS MODE  IS SEQUENTIAL\n                  FILE STATUS  IS DALYTRAN-STATUS.\n\n           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CUST-ID\n                  FILE STATUS  IS CUSTFILE-STATUS.\n\n           SELECT XREF-FILE ASSIGN TO   XREFFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-XREF-CARD-NUM\n                  FILE STATUS  IS XREFFILE-STATUS.\n\n           SELECT CARD-FILE ASSIGN TO   CARDFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CARD-NUM\n                  FILE STATUS  IS CARDFILE-STATUS.\n\n           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-ACCT-ID\n                  FILE STATUS  IS ACCTFILE-STATUS.\n\n           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-TRANS-ID\n                  FILE STATUS  IS TRANFILE-STATUS.\n      *\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_INPUT-OUTPUT_SECTION",
+      "program_id": "CBTRN01C",
+      "name": "INPUT-OUTPUT SECTION",
+      "type": "SECTION",
+      "start_line": 27,
+      "end_line": 63,
+      "parent_structure_id": "sec_CBTRN01C_ENVIRONMENT_DIVISION",
+      "content": "       INPUT-OUTPUT SECTION.\n       FILE-CONTROL.\n           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN\n                  ORGANIZATION IS SEQUENTIAL\n                  ACCESS MODE  IS SEQUENTIAL\n                  FILE STATUS  IS DALYTRAN-STATUS.\n\n           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CUST-ID\n                  FILE STATUS  IS CUSTFILE-STATUS.\n\n           SELECT XREF-FILE ASSIGN TO   XREFFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-XREF-CARD-NUM\n                  FILE STATUS  IS XREFFILE-STATUS.\n\n           SELECT CARD-FILE ASSIGN TO   CARDFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CARD-NUM\n                  FILE STATUS  IS CARDFILE-STATUS.\n\n           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-ACCT-ID\n                  FILE STATUS  IS ACCTFILE-STATUS.\n\n           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-TRANS-ID\n                  FILE STATUS  IS TRANFILE-STATUS.\n      *\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_FILE-CONTROL",
+      "program_id": "CBTRN01C",
+      "name": "FILE-CONTROL",
+      "type": "PARAGRAPH",
+      "start_line": 28,
+      "end_line": 63,
+      "parent_structure_id": "sec_CBTRN01C_INPUT-OUTPUT_SECTION",
+      "content": "       FILE-CONTROL.\n           SELECT DALYTRAN-FILE ASSIGN TO DALYTRAN\n                  ORGANIZATION IS SEQUENTIAL\n                  ACCESS MODE  IS SEQUENTIAL\n                  FILE STATUS  IS DALYTRAN-STATUS.\n\n           SELECT CUSTOMER-FILE ASSIGN TO   CUSTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CUST-ID\n                  FILE STATUS  IS CUSTFILE-STATUS.\n\n           SELECT XREF-FILE ASSIGN TO   XREFFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-XREF-CARD-NUM\n                  FILE STATUS  IS XREFFILE-STATUS.\n\n           SELECT CARD-FILE ASSIGN TO   CARDFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-CARD-NUM\n                  FILE STATUS  IS CARDFILE-STATUS.\n\n           SELECT ACCOUNT-FILE ASSIGN TO   ACCTFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-ACCT-ID\n                  FILE STATUS  IS ACCTFILE-STATUS.\n\n           SELECT TRANSACT-FILE ASSIGN TO   TRANFILE\n                  ORGANIZATION IS INDEXED\n                  ACCESS MODE  IS RANDOM\n                  RECORD KEY   IS FD-TRANS-ID\n                  FILE STATUS  IS TRANFILE-STATUS.\n      *\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_DATA_DIVISION",
+      "program_id": "CBTRN01C",
+      "name": "DATA DIVISION",
+      "type": "DIVISION",
+      "start_line": 64,
+      "end_line": 153,
+      "parent_structure_id": null,
+      "content": "       DATA DIVISION.\n       FILE SECTION.\n       FD  DALYTRAN-FILE.\n       01  FD-TRAN-RECORD.\n           05 FD-TRAN-ID                        PIC X(16).\n           05 FD-CUST-DATA                      PIC X(334).\n\n       FD  CUSTOMER-FILE.\n       01  FD-CUSTFILE-REC.\n           05 FD-CUST-ID                        PIC 9(09).\n           05 FD-CUST-DATA                      PIC X(491).\n\n       FD  XREF-FILE.\n       01  FD-XREFFILE-REC.\n           05 FD-XREF-CARD-NUM                  PIC X(16).\n           05 FD-XREF-DATA                      PIC X(34).\n\n       FD  CARD-FILE.\n       01  FD-CARDFILE-REC.\n           05 FD-CARD-NUM                       PIC X(16).\n           05 FD-CARD-DATA                      PIC X(134).\n\n       FD  ACCOUNT-FILE.\n       01  FD-ACCTFILE-REC.\n           05 FD-ACCT-ID                        PIC 9(11).\n           05 FD-ACCT-DATA                      PIC X(289).\n\n       FD  TRANSACT-FILE.\n       01  FD-TRANFILE-REC.\n           05 FD-TRANS-ID                       PIC X(16).\n           05 FD-ACCT-DATA                      PIC X(334).\n\n       WORKING-STORAGE SECTION.\n\n      *****************************************************************\n       COPY CVTRA06Y.\n       01  DALYTRAN-STATUS.\n           05  DALYTRAN-STAT1      PIC X.\n           05  DALYTRAN-STAT2      PIC X.\n\n       COPY CVCUS01Y.\n       01  CUSTFILE-STATUS.\n           05  CUSTFILE-STAT1      PIC X.\n           05  CUSTFILE-STAT2      PIC X.\n\n       COPY CVACT03Y.\n       01  XREFFILE-STATUS.\n           05  XREFFILE-STAT1      PIC X.\n           05  XREFFILE-STAT2      PIC X.\n\n       COPY CVACT02Y.\n       01  CARDFILE-STATUS.\n           05  CARDFILE-STAT1      PIC X.\n           05  CARDFILE-STAT2      PIC X.\n\n       COPY CVACT01Y.\n       01  ACCTFILE-STATUS.\n           05  ACCTFILE-STAT1      PIC X.\n           05  ACCTFILE-STAT2      PIC X.\n\n       COPY CVTRA05Y.\n       01  TRANFILE-STATUS.\n           05  TRANFILE-STAT1      PIC X.\n           05  TRANFILE-STAT2      PIC X.\n\n       01  IO-STATUS.\n           05  IO-STAT1            PIC X.\n           05  IO-STAT2            PIC X.\n\n       01  TWO-BYTES-BINARY        PIC 9(4) BINARY.\n       01  TWO-BYTES-ALPHA         REDEFINES TWO-BYTES-BINARY.\n           05  TWO-BYTES-LEFT      PIC X.\n           05  TWO-BYTES-RIGHT     PIC X.\n\n       01  IO-STATUS-04.\n           05  IO-STATUS-0401      PIC 9   VALUE 0.\n           05  IO-STATUS-0403      PIC 999 VALUE 0.\n\n       01  APPL-RESULT             PIC S9(9)   COMP.\n           88  APPL-AOK            VALUE 0.\n           88  APPL-EOF            VALUE 16.\n\n       01  END-OF-DAILY-TRANS-FILE             PIC X(01)    VALUE 'N'.\n       01  ABCODE                  PIC S9(9) BINARY.\n       01  TIMING                  PIC S9(9) BINARY.\n       01  WS-MISC-VARIABLES.\n           05 WS-XREF-READ-STATUS  PIC 9(04).\n           05 WS-ACCT-READ-STATUS  PIC 9(04).\n\n      *****************************************************************\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_FILE_SECTION",
+      "program_id": "CBTRN01C",
+      "name": "FILE SECTION",
+      "type": "SECTION",
+      "start_line": 65,
+      "end_line": 95,
+      "parent_structure_id": "sec_CBTRN01C_DATA_DIVISION",
+      "content": "       FILE SECTION.\n       FD  DALYTRAN-FILE.\n       01  FD-TRAN-RECORD.\n           05 FD-TRAN-ID                        PIC X(16).\n           05 FD-CUST-DATA                      PIC X(334).\n\n       FD  CUSTOMER-FILE.\n       01  FD-CUSTFILE-REC.\n           05 FD-CUST-ID                        PIC 9(09).\n           05 FD-CUST-DATA                      PIC X(491).\n\n       FD  XREF-FILE.\n       01  FD-XREFFILE-REC.\n           05 FD-XREF-CARD-NUM                  PIC X(16).\n           05 FD-XREF-DATA                      PIC X(34).\n\n       FD  CARD-FILE.\n       01  FD-CARDFILE-REC.\n           05 FD-CARD-NUM                       PIC X(16).\n           05 FD-CARD-DATA                      PIC X(134).\n\n       FD  ACCOUNT-FILE.\n       01  FD-ACCTFILE-REC.\n           05 FD-ACCT-ID                        PIC 9(11).\n           05 FD-ACCT-DATA                      PIC X(289).\n\n       FD  TRANSACT-FILE.\n       01  FD-TRANFILE-REC.\n           05 FD-TRANS-ID                       PIC X(16).\n           05 FD-ACCT-DATA                      PIC X(334).\n\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_WORKING-STORAGE_SECTION",
+      "program_id": "CBTRN01C",
+      "name": "WORKING-STORAGE SECTION",
+      "type": "SECTION",
+      "start_line": 96,
+      "end_line": 153,
+      "parent_structure_id": "sec_CBTRN01C_DATA_DIVISION",
+      "content": "       WORKING-STORAGE SECTION.\n\n      *****************************************************************\n       COPY CVTRA06Y.\n       01  DALYTRAN-STATUS.\n           05  DALYTRAN-STAT1      PIC X.\n           05  DALYTRAN-STAT2      PIC X.\n\n       COPY CVCUS01Y.\n       01  CUSTFILE-STATUS.\n           05  CUSTFILE-STAT1      PIC X.\n           05  CUSTFILE-STAT2      PIC X.\n\n       COPY CVACT03Y.\n       01  XREFFILE-STATUS.\n           05  XREFFILE-STAT1      PIC X.\n           05  XREFFILE-STAT2      PIC X.\n\n       COPY CVACT02Y.\n       01  CARDFILE-STATUS.\n           05  CARDFILE-STAT1      PIC X.\n           05  CARDFILE-STAT2      PIC X.\n\n       COPY CVACT01Y.\n       01  ACCTFILE-STATUS.\n           05  ACCTFILE-STAT1      PIC X.\n           05  ACCTFILE-STAT2      PIC X.\n\n       COPY CVTRA05Y.\n       01  TRANFILE-STATUS.\n           05  TRANFILE-STAT1      PIC X.\n           05  TRANFILE-STAT2      PIC X.\n\n       01  IO-STATUS.\n           05  IO-STAT1            PIC X.\n           05  IO-STAT2            PIC X.\n\n       01  TWO-BYTES-BINARY        PIC 9(4) BINARY.\n       01  TWO-BYTES-ALPHA         REDEFINES TWO-BYTES-BINARY.\n           05  TWO-BYTES-LEFT      PIC X.\n           05  TWO-BYTES-RIGHT     PIC X.\n\n       01  IO-STATUS-04.\n           05  IO-STATUS-0401      PIC 9   VALUE 0.\n           05  IO-STATUS-0403      PIC 999 VALUE 0.\n\n       01  APPL-RESULT             PIC S9(9)   COMP.\n           88  APPL-AOK            VALUE 0.\n           88  APPL-EOF            VALUE 16.\n\n       01  END-OF-DAILY-TRANS-FILE             PIC X(01)    VALUE 'N'.\n       01  ABCODE                  PIC S9(9) BINARY.\n       01  TIMING                  PIC S9(9) BINARY.\n       01  WS-MISC-VARIABLES.\n           05 WS-XREF-READ-STATUS  PIC 9(04).\n           05 WS-ACCT-READ-STATUS  PIC 9(04).\n\n      *****************************************************************\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "program_id": "CBTRN01C",
+      "name": "PROCEDURE DIVISION",
+      "type": "DIVISION",
+      "start_line": 154,
+      "end_line": 494,
+      "parent_structure_id": null,
+      "content": "       PROCEDURE DIVISION.\n       MAIN-PARA.\n           DISPLAY 'START OF EXECUTION OF PROGRAM CBTRN01C'.\n           PERFORM 0000-DALYTRAN-OPEN.\n           PERFORM 0100-CUSTFILE-OPEN.\n           PERFORM 0200-XREFFILE-OPEN.\n           PERFORM 0300-CARDFILE-OPEN.\n           PERFORM 0400-ACCTFILE-OPEN.\n           PERFORM 0500-TRANFILE-OPEN.\n\n           PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'\n               IF  END-OF-DAILY-TRANS-FILE = 'N'\n                   PERFORM 1000-DALYTRAN-GET-NEXT\n                   IF  END-OF-DAILY-TRANS-FILE = 'N'\n                       DISPLAY DALYTRAN-RECORD\n                   END-IF\n                   MOVE 0                 TO WS-XREF-READ-STATUS\n                   MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM\n                   PERFORM 2000-LOOKUP-XREF\n                   IF WS-XREF-READ-STATUS = 0\n                     MOVE 0            TO WS-ACCT-READ-STATUS\n                     MOVE XREF-ACCT-ID TO ACCT-ID\n                     PERFORM 3000-READ-ACCOUNT\n                     IF WS-ACCT-READ-STATUS NOT = 0\n                         DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'\n                     END-IF\n                   ELSE\n                     DISPLAY 'CARD NUMBER ' DALYTRAN-CARD-NUM\n                     ' COULD NOT BE VERIFIED. SKIPPING TRANSACTION ID-'\n                     DALYTRAN-ID\n                   END-IF\n               END-IF\n           END-PERFORM.\n\n           PERFORM 9000-DALYTRAN-CLOSE.\n           PERFORM 9100-CUSTFILE-CLOSE.\n           PERFORM 9200-XREFFILE-CLOSE.\n           PERFORM 9300-CARDFILE-CLOSE.\n           PERFORM 9400-ACCTFILE-CLOSE.\n           PERFORM 9500-TRANFILE-CLOSE.\n\n           DISPLAY 'END OF EXECUTION OF PROGRAM CBTRN01C'.\n\n           GOBACK.\n\n      *****************************************************************\n      * READS FILE                                                    *\n      *****************************************************************\n       1000-DALYTRAN-GET-NEXT.\n           READ DALYTRAN-FILE INTO DALYTRAN-RECORD.\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               IF  DALYTRAN-STATUS = '10'\n                   MOVE 16 TO APPL-RESULT\n               ELSE\n                   MOVE 12 TO APPL-RESULT\n               END-IF\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               IF  APPL-EOF\n                   MOVE 'Y' TO END-OF-DAILY-TRANS-FILE\n               ELSE\n                   DISPLAY 'ERROR READING DAILY TRANSACTION FILE'\n                   MOVE DALYTRAN-STATUS TO IO-STATUS\n                   PERFORM Z-DISPLAY-IO-STATUS\n                   PERFORM Z-ABEND-PROGRAM\n               END-IF\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       2000-LOOKUP-XREF.\n           MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM\n           READ XREF-FILE  RECORD INTO CARD-XREF-RECORD\n           KEY IS FD-XREF-CARD-NUM\n                INVALID KEY\n                  DISPLAY 'INVALID CARD NUMBER FOR XREF'\n                  MOVE 4 TO WS-XREF-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF XREF'\n                  DISPLAY 'CARD NUMBER: ' XREF-CARD-NUM\n                  DISPLAY 'ACCOUNT ID : ' XREF-ACCT-ID\n                  DISPLAY 'CUSTOMER ID: ' XREF-CUST-ID\n           END-READ.\n      *---------------------------------------------------------------*\n       3000-READ-ACCOUNT.\n           MOVE ACCT-ID TO FD-ACCT-ID\n           READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD\n           KEY IS FD-ACCT-ID\n                INVALID KEY\n                  DISPLAY 'INVALID ACCOUNT NUMBER FOUND'\n                  MOVE 4 TO WS-ACCT-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF ACCOUNT FILE'\n           END-READ.\n      *---------------------------------------------------------------*\n       0000-DALYTRAN-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING DAILY TRANSACTION FILE'\n               MOVE DALYTRAN-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n\n      *---------------------------------------------------------------*\n       0100-CUSTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       0200-XREFFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       0300-CARDFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       0400-ACCTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       0500-TRANFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       9000-DALYTRAN-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       9100-CUSTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       9200-XREFFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       9300-CARDFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       9400-ACCTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n       9500-TRANFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n\n       Z-ABEND-PROGRAM.\n           DISPLAY 'ABENDING PROGRAM'\n           MOVE 0 TO TIMING\n           MOVE 999 TO ABCODE\n           CALL 'CEE3ABD' USING ABCODE, TIMING.\n\n      *****************************************************************\n       Z-DISPLAY-IO-STATUS.\n           IF  IO-STATUS NOT NUMERIC\n           OR  IO-STAT1 = '9'\n               MOVE IO-STAT1 TO IO-STATUS-04(1:1)\n               MOVE 0        TO TWO-BYTES-BINARY\n               MOVE IO-STAT2 TO TWO-BYTES-RIGHT\n               MOVE TWO-BYTES-BINARY TO IO-STATUS-0403\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           ELSE\n               MOVE '0000' TO IO-STATUS-04\n               MOVE IO-STATUS TO IO-STATUS-04(3:2)\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           END-IF\n           EXIT.\n\n\n      *\n      * Ver: CardDemo_v2.0-25-gdb72e6b-235 Date: 2025-04-29 11:01:28 CDT\n      *\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_MAIN-PARA",
+      "program_id": "CBTRN01C",
+      "name": "MAIN-PARA",
+      "type": "PARAGRAPH",
+      "start_line": 155,
+      "end_line": 201,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       MAIN-PARA.\n           DISPLAY 'START OF EXECUTION OF PROGRAM CBTRN01C'.\n           PERFORM 0000-DALYTRAN-OPEN.\n           PERFORM 0100-CUSTFILE-OPEN.\n           PERFORM 0200-XREFFILE-OPEN.\n           PERFORM 0300-CARDFILE-OPEN.\n           PERFORM 0400-ACCTFILE-OPEN.\n           PERFORM 0500-TRANFILE-OPEN.\n\n           PERFORM UNTIL END-OF-DAILY-TRANS-FILE = 'Y'\n               IF  END-OF-DAILY-TRANS-FILE = 'N'\n                   PERFORM 1000-DALYTRAN-GET-NEXT\n                   IF  END-OF-DAILY-TRANS-FILE = 'N'\n                       DISPLAY DALYTRAN-RECORD\n                   END-IF\n                   MOVE 0                 TO WS-XREF-READ-STATUS\n                   MOVE DALYTRAN-CARD-NUM TO XREF-CARD-NUM\n                   PERFORM 2000-LOOKUP-XREF\n                   IF WS-XREF-READ-STATUS = 0\n                     MOVE 0            TO WS-ACCT-READ-STATUS\n                     MOVE XREF-ACCT-ID TO ACCT-ID\n                     PERFORM 3000-READ-ACCOUNT\n                     IF WS-ACCT-READ-STATUS NOT = 0\n                         DISPLAY 'ACCOUNT ' ACCT-ID ' NOT FOUND'\n                     END-IF\n                   ELSE\n                     DISPLAY 'CARD NUMBER ' DALYTRAN-CARD-NUM\n                     ' COULD NOT BE VERIFIED. SKIPPING TRANSACTION ID-'\n                     DALYTRAN-ID\n                   END-IF\n               END-IF\n           END-PERFORM.\n\n           PERFORM 9000-DALYTRAN-CLOSE.\n           PERFORM 9100-CUSTFILE-CLOSE.\n           PERFORM 9200-XREFFILE-CLOSE.\n           PERFORM 9300-CARDFILE-CLOSE.\n           PERFORM 9400-ACCTFILE-CLOSE.\n           PERFORM 9500-TRANFILE-CLOSE.\n\n           DISPLAY 'END OF EXECUTION OF PROGRAM CBTRN01C'.\n\n           GOBACK.\n\n      *****************************************************************\n      * READS FILE                                                    *\n      *****************************************************************\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_1000-DALYTRAN-GET-NEXT",
+      "program_id": "CBTRN01C",
+      "name": "1000-DALYTRAN-GET-NEXT",
+      "type": "PARAGRAPH",
+      "start_line": 202,
+      "end_line": 226,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       1000-DALYTRAN-GET-NEXT.\n           READ DALYTRAN-FILE INTO DALYTRAN-RECORD.\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               IF  DALYTRAN-STATUS = '10'\n                   MOVE 16 TO APPL-RESULT\n               ELSE\n                   MOVE 12 TO APPL-RESULT\n               END-IF\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               IF  APPL-EOF\n                   MOVE 'Y' TO END-OF-DAILY-TRANS-FILE\n               ELSE\n                   DISPLAY 'ERROR READING DAILY TRANSACTION FILE'\n                   MOVE DALYTRAN-STATUS TO IO-STATUS\n                   PERFORM Z-DISPLAY-IO-STATUS\n                   PERFORM Z-ABEND-PROGRAM\n               END-IF\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_2000-LOOKUP-XREF",
+      "program_id": "CBTRN01C",
+      "name": "2000-LOOKUP-XREF",
+      "type": "PARAGRAPH",
+      "start_line": 227,
+      "end_line": 240,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       2000-LOOKUP-XREF.\n           MOVE XREF-CARD-NUM TO FD-XREF-CARD-NUM\n           READ XREF-FILE  RECORD INTO CARD-XREF-RECORD\n           KEY IS FD-XREF-CARD-NUM\n                INVALID KEY\n                  DISPLAY 'INVALID CARD NUMBER FOR XREF'\n                  MOVE 4 TO WS-XREF-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF XREF'\n                  DISPLAY 'CARD NUMBER: ' XREF-CARD-NUM\n                  DISPLAY 'ACCOUNT ID : ' XREF-ACCT-ID\n                  DISPLAY 'CUSTOMER ID: ' XREF-CUST-ID\n           END-READ.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_3000-READ-ACCOUNT",
+      "program_id": "CBTRN01C",
+      "name": "3000-READ-ACCOUNT",
+      "type": "PARAGRAPH",
+      "start_line": 241,
+      "end_line": 251,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       3000-READ-ACCOUNT.\n           MOVE ACCT-ID TO FD-ACCT-ID\n           READ ACCOUNT-FILE RECORD INTO ACCOUNT-RECORD\n           KEY IS FD-ACCT-ID\n                INVALID KEY\n                  DISPLAY 'INVALID ACCOUNT NUMBER FOUND'\n                  MOVE 4 TO WS-ACCT-READ-STATUS\n                NOT INVALID KEY\n                  DISPLAY 'SUCCESSFUL READ OF ACCOUNT FILE'\n           END-READ.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
+      "program_id": "CBTRN01C",
+      "name": "0000-DALYTRAN-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 252,
+      "end_line": 270,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       0000-DALYTRAN-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING DAILY TRANSACTION FILE'\n               MOVE DALYTRAN-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_0100-CUSTFILE-OPEN",
+      "program_id": "CBTRN01C",
+      "name": "0100-CUSTFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 271,
+      "end_line": 288,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       0100-CUSTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_0200-XREFFILE-OPEN",
+      "program_id": "CBTRN01C",
+      "name": "0200-XREFFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 289,
+      "end_line": 306,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       0200-XREFFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_0300-CARDFILE-OPEN",
+      "program_id": "CBTRN01C",
+      "name": "0300-CARDFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 307,
+      "end_line": 324,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       0300-CARDFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_0400-ACCTFILE-OPEN",
+      "program_id": "CBTRN01C",
+      "name": "0400-ACCTFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 325,
+      "end_line": 342,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       0400-ACCTFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_0500-TRANFILE-OPEN",
+      "program_id": "CBTRN01C",
+      "name": "0500-TRANFILE-OPEN",
+      "type": "PARAGRAPH",
+      "start_line": 343,
+      "end_line": 360,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       0500-TRANFILE-OPEN.\n           MOVE 8 TO APPL-RESULT.\n           OPEN INPUT TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR OPENING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_9000-DALYTRAN-CLOSE",
+      "program_id": "CBTRN01C",
+      "name": "9000-DALYTRAN-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 361,
+      "end_line": 378,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       9000-DALYTRAN-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE DALYTRAN-FILE\n           IF  DALYTRAN-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_9100-CUSTFILE-CLOSE",
+      "program_id": "CBTRN01C",
+      "name": "9100-CUSTFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 379,
+      "end_line": 396,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       9100-CUSTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CUSTOMER-FILE\n           IF  CUSTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CUSTOMER FILE'\n               MOVE CUSTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_9200-XREFFILE-CLOSE",
+      "program_id": "CBTRN01C",
+      "name": "9200-XREFFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 397,
+      "end_line": 414,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       9200-XREFFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE XREF-FILE\n           IF  XREFFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CROSS REF FILE'\n               MOVE XREFFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_9300-CARDFILE-CLOSE",
+      "program_id": "CBTRN01C",
+      "name": "9300-CARDFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 415,
+      "end_line": 432,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       9300-CARDFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE CARD-FILE\n           IF  CARDFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING CARD FILE'\n               MOVE CARDFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_9400-ACCTFILE-CLOSE",
+      "program_id": "CBTRN01C",
+      "name": "9400-ACCTFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 433,
+      "end_line": 450,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       9400-ACCTFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE ACCOUNT-FILE\n           IF  ACCTFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING ACCOUNT FILE'\n               MOVE ACCTFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n      *---------------------------------------------------------------*\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_9500-TRANFILE-CLOSE",
+      "program_id": "CBTRN01C",
+      "name": "9500-TRANFILE-CLOSE",
+      "type": "PARAGRAPH",
+      "start_line": 451,
+      "end_line": 468,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       9500-TRANFILE-CLOSE.\n           ADD 8 TO ZERO GIVING APPL-RESULT.\n           CLOSE TRANSACT-FILE\n           IF  TRANFILE-STATUS = '00'\n               MOVE 0 TO APPL-RESULT\n           ELSE\n               MOVE 12 TO APPL-RESULT\n           END-IF\n           IF  APPL-AOK\n               CONTINUE\n           ELSE\n               DISPLAY 'ERROR CLOSING TRANSACTION FILE'\n               MOVE TRANFILE-STATUS TO IO-STATUS\n               PERFORM Z-DISPLAY-IO-STATUS\n               PERFORM Z-ABEND-PROGRAM\n           END-IF\n           EXIT.\n\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_Z-ABEND-PROGRAM",
+      "program_id": "CBTRN01C",
+      "name": "Z-ABEND-PROGRAM",
+      "type": "PARAGRAPH",
+      "start_line": 469,
+      "end_line": 475,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       Z-ABEND-PROGRAM.\n           DISPLAY 'ABENDING PROGRAM'\n           MOVE 0 TO TIMING\n           MOVE 999 TO ABCODE\n           CALL 'CEE3ABD' USING ABCODE, TIMING.\n\n      *****************************************************************\n"
+    },
+    {
+      "section_id": "sec_CBTRN01C_Z-DISPLAY-IO-STATUS",
+      "program_id": "CBTRN01C",
+      "name": "Z-DISPLAY-IO-STATUS",
+      "type": "PARAGRAPH",
+      "start_line": 476,
+      "end_line": 494,
+      "parent_structure_id": "sec_CBTRN01C_PROCEDURE_DIVISION",
+      "content": "       Z-DISPLAY-IO-STATUS.\n           IF  IO-STATUS NOT NUMERIC\n           OR  IO-STAT1 = '9'\n               MOVE IO-STAT1 TO IO-STATUS-04(1:1)\n               MOVE 0        TO TWO-BYTES-BINARY\n               MOVE IO-STAT2 TO TWO-BYTES-RIGHT\n               MOVE TWO-BYTES-BINARY TO IO-STATUS-0403\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           ELSE\n               MOVE '0000' TO IO-STATUS-04\n               MOVE IO-STATUS TO IO-STATUS-04(3:2)\n               DISPLAY 'FILE STATUS IS: NNNN' IO-STATUS-04\n           END-IF\n           EXIT.\n\n\n      *\n      * Ver: CardDemo_v2.0-25-gdb72e6b-235 Date: 2025-04-29 11:01:28 CDT\n      *\n"
+    }
+  ]
+}
