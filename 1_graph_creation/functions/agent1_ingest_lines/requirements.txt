@@ -1,0 +1,5 @@
+efunctions-framework
+flask
+google-cloud-storage
+google-genai
+requests
