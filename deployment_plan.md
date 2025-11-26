@@ -31,7 +31,7 @@ We use Cloud Spanner Enterprise edition to support Spanner Graph.
     ```bash
     gcloud spanner databases ddl update cobol-graph-db \
         --instance=cobol-graph-v2 \
-        --ddl-file=1_graph_creation/spanner-schema.sql
+        --ddl-file=1_graph_creation/canonical_references/spanner-schema.sql
     ```
 
 ### 1.2. Cloud Storage (Source Code)
@@ -44,81 +44,82 @@ We use GCS to store the raw COBOL files.
 
 2.  **Upload Source Code:**
     ```bash
-    gcloud storage cp 1_graph_creation/cbl/CBACT01C.cbl gs://wz-cobol-graph-source/CBACT01C.cbl
+    gcloud storage cp 1_graph_creation/source_cbl/CBTRN01C.cbl gs://wz-cobol-graph-source/CBTRN01C.cbl
     ```
 
-## 2. Agent Deployment Strategy (Hybrid)
+## 2. Agent Deployment Strategy (Refined Pipeline)
 
-We use a hybrid approach where ingestion and orchestration happen locally (or in a lightweight environment), while heavy AI processing (Rule Extraction) runs as a scalable Cloud Function.
+We are building a 5-stage agentic pipeline to process COBOL code into a Spanner Graph.
 
-### 2.1. Agent 1 & 2 (Local / Orchestrator)
-*   **Agent 1 (Ingest):** Runs locally. Downloads source, hands off to Agent 2 asynchronously.
-*   **Agent 2 (Parse):** Runs locally. Parses structure, handles **parallel fan-out** to Agent 3 with retry logic.
+1.  **Agent 1 (Ingest & Lines)**: Ingests source code, creates `Programs` metadata, and classifies individual `SourceCodeLines` (CODE, COMMENT, etc.).
+2.  **Agent 2 (Structure)**: Identifies the hierarchy (Divisions, Sections, Paragraphs) and links lines to their parent structure.
+3.  **Agent 3 (Entities)**: Parses the Data Division to extract `DataEntities` (Variables, Files).
+4.  **Agent 4 (Flow)**: Analyzes the Procedure Division to extract `LineReferences` and `ControlFlow`.
+5.  **Agent 5 (Writer)**: Aggregates all objects and commits them to Spanner.
+
+### 2.1. Agent 1: Ingest & Lines (Implemented)
+
+*   **Functionality**: Reads COBOL source (Text or GCS), extracts Program ID using Gemini, classifies lines using Gemini (parallelized).
+*   **Source**: `1_graph_creation/functions/agent1_ingest_lines/main.py`
+*   **Input**: JSON `{"content": "..."}` or `{"gcs_uri": "..."}`
+*   **Output**: NDJSON stream of `metadata` and `line_record` objects.
 
 **Run Locally:**
 ```bash
-# Terminal 1
 source venv/bin/activate
-AGENT2_URL=http://localhost:8082 functions-framework --target=ingest_source --source=1_graph_creation/functions/agent1_ingest_source/main.py --port=8081 --debug 2>&1 | tee agent1.txt
-
-# Terminal 2
-source venv/bin/activate
-# Point to Cloud Agent 3
-AGENT3_URL=https://us-central1-wz-cobol-graph.cloudfunctions.net/agent3-extract-rules \
-WRITER_URL=http://localhost:8085 \
-functions-framework --target=parse_structure --source=1_graph_creation/functions/agent2_parse_structure/main.py --port=8082 --debug 2>&1 | tee agent2.txt
+functions-framework \
+    --target=ingest_lines \
+    --source=1_graph_creation/functions/agent1_ingest_lines/main.py \
+    --port=8081 \
+    --debug
 ```
 
-### 2.2. Agent 3 (Cloud / Worker)
-*   **Agent 3 (Extract):** Deployed as a **Cloud Function (Gen 2)**.
-*   **Model:** Uses **Gemini 3.0 Pro Preview** (via Vertex AI).
-*   **Scaling:** Configured for `max-instances=1000` and `concurrency=3` to handle massive parallel loads from Agent 2.
-
-**Deploy Command:**
+**Test Locally:**
 ```bash
-gcloud functions deploy agent3-extract-rules \
+curl -X POST http://localhost:8081 \
+-H "Content-Type: application/json" \
+-d '{"content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. TEST."}'
+```
+
+**Deploy to Cloud Functions:**
+```bash
+gcloud functions deploy agent1-ingest-lines \
     --gen2 \
     --region=us-central1 \
     --runtime=python311 \
-    --source=1_graph_creation/functions/agent3_extract_rules \
-    --entry-point=extract_rules \
+    --source=1_graph_creation/functions/agent1_ingest_lines \
+    --entry-point=ingest_lines \
     --trigger-http \
     --allow-unauthenticated \
-    --max-instances=1000 \
-    --concurrency=3 \
-    --timeout=540s \
-    --memory=4Gi \
-    --cpu=2 \
-    --set-env-vars=GOOGLE_CLOUD_PROJECT=wz-cobol-graph,LOG_EXECUTION_ID=true
+    --timeout=300s \
+    --memory=2Gi \
+    --cpu=1 \
+    --set-env-vars=GOOGLE_CLOUD_PROJECT=wz-cobol-graph
 ```
 
-### 2.3. Agent 4 & 5 (Pending Deployment)
-*   **Agent 4 (Link):** Will be deployed to Cloud Functions (similar spec to Agent 3) to handle entity linking at scale.
-*   **Agent 5 (Writer):** Writes to Spanner. Can be local or cloud.
+### 2.2. Agent 2: Structure (Next Step)
+*   **Goal**: Consume Agent 1's output. Use Gemini to identify start/end lines of Divisions, Sections, and Paragraphs.
+*   **Enrichment**: Update line records with `structure_id`.
 
-## 3. Current Status & Caveats
+### 2.3. Agent 3: Data Entities (Planned)
+*   **Goal**: Extract variables and files from Data Division sections identified by Agent 2.
 
-### 3.1. Status (As of Latest Run)
-*   **Traceability Query:** **Supported**. The pipeline successfully extracts business rules and links them to entities (once Agent 4 is online).
-*   **Execution Flow (Tree Query):** **Partially Supported**. The logic is extracted, but the graph schema lacks explicit `[:CALLS]` edges between sections.
+### 2.4. Agent 4: References & Flow (Planned)
+*   **Goal**: Analyze Procedure Division lines for entity usage and control flow.
 
-### 3.2. Caveats for Execution Flow
-To fully enable the "Execution Tree" query (`(Section)-[:CALLS*]->(Section)`), we are implementing updates with the following constraints:
+### 2.5. Agent 5: Writer (Planned)
+*   **Goal**: Batch write to Spanner `Programs`, `SourceCodeLines`, `CodeStructure`, `DataEntities`, `LineReferences`, `ControlFlow`.
 
-1.  **Internal Paragraphs (`PERFORM 1000-MAIN`)**:
-    *   **Status:** Solvable. We map the target name to the Section ID within the same program.
-    *   **Action:** Agent 5 will be updated to create `[:CALLS]` edges for these.
+## 3. Current Status
 
-2.  **External Program Calls (`CALL 'SUBPROG'`)**:
-    *   **Status:** Requires cross-program linking.
-    *   **Action:** Agent 5 must detect `CALL` (vs `PERFORM`) and link to a `Program` node instead of a `Section` node.
-
-3.  **Dynamic Calls (`CALL WS-VAR`)**:
-    *   **Status:** **Unsolvable Static Analysis**. Since the target is a variable determined at runtime, we cannot draw a static graph edge to a specific program.
-    *   **Mitigation:** We link to the *Variable Entity* (`WS-VAR`), but the graph traversal stops there.
+*   [x] **Spanner Schema**: Defined (`1_graph_creation/canonical_references/spanner-schema.sql`)
+*   [x] **Agent 1**: Implemented and tested locally.
+*   [ ] **Agent 2**: Pending implementation.
+*   [ ] **Agent 3**: Pending implementation.
+*   [ ] **Agent 4**: Pending implementation.
+*   [ ] **Agent 5**: Pending implementation.
 
 ## 4. Next Steps
-1.  **Schema Update:** Add `SectionCalls` table/edge to `spanner-schema.sql`.
-2.  **Logic Update:** Modify Agent 3 prompt to explicitly extract Flow Control targets.
-3.  **Writer Update:** Update Agent 5 to write these edges.
-4.  **Deploy:** Agent 4 & 5 to Cloud.
+
+1.  Implement **Agent 2 (Structure)** to process the line stream and build the hierarchy.
+2.  Verify Agent 2 output against `02_structure.json`.
