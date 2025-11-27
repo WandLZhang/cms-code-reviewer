@@ -137,17 +137,26 @@ def extract_entities(request):
                     Code with Line IDs:
                     {structured_content}
                     
-                    Task: Extract ALL Data Entities (Files, Variables, Condition Names) defined OR referenced in this code block.
+                    Task: Extract ALL Data Entities defined OR referenced in this code block.
+                    
+                    Entity Types:
+                    - FILE: File definitions (SELECT, FD statements)
+                    - VARIABLE: Data items at all levels (01, 05, 10...49, 77) including Level 88 Condition Names
+                    - COPYBOOK: COPY statements that include external copybooks (e.g., "COPY CVTRA06Y.")
                     
                     Instructions:
-                    - Identify ALL Data Entities.
-                    - Include ALL hierarchical levels (01, 05, 10... 49, 77).
-                    - Include Level 88 Condition Names as 'VARIABLE'.
-                    - If an entity is used (e.g. in a MOVE statement) but not explicitly defined here (e.g. from a copybook), EXTRACT IT anyway.
-                    - EXTRACT 'definition_line_id': The 'ID' of the line where it is defined (or first seen).
-                    - GENERATE 'description': A brief description.
+                    1. COPYBOOK STATEMENTS: When you see "COPY <name>." extract it as entity_type: "COPYBOOK" with the copybook name (e.g., "CVTRA06Y").
                     
-                    Return JSON: {{ "found_entities": [ {{ "entity_name": "...", "entity_type": "FILE/VARIABLE", "definition_line_id": "...", "description": "..." }} ] }}
+                    2. DEFINED ENTITIES: For variables/files DEFINED in this code (has a PIC clause, FD, SELECT, or level number):
+                       - Set definition_line_id to the line ID where it is defined.
+                    
+                    3. REFERENCED BUT NOT DEFINED: For variables USED in this code (e.g., in MOVE, DISPLAY, READ INTO) but NOT DEFINED here (likely from a copybook):
+                       - Set definition_line_id to null.
+                       - In description, note "Defined externally (likely in copybook)."
+                    
+                    4. DESCRIPTION: Include relevant details (PIC clause, purpose, parent record if applicable).
+                    
+                    Return JSON: {{ "found_entities": [ {{ "entity_name": "...", "entity_type": "FILE/VARIABLE/COPYBOOK", "definition_line_id": "..." or null, "description": "..." }} ] }}
                     """
                     
                     contents_ext = [types.Content(role="user", parts=[types.Part.from_text(text=prompt_extract)])]
@@ -164,8 +173,8 @@ def extract_entities(request):
                                         "type": "OBJECT",
                                         "properties": {
                                             "entity_name": {"type": "STRING"},
-                                            "entity_type": {"type": "STRING", "enum": ["FILE", "VARIABLE"]},
-                                            "definition_line_id": {"type": "STRING"},
+                                            "entity_type": {"type": "STRING", "enum": ["FILE", "VARIABLE", "COPYBOOK"]},
+                                            "definition_line_id": {"type": "STRING", "nullable": True},
                                             "description": {"type": "STRING"}
                                         },
                                         "required": ["entity_name", "entity_type"]
