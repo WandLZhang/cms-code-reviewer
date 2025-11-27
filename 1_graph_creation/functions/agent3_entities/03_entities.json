@@ -1,0 +1,417 @@
+{
+  "entities": [
+    {
+      "entity_name": "DALYTRAN-FILE",
+      "entity_type": "FILE",
+      "definition_line_id": "CBTRN01C_29",
+      "description": "Sequential file defined in FILE-CONTROL assigned to DALYTRAN. Organization is SEQUENTIAL, Access Mode is SEQUENTIAL, File Status is DALYTRAN-STATUS. File Definition in DATA DIVISION.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "DALYTRAN-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_100",
+      "description": "File status variable for DALYTRAN-FILE. Group item.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CUSTOMER-FILE",
+      "entity_type": "FILE",
+      "definition_line_id": "CBTRN01C_34",
+      "description": "Indexed file defined in FILE-CONTROL assigned to CUSTFILE. It has ORGANIZATION IS INDEXED, ACCESS MODE IS RANDOM, RECORD KEY IS FD-CUST-ID, and FILE STATUS IS CUSTFILE-STATUS. File Definition (FD) in DATA DIVISION.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CUST-ID",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_73",
+      "description": "Record key variable for CUSTOMER-FILE. Elementary item PIC 9(09).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CUSTFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_105",
+      "description": "File status variable for CUSTOMER-FILE. Group item defined in WORKING-STORAGE.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREF-FILE",
+      "entity_type": "FILE",
+      "definition_line_id": "CBTRN01C_40",
+      "description": "Indexed file defined in FILE-CONTROL assigned to XREFFILE with random access mode, record key FD-XREF-CARD-NUM, and file status XREFFILE-STATUS. File Definition in DATA DIVISION with record FD-XREFFILE-REC.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-XREF-CARD-NUM",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_78",
+      "description": "Record key variable for XREF-FILE. Elementary item PIC X(16).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREFFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_110",
+      "description": "File status variable for XREF-FILE. Group item defined in WORKING-STORAGE.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARD-FILE",
+      "entity_type": "FILE",
+      "definition_line_id": "CBTRN01C_46",
+      "description": "Indexed file defined in FILE-CONTROL assigned to CARDFILE. Organization is INDEXED, access mode is RANDOM, record key is FD-CARD-NUM, and file status is CARDFILE-STATUS. Defined as FD in DATA DIVISION with record FD-CARDFILE-REC.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CARD-NUM",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_83",
+      "description": "Record key variable for CARD-FILE. Elementary item PIC X(16).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARDFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_115",
+      "description": "File status variable for CARD-FILE. Group item defined in WORKING-STORAGE.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCOUNT-FILE",
+      "entity_type": "FILE",
+      "definition_line_id": "CBTRN01C_52",
+      "description": "Indexed file defined in FILE-CONTROL assigned to ACCTFILE. Organization is INDEXED, Access Mode is RANDOM, Record Key is FD-ACCT-ID, File Status is ACCTFILE-STATUS. File Definition.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-ACCT-ID",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_88",
+      "description": "Record key variable for ACCOUNT-FILE. Elementary item PIC 9(11).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCTFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_120",
+      "description": "File status variable for ACCOUNT-FILE. Group item defined in WORKING-STORAGE.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TRANSACT-FILE",
+      "entity_type": "FILE",
+      "definition_line_id": "CBTRN01C_58",
+      "description": "Indexed file defined in FILE-CONTROL assigned to TRANFILE. Organization is INDEXED, access mode is RANDOM, record key is FD-TRANS-ID, and file status is TRANFILE-STATUS. Defined in DATA DIVISION with record FD-TRANFILE-REC.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRANS-ID",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_93",
+      "description": "Record key variable for TRANSACT-FILE. Elementary item PIC X(16).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TRANFILE-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_125",
+      "description": "File status variable for TRANSACT-FILE. Group item.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRAN-RECORD",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_67",
+      "description": "Record definition for DALYTRAN-FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRAN-ID",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_68",
+      "description": "Transaction ID field within FD-TRAN-RECORD. Elementary item PIC X(16).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CUST-DATA",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_69",
+      "description": "Customer data field within FD-TRAN-RECORD (DALYTRAN-FILE), defined as PIC X(334). Also defined as PIC X(491) in CUSTOMER-FILE.",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CUSTFILE-REC",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_72",
+      "description": "Record definition for CUSTOMER-FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-XREFFILE-REC",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_77",
+      "description": "Record definition for XREF-FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-XREF-DATA",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_79",
+      "description": "Elementary item PIC X(34)",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CARDFILE-REC",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_82",
+      "description": "Record definition for CARD-FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-CARD-DATA",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_84",
+      "description": "Elementary item PIC X(134)",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-ACCTFILE-REC",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_87",
+      "description": "Record definition for ACCOUNT-FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-ACCT-DATA",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_89",
+      "description": "Elementary item PIC X(289) defined in ACCOUNT-FILE. Also defined as PIC X(334) in TRANSACT-FILE (Line 94).",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "FD-TRANFILE-REC",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_92",
+      "description": "Record definition for TRANSACT-FILE",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "DALYTRAN-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_101",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "DALYTRAN-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_102",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CUSTFILE-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_106",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CUSTFILE-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_107",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREFFILE-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_111",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "XREFFILE-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_112",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARDFILE-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_116",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "CARDFILE-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_117",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCTFILE-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_121",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ACCTFILE-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_122",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TRANFILE-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_126",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TRANFILE-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_127",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_129",
+      "description": "Group item",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STAT1",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_130",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STAT2",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_131",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TWO-BYTES-BINARY",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_133",
+      "description": "Elementary item PIC 9(4) BINARY",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TWO-BYTES-ALPHA",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_134",
+      "description": "Group item REDEFINES TWO-BYTES-BINARY",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TWO-BYTES-LEFT",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_135",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TWO-BYTES-RIGHT",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_136",
+      "description": "Elementary item PIC X",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS-04",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_138",
+      "description": "Group item",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS-0401",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_139",
+      "description": "Elementary item PIC 9 VALUE 0",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "IO-STATUS-0403",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_140",
+      "description": "Elementary item PIC 999 VALUE 0",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "APPL-RESULT",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_142",
+      "description": "Elementary item PIC S9(9) COMP",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "APPL-AOK",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_143",
+      "description": "Condition name VALUE 0",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "APPL-EOF",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_144",
+      "description": "Condition name VALUE 16",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "END-OF-DAILY-TRANS-FILE",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_146",
+      "description": "Elementary item PIC X(01) VALUE 'N'",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "ABCODE",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_147",
+      "description": "Elementary item PIC S9(9) BINARY",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "TIMING",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_148",
+      "description": "Elementary item PIC S9(9) BINARY",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "WS-MISC-VARIABLES",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_149",
+      "description": "Group item",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "WS-XREF-READ-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_150",
+      "description": "Elementary item PIC 9(04)",
+      "program_id": "CBTRN01C"
+    },
+    {
+      "entity_name": "WS-ACCT-READ-STATUS",
+      "entity_type": "VARIABLE",
+      "definition_line_id": "CBTRN01C_151",
+      "description": "Elementary item PIC 9(04)",
+      "program_id": "CBTRN01C"
+    }
+  ]
+}

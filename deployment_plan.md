@@ -47,38 +47,34 @@ We use GCS to store the raw COBOL files.
     gcloud storage cp 1_graph_creation/source_cbl/CBTRN01C.cbl gs://wz-cobol-graph-source/CBTRN01C.cbl
     ```
 
-## 2. Agent Deployment Strategy (Refined Pipeline)
+## 2. Agent Pipeline Architecture
 
 We are building a 5-stage agentic pipeline to process COBOL code into a Spanner Graph.
 
-1.  **Agent 1 (Ingest & Lines)**: Ingests source code, creates `Programs` metadata, and classifies individual `SourceCodeLines` (CODE, COMMENT, etc.).
-2.  **Agent 2 (Structure)**: Identifies the hierarchy (Divisions, Sections, Paragraphs) and links lines to their parent structure.
-3.  **Agent 3 (Entities)**: Parses the Data Division to extract `DataEntities` (Variables, Files).
-4.  **Agent 4 (Flow)**: Analyzes the Procedure Division to extract `LineReferences` and `ControlFlow`.
-5.  **Agent 5 (Writer)**: Aggregates all objects and commits them to Spanner.
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Agent 1       │     │   Agent 2       │     │   Agent 3       │     │   Agent 4       │     │   Agent 5       │
+│   Ingest &      │────▶│   Structure     │────▶│   Entities      │────▶│   References &  │────▶│   Graph Writer  │
+│   Lines         │     │   Parser        │     │   Extractor     │     │   Flow          │     │                 │
+└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
+       │                       │                       │                       │                       │
+       ▼                       ▼                       ▼                       ▼                       ▼
+  01_source_lines.json   02_structure.json      03_entities.json    04_references_and_flow.json    Spanner Graph
+```
 
-### 2.1. Agent 1: Ingest & Lines (Implemented)
+### 2.1. Agent 1: Ingest & Lines 
 
 *   **Functionality**: Reads COBOL source (Text or GCS), extracts Program ID using Gemini, classifies lines using Gemini (parallelized).
 *   **Source**: `1_graph_creation/functions/agent1_ingest_lines/main.py`
 *   **Input**: JSON `{"content": "..."}` or `{"gcs_uri": "..."}`
-*   **Output**: NDJSON stream of `metadata` and `line_record` objects.
+*   **Output**: `01_source_lines.json` - NDJSON stream of `metadata` and `line_record` objects.
 
 **Run Locally:**
 ```bash
-source venv/bin/activate
-functions-framework \
-    --target=ingest_lines \
-    --source=1_graph_creation/functions/agent1_ingest_lines/main.py \
-    --port=8081 \
-    --debug
-```
-
-**Test Locally:**
-```bash
-curl -X POST http://localhost:8081 \
--H "Content-Type: application/json" \
--d '{"content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. TEST."}'
+cd 1_graph_creation/functions/agent1_ingest_lines
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+python main.py
 ```
 
 **Deploy to Cloud Functions:**
@@ -97,29 +93,199 @@ gcloud functions deploy agent1-ingest-lines \
     --set-env-vars=GOOGLE_CLOUD_PROJECT=wz-cobol-graph
 ```
 
-### 2.2. Agent 2: Structure (Next Step)
-*   **Goal**: Consume Agent 1's output. Use Gemini to identify start/end lines of Divisions, Sections, and Paragraphs.
-*   **Enrichment**: Update line records with `structure_id`.
+### 2.2. Agent 2: Structure 
 
-### 2.3. Agent 3: Data Entities (Planned)
-*   **Goal**: Extract variables and files from Data Division sections identified by Agent 2.
+*   **Functionality**: Consumes Agent 1's output. Uses Gemini to identify start/end lines of Divisions, Sections, and Paragraphs. Builds hierarchical structure with parent-child relationships.
+*   **Source**: `1_graph_creation/functions/agent2_structure/main.py`
+*   **Input**: `01_source_lines.json`
+*   **Output**: `02_structure.json` - Array of structure objects with `section_id`, `name`, `type`, `start_line`, `end_line`, `parent_structure_id`, `content`.
 
-### 2.4. Agent 4: References & Flow (Planned)
-*   **Goal**: Analyze Procedure Division lines for entity usage and control flow.
+**Run Locally:**
+```bash
+cd 1_graph_creation/functions/agent2_structure
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
 
-### 2.5. Agent 5: Writer (Planned)
-*   **Goal**: Batch write to Spanner `Programs`, `SourceCodeLines`, `CodeStructure`, `DataEntities`, `LineReferences`, `ControlFlow`.
+### 2.3. Agent 3: Data Entities 
+
+*   **Functionality**: Iterates through structures from Agent 2, extracts data entities (Files, Variables) using Gemini LLM extraction per structure. Performs Python-based duplicate detection with LLM conflict resolution for merging overlapping entity definitions.
+*   **Source**: `1_graph_creation/functions/agent3_entities/main.py`
+*   **Input**: `01_source_lines.json` (for line IDs) + `02_structure.json` (for structures)
+*   **Output**: `03_entities.json` - Master list of entities with:
+    - `entity_name`: Variable or File name
+    - `entity_type`: "FILE" or "VARIABLE"
+    - `definition_line_id`: Line ID where entity is defined
+    - `description`: LLM-generated description
+    - `program_id`: Source program
+
+**Run Locally:**
+```bash
+cd 1_graph_creation/functions/agent3_entities
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
+
+**Current Status**: Running locally, processing 28 structures, extracting ~50 entities to match canonical.
+
+**Future Optimization - Parallel Subagents:**
+The current sequential approach with conflict resolution is slow due to:
+1. Overlapping structures (DIVISION → SECTION → PARAGRAPH nesting) causing redundant processing
+2. LLM calls for every conflict (~7-10 sec each)
+
+**Proposed Architecture:**
+```
+                     ┌──────────────────────────┐
+                     │    Agent 3 Orchestrator   │
+                     └──────────────────────────┘
+                                 │
+            ┌────────────────────┼────────────────────┐
+            ▼                    ▼                    ▼
+    ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+    │  Subagent 3a  │    │  Subagent 3b  │    │  Subagent 3c  │
+    │  ENVIRONMENT  │    │  DATA DIV     │    │  PROCEDURE    │
+    │  DIVISION     │    │  (FILE/WS)    │    │  DIVISION     │
+    └───────────────┘    └───────────────┘    └───────────────┘
+            │                    │                    │
+            └────────────────────┼────────────────────┘
+                                 ▼
+                     ┌──────────────────────────┐
+                     │   Aggregator & Merger    │
+                     │   (LLM call for   │
+                     │    each conflict)        │
+                     └──────────────────────────┘
+```
+
+This would enable:
+- Parallel Cloud Functions for each major structure
+- Single aggregation/merge step at the end
+- Reduced total execution time from ~25 min to ~5 min
+
+### TODO: 2.4. Agent 4: References & Flow
+
+**Goal**: Analyze Procedure Division lines to extract:
+1. **Control Flow** (`control_flow`): PERFORM statements that call other paragraphs
+2. **Line References** (`line_references`): Entity usage with type (READS, UPDATES, VALIDATES)
+
+**Input Required:**
+- `02_structure.json` - To know which lines belong to which paragraph
+- `03_entities.json` - Master list of entities to reference
+
+**Output**: `04_references_and_flow.json` with two arrays:
+
+```json
+{
+  "control_flow": [
+    {
+      "flow_id": "flow_CBTRN01C_157",
+      "source_line_id": "CBTRN01C_157",
+      "target_structure_id": "sec_CBTRN01C_0000-DALYTRAN-OPEN",
+      "type": "PERFORM"
+    }
+  ],
+  "line_references": [
+    {
+      "reference_id": "ref_CBTRN01C_170_WS-XREF-READ-STATUS",
+      "source_line_id": "CBTRN01C_170",
+      "target_entity_name": "WS-XREF-READ-STATUS",
+      "usage_type": "UPDATES"
+    }
+  ]
+}
+```
+
+**Implementation Strategy:**
+
+1. **Control Flow Extraction:**
+   - Scan PROCEDURE DIVISION lines for `PERFORM` statements
+   - Match target paragraph name to `structure_id` from `02_structure.json`
+   - Generate `flow_id` as `flow_{program_id}_{line_number}`
+
+2. **Line References Extraction:**
+   - For each line in PROCEDURE DIVISION:
+     - Use LLM to identify which entities from `03_entities.json` are referenced
+     - Classify usage type:
+       - `READS`: Entity value is read (source of MOVE, displayed, used in condition)
+       - `UPDATES`: Entity value is modified (target of MOVE, computed)
+       - `VALIDATES`: Entity is used in IF/EVALUATE condition
+
+3. **LLM Prompt Design:**
+```
+Given this COBOL line:
+   MOVE DALYTRAN-STATUS TO IO-STATUS
+
+And these known entities: [DALYTRAN-STATUS, IO-STATUS, APPL-RESULT, ...]
+
+Extract references:
+- DALYTRAN-STATUS: READS (source of MOVE)
+- IO-STATUS: UPDATES (target of MOVE)
+```
+
+**Why This Enables the Canonical Query:**
+
+The canonical query ("Life of a Transaction") requires:
+```gql
+MATCH (main:Structure)-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
+MATCH (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
+```
+
+Agent 4's output creates the edges:
+- `control_flow` → `CALLS` edges (Line to Structure)
+- `line_references` → `REFERENCES` edges with `usage_type` property (Line to Entity)
+
+### 2.5. Agent 5: Graph Writer 📋 PLANNED
+
+*   **Goal**: Batch write all artifacts to Spanner:
+    - `Programs` table from metadata
+    - `SourceCodeLines` table from `01_source_lines.json`
+    - `CodeStructure` table from `02_structure.json`
+    - `DataEntities` table from `03_entities.json`
+    - `ControlFlow` table from `04_references_and_flow.json`
+    - `LineReferences` table from `04_references_and_flow.json`
 
 ## 3. Current Status
 
-*   [x] **Spanner Schema**: Defined (`1_graph_creation/canonical_references/spanner-schema.sql`)
-*   [x] **Agent 1**: Implemented and tested locally.
-*   [ ] **Agent 2**: Pending implementation.
-*   [ ] **Agent 3**: Pending implementation.
-*   [ ] **Agent 4**: Pending implementation.
-*   [ ] **Agent 5**: Pending implementation.
+| Agent | Status | Artifact | Notes |
+|-------|--------|----------|-------|
+| Agent 1 | ✅ Complete | `01_source_lines.json` | Local execution verified |
+| Agent 2 | ✅ Complete | `02_structure.json` | 28 structures extracted |
+| Agent 3 | 🔄 Running | `03_entities.json` | Processing 50 entities, ~20 min remaining |
+| Agent 4 | 📋 Planned | `04_references_and_flow.json` | Design complete, implementation next |
+| Agent 5 | 📋 Planned | Spanner Graph | After Agent 4 complete |
 
-## 4. Next Steps
+## 4. Canonical Query Target
 
-1.  Implement **Agent 2 (Structure)** to process the line stream and build the hierarchy.
-2.  Verify Agent 2 output against `02_structure.json`.
+The ultimate goal is to enable this GQL query:
+
+```gql
+-- "Life of a Transaction" - Show validation gates a transaction passes through
+
+MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
+MATCH (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
+MATCH (sub)-[:CONTAINS_LINE]->(update_line:Line)-[:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
+MATCH (decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
+WHERE decision_line.structure_id = main.structure_id
+RETURN 
+  call_line.line_number AS Sequence,
+  sub.name AS Routine,
+  entity.name AS Entity_Checked,
+  decision_line.content AS Logic_Gate
+ORDER BY call_line.line_number
+```
+
+This query traces transaction processing through:
+1. MAIN-PARA calls to subroutines (2000-LOOKUP-XREF, 3000-READ-ACCOUNT)
+2. What entities those subroutines READ
+3. What status variables they UPDATE
+4. How MAIN-PARA VALIDATES those status variables
+
+## 5. Next Steps
+
+1. ✅ Wait for Agent 3 to complete (~12:25-12:30 PM)
+2. 📋 Verify Agent 3 output matches canonical `03_entities.json` (50 entities)
+3. 📋 Implement Agent 4: References & Flow
+4. 📋 Verify Agent 4 output matches canonical `04_references_and_flow.json`
+5. 📋 Implement Agent 5: Graph Writer
+6. 📋 Load data to Spanner and run canonical query
