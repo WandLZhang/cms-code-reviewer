@@ -1,6 +1,13 @@
 /*
 ------------------------------------------------------------------------------
  CANONICAL QUERIES (GQL)
+ 
+ Database: cobol-graph-db-agent-outputs
+ Instance: cobol-graph-v2
+ Project: wz-cobol-graph
+ 
+ Usage in Colab/Notebook:
+ %%spanner_graph --project wz-cobol-graph --instance cobol-graph-v2 --database cobol-graph-db-agent-outputs
 ------------------------------------------------------------------------------
 
 1. LIFE OF A TRANSACTION ("The Policy Map & Data Lineage")

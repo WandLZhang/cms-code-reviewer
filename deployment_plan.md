@@ -22,16 +22,48 @@ We use Cloud Spanner Enterprise edition to support Spanner Graph.
     ```
     *(Note: If you have a Standard instance, update it: `gcloud spanner instances update cobol-graph-v2 --edition=ENTERPRISE`)*
 
-3.  **Create Database:**
+3.  **Create Database:** (✅ Already exists: `cobol-graph-db-agent-outputs`)
     ```bash
-    gcloud spanner databases create cobol-graph-db --instance=cobol-graph-v2
+    gcloud spanner databases create cobol-graph-db-agent-outputs --instance=cobol-graph-v2
     ```
 
-4.  **Apply Schema (including Graph Definition):**
+4.  **Apply Schema (Tables):**
+    Tables are created by Agent 5 writer on first write.
+
+5.  **Create Property Graph Definition:**
     ```bash
-    gcloud spanner databases ddl update cobol-graph-db \
+    gcloud spanner databases ddl update cobol-graph-db-agent-outputs \
         --instance=cobol-graph-v2 \
-        --ddl-file=1_graph_creation/canonical_references/spanner-schema.sql
+        --project=wz-cobol-graph \
+        --ddl="CREATE OR REPLACE PROPERTY GRAPH CobolLineGraph
+          NODE TABLES (
+            Programs KEY (program_id) LABEL Program PROPERTIES (program_name, file_name),
+            SourceCodeLines KEY (line_id) LABEL Line PROPERTIES (content, line_number, type),
+            CodeStructure KEY (structure_id) LABEL Structure PROPERTIES (name, type, start_line_number, end_line_number),
+            DataEntities KEY (entity_id) LABEL Entity PROPERTIES (name, type, description)
+          )
+          EDGE TABLES (
+            SourceCodeLines AS ContainsLine
+              SOURCE KEY (program_id) REFERENCES Programs (program_id)
+              DESTINATION KEY (line_id) REFERENCES SourceCodeLines (line_id)
+              LABEL HAS_LINE,
+            CodeStructure AS ParentStructure
+              SOURCE KEY (parent_structure_id) REFERENCES CodeStructure (structure_id)
+              DESTINATION KEY (structure_id) REFERENCES CodeStructure (structure_id)
+              LABEL CONTAINS_CHILD,
+            SourceCodeLines AS StructureContainsLine
+              SOURCE KEY (structure_id) REFERENCES CodeStructure (structure_id)
+              DESTINATION KEY (line_id) REFERENCES SourceCodeLines (line_id)
+              LABEL CONTAINS_LINE,
+            LineReferences
+              SOURCE KEY (source_line_id) REFERENCES SourceCodeLines (line_id)
+              DESTINATION KEY (target_entity_id) REFERENCES DataEntities (entity_id)
+              LABEL REFERENCES PROPERTIES (usage_type),
+            ControlFlow
+              SOURCE KEY (source_line_id) REFERENCES SourceCodeLines (line_id)
+              DESTINATION KEY (target_structure_id) REFERENCES CodeStructure (structure_id)
+              LABEL CALLS PROPERTIES (type)
+          )"
     ```
 
 ### 1.2. Cloud Storage (Source Code)
@@ -92,7 +124,7 @@ We have built a 5-stage agentic pipeline to process COBOL code into a Spanner Gr
 *   **Output**: `04_references_and_flow.json`.
 *   **Verification**: 100% coverage of canonical flows + 2 new flows found.
 
-### 2.5. Agent 5: Graph Writer
+### 2.5. Agent 5: Graph Writer (✅ Complete)
 
 *   **Goal**: Batch write all artifacts to Spanner.
 *   **Basis**: Based on `load_canonical.py`.
@@ -103,17 +135,26 @@ We have built a 5-stage agentic pipeline to process COBOL code into a Spanner Gr
     *   Insert `DataEntities`.
     *   Insert `LineReferences` & `ControlFlow`.
 *   **Target**: Spanner DB `cobol-graph-db-agent-outputs`.
+*   **Status**: Tables populated, Property Graph DDL created (2025-11-28).
 
-## 3. Canonical Query Target
+## 3. Canonical Query Target 
 
-The ultimate goal is to enable this GQL query:
+**Database**: `cobol-graph-db-agent-outputs`
+**Instance**: `cobol-graph-v2`
+**Project**: `wz-cobol-graph`
 
+### Notebook Usage:
+```
+%%spanner_graph --project wz-cobol-graph --instance cobol-graph-v2 --database cobol-graph-db-agent-outputs
+```
+
+### Visualization Query:
 ```gql
 GRAPH CobolLineGraph
-MATCH p1 = (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
-MATCH p2 = (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
-MATCH p3 = (sub)-[:CONTAINS_LINE]->(update_line:Line)-[:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
-MATCH p4 = (main)-[:CONTAINS_LINE]->(decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
+MATCH p1 = (main:Structure)-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
+MATCH p2 = (sub)-[:CONTAINS_LINE]->(read_line:Line)-[ref_read:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
+MATCH p3 = (sub)-[:CONTAINS_LINE]->(update_line:Line)-[ref_update:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
+MATCH p4 = (main)-[:CONTAINS_LINE]->(decision_line:Line)-[ref_val:REFERENCES {usage_type: 'VALIDATES'}]->(status)
 RETURN 
   TO_JSON(p1) AS call_flow,
   TO_JSON(p2) AS data_read,
