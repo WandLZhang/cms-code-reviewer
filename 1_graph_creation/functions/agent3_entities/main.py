@@ -103,6 +103,21 @@ def extract_entities(request):
                 # Sort structures by line number
                 structures.sort(key=lambda x: x.get('start_line', 0))
                 master_entities = {} # Name -> Record
+                
+                # Build FULL PROGRAM context for reference
+                # This allows the LLM to see all definitions and cross-reference
+                full_program_context = ""
+                if line_map:
+                    for ln in sorted(line_map.keys()):
+                        l_obj = line_map[ln]
+                        content = l_obj.get('content', '')
+                        line_id = l_obj.get('line_id', 'NA')
+                        if content.strip():  # Skip blank lines
+                            full_program_context += f"Line {ln} [{line_id}]: {content}\n"
+                
+                if is_local and full_program_context:
+                    ts = datetime.datetime.now().strftime("%H:%M:%S")
+                    print(f"[{ts}] Built FULL PROGRAM context: {len(full_program_context)} chars", flush=True)
 
                 for i, struct in enumerate(structures):
                     name = struct.get('name', '')
@@ -134,7 +149,10 @@ def extract_entities(request):
                     You are analyzing COBOL structure: {name} ({sType}).
                     Program: {program_id}.
                     
-                    Code with Line IDs:
+                    === FULL PROGRAM (for cross-reference) ===
+                    {full_program_context}
+                    
+                    === CURRENT STRUCTURE TO ANALYZE ===
                     {structured_content}
                     
                     Task: Extract ALL Data Entities defined OR referenced in this code block.
@@ -156,13 +174,27 @@ def extract_entities(request):
                     
                     4. DESCRIPTION: Include relevant details (PIC clause, purpose, parent record if applicable).
                     
+                    IMPORTANT: Extract EVERY variable name you see, even if you don't see its definition.
+                    Cross-reference with the FULL PROGRAM above to determine definition_line_id.
+                    If it's not defined anywhere in the FULL PROGRAM, it's from a COPY copybook - mark with definition_line_id: null.
+                    
+                    EXAMPLES - Extract BOTH source and target variables:
+                    - "MOVE X TO Y" → Extract X (source), Extract Y (target)
+                    - "IF A = B" → Extract A, Extract B
+                    - "DISPLAY X" → Extract X
+                    - "READ FILE-A INTO RECORD-B" → Extract FILE-A (file), Extract RECORD-B (variable)
+                    - "PERFORM PARA-X" → Extract PARA-X (paragraph reference)
+                    - "COPY COPYNAME." → Extract as COPYBOOK entity with name "COPYNAME"
+                    
                     Return JSON: {{ "found_entities": [ {{ "entity_name": "...", "entity_type": "FILE/VARIABLE/COPYBOOK", "definition_line_id": "..." or null, "description": "..." }} ] }}
                     """
                     
                     contents_ext = [types.Content(role="user", parts=[types.Part.from_text(text=prompt_extract)])]
                     
                     config_ext = types.GenerateContentConfig(
-                        temperature=0.0, 
+                        temperature=1.0, 
+                        top_p=0.95,
+                        max_output_tokens=65535,
                         response_mime_type="application/json",
                         response_schema={
                             "type": "OBJECT",
@@ -181,7 +213,10 @@ def extract_entities(request):
                                     }
                                 }
                             }
-                        }
+                        },
+                        thinking_config=types.ThinkingConfig(
+                            thinking_level="HIGH",
+                        ),
                     )
                     
                     try:
@@ -199,6 +234,8 @@ def extract_entities(request):
                         e_name = item['entity_name']
                         norm_name = e_name.strip().upper() # Normalization for de-duplication
                         item['program_id'] = program_id
+                        # Generate entity_id (integrated from loader enrichment)
+                        item['entity_id'] = f"{program_id}_{e_name}"
                         
                         updated = False
                         
@@ -212,15 +249,14 @@ def extract_entities(request):
                             yield json.dumps(item) + "\n"
                             updated = True
                         else:
-                            # Duplicate / Conflict
+                            # Duplicate found - ALWAYS reconcile (smaller structures may have better insights)
                             existing = master_entities[norm_name]
-                            if existing == item:
-                                continue # No change
                                 
-                            # 4. LLM Resolution
+                            # 4. LLM Resolution for ALL duplicates
                             if is_local:
                                 ts = datetime.datetime.now().strftime("%H:%M:%S")
-                                print(f"[{ts}]     ~ Conflict: {e_name}. Reconciling with existing record...", flush=True)
+                                is_identical = (existing == item)
+                                print(f"[{ts}]     ~ Duplicate: {e_name} {'(identical data)' if is_identical else '(different data)'}. Reconciling...", flush=True)
                                 
                             prompt_resolve = f"""
                             Conflict Resolution (Additive Merge).
@@ -250,24 +286,31 @@ def extract_entities(request):
                             
                             contents_res = [types.Content(role="user", parts=[types.Part.from_text(text=prompt_resolve)])]
                             config_res = types.GenerateContentConfig(
-                                temperature=0.0,
+                                temperature=1.0,
+                                top_p=0.95,
+                                max_output_tokens=65535,
                                 response_mime_type="application/json",
                                 response_schema={
                                     "type": "OBJECT",
                                     "properties": {
                                         "entity_name": {"type": "STRING"},
-                                        "entity_type": {"type": "STRING", "enum": ["FILE", "VARIABLE"]},
-                                        "definition_line_id": {"type": "STRING"},
+                                        "entity_type": {"type": "STRING", "enum": ["FILE", "VARIABLE", "COPYBOOK"]},
+                                        "definition_line_id": {"type": "STRING", "nullable": True},
                                         "description": {"type": "STRING"}
                                     },
                                     "required": ["entity_name", "entity_type"]
-                                }
+                                },
+                                thinking_config=types.ThinkingConfig(
+                                    thinking_level="HIGH",
+                                ),
                             )
                             
                             try:
                                 resp_res = generate_with_retries(MODEL_NAME, contents_res, config_res)
                                 final_rec = json.loads(resp_res.text)
                                 final_rec['program_id'] = program_id
+                                # Generate entity_id (integrated from loader enrichment)
+                                final_rec['entity_id'] = f"{program_id}_{final_rec['entity_name']}"
                                 
                                 master_entities[norm_name] = final_rec
                                 if is_local:

@@ -161,6 +161,11 @@ def identify_structure(request):
                 
                 total_lines_count = max(line_map.keys())
                 
+                # Build line_structure_map (for CONTAINS_LINE edge enrichment)
+                # Sort structures by type so PARAGRAPH overwrites SECTION overwrites DIVISION
+                sorted_by_type = sorted(llm_structures, key=lambda x: hierarchy_levels.get(x['type'], 3))
+                line_structure_map = {}  # line_number -> structure_id
+                
                 for i, current in enumerate(llm_structures):
                     current_level = hierarchy_levels.get(current['type'], 3)
                     current_start = current['start_line']
@@ -214,7 +219,25 @@ def identify_structure(request):
                     }
                     
                     processed_structures.append(record)
+                    
+                    # Build line_structure_map for this structure (PARAGRAPH priority)
+                    # Since we process in start_line order, we need to handle overwriting
+                    for ln in range(current_start, current_end + 1):
+                        # Only overwrite if this structure is more specific (higher level number)
+                        existing_level = 0
+                        if ln in line_structure_map:
+                            # Find the level of the existing structure
+                            for s in processed_structures:
+                                if s['section_id'] == line_structure_map[ln]:
+                                    existing_level = hierarchy_levels.get(s['type'], 0)
+                                    break
+                        if current_level >= existing_level:
+                            line_structure_map[ln] = structure_id
+                    
                     yield json.dumps(record) + "\n"
+                
+                # Output the line_structure_map as final record (enrichment for CONTAINS_LINE edges)
+                yield json.dumps({"_type": "line_structure_map", "map": line_structure_map}) + "\n"
 
             except Exception as e:
                 yield json.dumps({'error': str(e)}) + "\n"
