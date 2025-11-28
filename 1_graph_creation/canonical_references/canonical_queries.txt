@@ -10,6 +10,15 @@
 
    -- SIMULATION: "From Square One to Full Trace"
    
+   -- Step 0: SOURCE CODE CONTEXT ("The Raw Evidence")
+   -- Before any analysis, we retrieve the complete source code.
+   -- This gives the LLM or sleuth the full context of what code exists in the program.
+   -- Every line is evidence that can be referenced during the investigation.
+   GRAPH CobolLineGraph
+   MATCH (line:Line)
+   RETURN line.line_number AS Line_Number, line.content AS Source_Code
+   ORDER BY line.line_number
+
    -- Step 1: DISCOVERY ("Map the Territory")
    -- We request a high-level map of the program's structure (Divisions and their contents).
    -- This naive query provides the full context for an LLM or developer to identify the logic container (Procedure Division) and entry point.

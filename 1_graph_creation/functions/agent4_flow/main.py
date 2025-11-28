@@ -108,7 +108,7 @@ def flow_worker(request: Request):
         {json.dumps(known_paragraphs)}
         
         === FULL PROGRAM CONTEXT (For Reference) ===
-        {full_code_str[:50000]} ... (truncated if too massive)
+        {full_code_str}
         
         === TARGET STRUCTURE CODE (Analyze THESE lines) ===
         {target_code_str}
@@ -184,12 +184,32 @@ def flow_worker(request: Request):
             ),
         )
 
+        # Collect debug messages to return to orchestrator
+        debug_msgs = []
+        
         response = generate_with_retries(MODEL_NAME, [prompt], config)
-        result = json.loads(response.text)
+        
+        # Log the raw response for debugging
+        raw_text = response.text if response and hasattr(response, 'text') else None
+        debug_msgs.append(f"[OK] {target_structure_id}: {len(target_lines)} lines, resp_len={len(raw_text) if raw_text else 0}")
+        
+        # Handle empty response
+        if not raw_text or raw_text.strip() == "":
+            debug_msgs.append(f"[WARN] Empty response. Lines: {[l.get('content', '')[:40] for l in target_lines[:3]]}")
+            return jsonify({'control_flow': [], 'line_references': [], '_debug': debug_msgs})
+        
+        try:
+            result = json.loads(raw_text)
+        except json.JSONDecodeError as je:
+            debug_msgs.append(f"[ERROR] JSON parse failed: {str(je)[:100]}. Raw: {raw_text[:200]}")
+            return jsonify({'control_flow': [], 'line_references': [], '_debug': debug_msgs})
+        
+        # Add debug info to result
+        result['_debug'] = debug_msgs
         return jsonify(result)
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e), '_debug': [f"[EXCEPTION] {target_structure_id}: {e}"]}), 500
 
 
 # --- ORCHESTRATOR FUNCTION ---
