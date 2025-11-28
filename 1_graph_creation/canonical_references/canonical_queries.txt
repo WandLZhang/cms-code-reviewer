@@ -3,22 +3,66 @@
  CANONICAL QUERIES (GQL)
 ------------------------------------------------------------------------------
 
-1. LIFE OF A TRANSACTION ("The Policy Map")
-   "Show me the sequence of validation gates a transaction must pass through."
+1. LIFE OF A TRANSACTION ("The Policy Map & Data Lineage")
+   "Show the sequence of validation gates a transaction must pass through, including the specific data interactions."
    
-   Context: "Map the 'Process Transaction' flow to its data checks (Provider/XREF, Beneficiary/Account)."
+   Context: "Map the 'Process Transaction' flow to its data checks (Provider/XREF, Beneficiary/Account), revealing both the high-level policy decisions and the low-level data operations."
 
-   MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(call_line:Line)-[:CALLS]->(sub:Structure)
-   MATCH (sub)-[:CONTAINS_LINE]->(read_line:Line)-[:REFERENCES {usage_type: 'READS'}]->(entity:Entity)
-   MATCH (sub)-[:CONTAINS_LINE]->(update_line:Line)-[:REFERENCES {usage_type: 'UPDATES'}]->(status:Entity)
-   MATCH (decision_line:Line)-[:REFERENCES {usage_type: 'VALIDATES'}]->(status)
-   WHERE decision_line.structure_id = main.structure_id
+   -- SIMULATION: "From Square One to Full Trace"
+   
+   -- Step 1: DISCOVERY ("Map the Territory")
+   -- We request a high-level map of the program's structure (Divisions and their contents).
+   -- This naive query provides the full context for an LLM or developer to identify the logic container (Procedure Division) and entry point.
+   GRAPH CobolLineGraph
+   MATCH (div:Structure {type: 'DIVISION'})
+   OPTIONAL MATCH (div)-[:CONTAINS_CHILD]->(child:Structure)
+   RETURN div.name AS Division, child.name AS Content, child.type AS Type
+   ORDER BY div.start_line_number, child.start_line_number
+
+   -- Step 2: ASSET INVENTORY ("The 'Red Flag' Check")
+   -- Before tracing logic, we survey the program's assets (Files).
+   -- We specifically count READS and WRITES to distinguish "Active" assets from "Dead" assets (opened but never used).
+   -- A file with 0 Reads/Writes is likely a "Zombie" connection (technical debt).
+   GRAPH CobolLineGraph
+   MATCH (file:Entity {type: 'FILE'})
+   OPTIONAL MATCH (line:Line)-[ref:REFERENCES]->(file)
    RETURN 
-     call_line.line_number AS Sequence,
-     sub.name AS Routine,
-     entity.name AS Entity_Checked,
-     decision_line.content AS Logic_Gate
-   ORDER BY call_line.line_number
+     file.name AS File_Name, 
+     COUNTIF(ref.usage_type = 'READS') AS Read_Count,
+     COUNTIF(ref.usage_type = 'WRITES') AS Write_Count,
+     ARRAY_AGG(DISTINCT ref.usage_type) AS All_Operations
+   ORDER BY File_Name
+
+   -- Step 3: HIGH-LEVEL FLOW ("What does the main logic do?")
+   -- Once we identify 'MAIN-PARA' (from Step 1), we ask: "What subroutines does it orchestrate?"
+   GRAPH CobolLineGraph
+   MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(line:Line)-[:CALLS]->(sub:Structure)
+   RETURN DISTINCT sub.name AS Subroutine_Called
+   
+   -- Step 4: DETAILED TRACE ("The Life of a Transaction")
+   -- We trace MAIN-PARA line-by-line AND expand the code of any called subroutines.
+   -- We explicitly capture Entity Types (File vs Variable) to distinguish "State Management" from "Data I/O".
+   -- This allows us to see if the program is Read-Only (no writes to File entities) or updates the database.
+   GRAPH CobolLineGraph
+   MATCH (main:Structure {name: 'MAIN-PARA'})-[:CONTAINS_LINE]->(line:Line)
+   -- Capture direct references in Main
+   OPTIONAL MATCH (line)-[ref:REFERENCES]->(ref_entity:Entity)
+   -- Capture subroutine calls AND their internal logic
+   OPTIONAL MATCH (line)-[:CALLS]->(sub:Structure)
+   OPTIONAL MATCH (sub)-[:CONTAINS_LINE]->(sub_line:Line)
+   OPTIONAL MATCH (sub_line)-[sub_ref:REFERENCES]->(sub_entity:Entity)
+   RETURN
+     line.line_number AS Main_Seq,
+     line.content AS Main_Code,
+     ref_entity.name AS Main_Ref_Entity,
+     ref_entity.type AS Main_Ref_EntType,
+     ref.usage_type AS Main_Ref_Op,
+     sub.name AS Called_Routine,
+     sub_line.content AS Sub_Code,
+     sub_entity.name AS Sub_Ref_Entity,
+     sub_entity.type AS Sub_Ref_EntType,
+     sub_ref.usage_type AS Sub_Ref_Op
+   ORDER BY Main_Seq, sub_line.line_number
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
@@ -65,6 +109,4 @@ Edges: [ TYPE ]
  - UPDATES: State modification (setting return codes)
  - VALIDATES: Decision logic (IF condition checking the return code)
 ------------------------------------------------------------------------------
-
-
 */

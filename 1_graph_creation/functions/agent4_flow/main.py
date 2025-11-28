@@ -119,10 +119,20 @@ def flow_worker(request: Request):
            - Type: 'PERFORM', 'GO_TO', 'CALL'.
         2. Identify **Line References**: Usages of KNOWN ENTITIES.
            - Usage Types:
-             - 'READS': Entity is source of data (IF A = B, MOVE A TO B, DISPLAY A).
-             - 'UPDATES': Entity is modified (MOVE A TO B, COMPUTE B = ...).
-             - 'VALIDATES': Entity is checked in a condition (IF A = 'Y').
-             - 'DECLARATION': Definition (FD, 01, 05 level).
+             - 'READS': Entity value is used/read (source in MOVE, displayed, used in COMPUTE, READ file INTO record).
+             - 'WRITES': Entity is written to an output file (WRITE record).
+             - 'UPDATES': Entity is modified/receives data (target in MOVE, result of COMPUTE, REWRITE record).
+             - 'VALIDATES': Entity is checked in a condition (IF A = 'Y', EVALUATE).
+             - 'OPENS': File is opened (OPEN INPUT/OUTPUT/EXTEND file).
+             - 'CLOSES': File is closed (CLOSE file).
+             - 'DECLARATION': Definition (FD, 01, 05 level, SELECT).
+           
+           CRITICAL FILE I/O RULES:
+             - OPEN INPUT/OUTPUT/EXTEND file-name → usage_type = 'OPENS' (NOT 'READS')
+             - CLOSE file-name → usage_type = 'CLOSES' (NOT 'READS' or 'UPDATES')
+             - READ file-name INTO variable → file usage_type = 'READS', variable = 'UPDATES'
+             - WRITE record-name → record usage_type = 'WRITES'
+             - REWRITE record-name → record usage_type = 'UPDATES'
         
         OUTPUT JSON:
         {{
@@ -162,7 +172,7 @@ def flow_worker(request: Request):
                             "properties": {
                                 "line_number": {"type": "INTEGER"},
                                 "target_entity_name": {"type": "STRING"},
-                                "usage_type": {"type": "STRING", "enum": ["READS", "UPDATES", "VALIDATES", "DECLARATION"]}
+                                "usage_type": {"type": "STRING", "enum": ["READS", "WRITES", "UPDATES", "VALIDATES", "OPENS", "CLOSES", "DECLARATION"]}
                             },
                             "required": ["line_number", "target_entity_name", "usage_type"]
                         }
