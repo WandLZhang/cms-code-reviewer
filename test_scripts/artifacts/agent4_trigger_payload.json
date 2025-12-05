@@ -1,0 +1,10 @@
+{
+  "rule": {
+      "rule_name": "File Resource Cleanup",
+      "technical_condition": "PERFORM 9000-CUSTFILE-CLOSE",
+      "plain_english": "Upon completion of the main processing loop, the program executes the specific routine to close customer files.",
+      "entities_used": ["9000-CUSTFILE-CLOSE"],
+      "section_id": "CBCUS01C_END-PERFORM",
+      "rule_id": "rule_test_12345"
+  }
+}
